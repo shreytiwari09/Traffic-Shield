@@ -1,0 +1,754 @@
+{
+  "phase_1": {
+    "phase": 1,
+    "raw_pdf_dir": "C:\\Users\\karan\\OneDrive\\Desktop\\traffic-shield\\data\\raw_pdfs",
+    "documents_collected": 6,
+    "required_sources": 6,
+    "missing_sources": [],
+    "documents": [
+      {
+        "filename": "motor_vehicles_act_1988.pdf",
+        "stem": "motor_vehicles_act_1988",
+        "registered": true,
+        "act": "Motor Vehicles Act, 1988",
+        "id_prefix": "MVA",
+        "size_bytes": 3740289,
+        "sha256": "be5bac906607cb2ac902d5c113c42c7f89142be3591a81ccb825cfbb7ee5d50d"
+      },
+      {
+        "filename": "motor_vehicles_amendment_2019.pdf",
+        "stem": "motor_vehicles_amendment_2019",
+        "registered": true,
+        "act": "Motor Vehicles (Amendment) Act, 2019",
+        "id_prefix": "MVA19",
+        "size_bytes": 1250015,
+        "sha256": "488b7fc7b2051f4583501e6c06de8afb75a65a1de4f003cd8979f93c066b2b8d"
+      },
+      {
+        "filename": "central_motor_vehicle_rules_1989.pdf",
+        "stem": "central_motor_vehicle_rules_1989",
+        "registered": true,
+        "act": "Central Motor Vehicles Rules, 1989",
+        "id_prefix": "CMVR",
+        "size_bytes": 5141574,
+        "sha256": "ccee16f8b698da0ee524fc6e42fcf99fda0aaecd02524c306dec20865aad587f"
+      },
+      {
+        "filename": "motor_vehicles_driving_regulations_2017.PDF",
+        "stem": "motor_vehicles_driving_regulations_2017",
+        "registered": true,
+        "act": "Motor Vehicles (Driving) Regulations, 2017",
+        "id_prefix": "MVDR",
+        "size_bytes": 209877,
+        "sha256": "48e4b7fd7c84ef20c52c5b40777c1465dbd093b130aae6cd75a60621e05b294f"
+      },
+      {
+        "filename": "haryana_motor_vehicle_rules.pdf",
+        "stem": "haryana_motor_vehicle_rules",
+        "registered": true,
+        "act": "Haryana Motor Vehicle Rules, 1993",
+        "id_prefix": "HMVR",
+        "size_bytes": 828751,
+        "sha256": "20af6d3f6ad0c12a4ba6e166f68d44bb34f966e2cd78425af1f66c5ba5609390"
+      },
+      {
+        "filename": "bharatiya_sakshya_adhiniyam_2023.pdf",
+        "stem": "bharatiya_sakshya_adhiniyam_2023",
+        "registered": true,
+        "act": "Bharatiya Sakshya Adhiniyam, 2023",
+        "id_prefix": "BSA",
+        "size_bytes": 525216,
+        "sha256": "993882ad0ae7ded6ae8087351edd61caeb6faa1a2d6c8fff8c269a9cf149b9ac"
+      }
+    ],
+    "elapsed_seconds": 0.0,
+    "status": "ok"
+  },
+  "phase_2": {
+    "phase": 2,
+    "parsed_markdown_dir": "C:\\Users\\karan\\OneDrive\\Desktop\\traffic-shield\\data\\parsed_markdown",
+    "documents_parsed": 6,
+    "pages_total": 854,
+    "image_only_pages_total": 51,
+    "documents": [
+      {
+        "source_pdf": "bharatiya_sakshya_adhiniyam_2023.pdf",
+        "act": "Bharatiya Sakshya Adhiniyam, 2023",
+        "markdown_file": "bharatiya_sakshya_adhiniyam_2023.md",
+        "pages_total": 54,
+        "pages_with_text": 54,
+        "image_only_pages": [],
+        "chars": 169905
+      },
+      {
+        "source_pdf": "central_motor_vehicle_rules_1989.pdf",
+        "act": "Central Motor Vehicles Rules, 1989",
+        "markdown_file": "central_motor_vehicle_rules_1989.md",
+        "pages_total": 489,
+        "pages_with_text": 489,
+        "image_only_pages": [],
+        "chars": 963954
+      },
+      {
+        "source_pdf": "haryana_motor_vehicle_rules.pdf",
+        "act": "Haryana Motor Vehicle Rules, 1993",
+        "markdown_file": "haryana_motor_vehicle_rules.md",
+        "pages_total": 75,
+        "pages_with_text": 75,
+        "image_only_pages": [],
+        "chars": 241336
+      },
+      {
+        "source_pdf": "motor_vehicles_act_1988.pdf",
+        "act": "Motor Vehicles Act, 1988",
+        "markdown_file": "motor_vehicles_act_1988.md",
+        "pages_total": 175,
+        "pages_with_text": 124,
+        "image_only_pages": [
+          121,
+          122,
+          123,
+          124,
+          125,
+          126,
+          127,
+          128,
+          129,
+          130,
+          131,
+          132,
+          133,
+          134,
+          135,
+          136,
+          137,
+          138,
+          139,
+          140,
+          141,
+          142,
+          143,
+          144,
+          145,
+          146,
+          147,
+          148,
+          149,
+          150,
+          151,
+          152,
+          153,
+          154,
+          155,
+          156,
+          157,
+          158,
+          159,
+          160,
+          161,
+          162,
+          163,
+          164,
+          165,
+          166,
+          167,
+          168,
+          169,
+          170,
+          171
+        ],
+        "chars": 447773
+      },
+      {
+        "source_pdf": "motor_vehicles_amendment_2019.pdf",
+        "act": "Motor Vehicles (Amendment) Act, 2019",
+        "markdown_file": "motor_vehicles_amendment_2019.md",
+        "pages_total": 45,
+        "pages_with_text": 45,
+        "image_only_pages": [],
+        "chars": 143867
+      },
+      {
+        "source_pdf": "motor_vehicles_driving_regulations_2017.PDF",
+        "act": "Motor Vehicles (Driving) Regulations, 2017",
+        "markdown_file": "motor_vehicles_driving_regulations_2017.md",
+        "pages_total": 16,
+        "pages_with_text": 16,
+        "image_only_pages": [],
+        "chars": 54126
+      }
+    ],
+    "elapsed_seconds": 56.2,
+    "status": "ok"
+  },
+  "phase_3": {
+    "phase": 3,
+    "cleaned_dir": "C:\\Users\\karan\\OneDrive\\Desktop\\traffic-shield\\data\\cleaned_sections",
+    "documents": [
+      {
+        "source_pdf": "bharatiya_sakshya_adhiniyam_2023.pdf",
+        "act": "Bharatiya Sakshya Adhiniyam, 2023",
+        "cleaned_file": "bharatiya_sakshya_adhiniyam_2023.md",
+        "pages_in": 54,
+        "pages_kept": 47,
+        "pages_removed": 7,
+        "removed_by_reason": {
+          "table of contents / index": 7
+        },
+        "removed_pages": [
+          {
+            "page": 2,
+            "reason": "table of contents / index (contents/abbreviations front matter)"
+          },
+          {
+            "page": 3,
+            "reason": "table of contents / index (contents heading + 62% index-style lines)"
+          },
+          {
+            "page": 4,
+            "reason": "table of contents / index (68% index-style lines)"
+          },
+          {
+            "page": 5,
+            "reason": "table of contents / index (69% index-style lines)"
+          },
+          {
+            "page": 6,
+            "reason": "table of contents / index (82% index-style lines)"
+          },
+          {
+            "page": 7,
+            "reason": "table of contents / index (74% index-style lines)"
+          },
+          {
+            "page": 8,
+            "reason": "table of contents / index (87% index-style lines)"
+          }
+        ]
+      },
+      {
+        "source_pdf": "central_motor_vehicle_rules_1989.pdf",
+        "act": "Central Motor Vehicles Rules, 1989",
+        "cleaned_file": "central_motor_vehicle_rules_1989.md",
+        "pages_in": 489,
+        "pages_kept": 472,
+        "pages_removed": 17,
+        "removed_by_reason": {
+          "table of contents / index": 17
+        },
+        "removed_pages": [
+          {
+            "page": 1,
+            "reason": "table of contents / index (contents table (30 index rows))"
+          },
+          {
+            "page": 2,
+            "reason": "table of contents / index (contents table (40 index rows))"
+          },
+          {
+            "page": 3,
+            "reason": "table of contents / index (contents table (30 index rows))"
+          },
+          {
+            "page": 4,
+            "reason": "table of contents / index (contents table (36 index rows))"
+          },
+          {
+            "page": 5,
+            "reason": "table of contents / index (contents table (34 index rows))"
+          },
+          {
+            "page": 6,
+            "reason": "table of contents / index (contents table (36 index rows))"
+          },
+          {
+            "page": 7,
+            "reason": "table of contents / index (contents table (21 index rows))"
+          },
+          {
+            "page": 8,
+            "reason": "table of contents / index (contents table (0 index rows))"
+          },
+          {
+            "page": 10,
+            "reason": "table of contents / index (index table (22/22 rows trail a page number))"
+          },
+          {
+            "page": 11,
+            "reason": "table of contents / index (contents table (15 index rows))"
+          },
+          {
+            "page": 12,
+            "reason": "table of contents / index (contents table (32 index rows))"
+          },
+          {
+            "page": 13,
+            "reason": "table of contents / index (contents table (25 index rows))"
+          },
+          {
+            "page": 14,
+            "reason": "table of contents / index (contents table (21 index rows))"
+          },
+          {
+            "page": 15,
+            "reason": "table of contents / index (contents table (2 index rows))"
+          },
+          {
+            "page": 16,
+            "reason": "table of contents / index (contents table (20 index rows))"
+          },
+          {
+            "page": 17,
+            "reason": "table of contents / index (contents table (16 index rows))"
+          },
+          {
+            "page": 18,
+            "reason": "table of contents / index (contents table (15 index rows))"
+          }
+        ]
+      },
+      {
+        "source_pdf": "haryana_motor_vehicle_rules.pdf",
+        "act": "Haryana Motor Vehicle Rules, 1993",
+        "cleaned_file": "haryana_motor_vehicle_rules.md",
+        "pages_in": 75,
+        "pages_kept": 75,
+        "pages_removed": 0,
+        "removed_by_reason": {},
+        "removed_pages": []
+      },
+      {
+        "source_pdf": "motor_vehicles_act_1988.pdf",
+        "act": "Motor Vehicles Act, 1988",
+        "cleaned_file": "motor_vehicles_act_1988.md",
+        "pages_in": 175,
+        "pages_kept": 117,
+        "pages_removed": 58,
+        "removed_by_reason": {
+          "table of contents / index": 7,
+          "blank": 51
+        },
+        "removed_pages": [
+          {
+            "page": 3,
+            "reason": "table of contents / index (contents heading + 76% index-style lines)"
+          },
+          {
+            "page": 4,
+            "reason": "table of contents / index (87% index-style lines)"
+          },
+          {
+            "page": 5,
+            "reason": "table of contents / index (85% index-style lines)"
+          },
+          {
+            "page": 6,
+            "reason": "table of contents / index (89% index-style lines)"
+          },
+          {
+            "page": 7,
+            "reason": "table of contents / index (82% index-style lines)"
+          },
+          {
+            "page": 8,
+            "reason": "table of contents / index (84% index-style lines)"
+          },
+          {
+            "page": 9,
+            "reason": "table of contents / index (87% index-style lines)"
+          },
+          {
+            "page": 121,
+            "reason": "blank"
+          },
+          {
+            "page": 122,
+            "reason": "blank"
+          },
+          {
+            "page": 123,
+            "reason": "blank"
+          },
+          {
+            "page": 124,
+            "reason": "blank"
+          },
+          {
+            "page": 125,
+            "reason": "blank"
+          },
+          {
+            "page": 126,
+            "reason": "blank"
+          },
+          {
+            "page": 127,
+            "reason": "blank"
+          },
+          {
+            "page": 128,
+            "reason": "blank"
+          },
+          {
+            "page": 129,
+            "reason": "blank"
+          },
+          {
+            "page": 130,
+            "reason": "blank"
+          },
+          {
+            "page": 131,
+            "reason": "blank"
+          },
+          {
+            "page": 132,
+            "reason": "blank"
+          },
+          {
+            "page": 133,
+            "reason": "blank"
+          },
+          {
+            "page": 134,
+            "reason": "blank"
+          },
+          {
+            "page": 135,
+            "reason": "blank"
+          },
+          {
+            "page": 136,
+            "reason": "blank"
+          },
+          {
+            "page": 137,
+            "reason": "blank"
+          },
+          {
+            "page": 138,
+            "reason": "blank"
+          },
+          {
+            "page": 139,
+            "reason": "blank"
+          },
+          {
+            "page": 140,
+            "reason": "blank"
+          },
+          {
+            "page": 141,
+            "reason": "blank"
+          },
+          {
+            "page": 142,
+            "reason": "blank"
+          },
+          {
+            "page": 143,
+            "reason": "blank"
+          },
+          {
+            "page": 144,
+            "reason": "blank"
+          },
+          {
+            "page": 145,
+            "reason": "blank"
+          },
+          {
+            "page": 146,
+            "reason": "blank"
+          },
+          {
+            "page": 147,
+            "reason": "blank"
+          },
+          {
+            "page": 148,
+            "reason": "blank"
+          },
+          {
+            "page": 149,
+            "reason": "blank"
+          },
+          {
+            "page": 150,
+            "reason": "blank"
+          },
+          {
+            "page": 151,
+            "reason": "blank"
+          },
+          {
+            "page": 152,
+            "reason": "blank"
+          },
+          {
+            "page": 153,
+            "reason": "blank"
+          },
+          {
+            "page": 154,
+            "reason": "blank"
+          },
+          {
+            "page": 155,
+            "reason": "blank"
+          },
+          {
+            "page": 156,
+            "reason": "blank"
+          },
+          {
+            "page": 157,
+            "reason": "blank"
+          },
+          {
+            "page": 158,
+            "reason": "blank"
+          },
+          {
+            "page": 159,
+            "reason": "blank"
+          },
+          {
+            "page": 160,
+            "reason": "blank"
+          },
+          {
+            "page": 161,
+            "reason": "blank"
+          },
+          {
+            "page": 162,
+            "reason": "blank"
+          },
+          {
+            "page": 163,
+            "reason": "blank"
+          },
+          {
+            "page": 164,
+            "reason": "blank"
+          },
+          {
+            "page": 165,
+            "reason": "blank"
+          },
+          {
+            "page": 166,
+            "reason": "blank"
+          },
+          {
+            "page": 167,
+            "reason": "blank"
+          },
+          {
+            "page": 168,
+            "reason": "blank"
+          },
+          {
+            "page": 169,
+            "reason": "blank"
+          },
+          {
+            "page": 170,
+            "reason": "blank"
+          },
+          {
+            "page": 171,
+            "reason": "blank"
+          }
+        ]
+      },
+      {
+        "source_pdf": "motor_vehicles_amendment_2019.pdf",
+        "act": "Motor Vehicles (Amendment) Act, 2019",
+        "cleaned_file": "motor_vehicles_amendment_2019.md",
+        "pages_in": 45,
+        "pages_kept": 45,
+        "pages_removed": 0,
+        "removed_by_reason": {},
+        "removed_pages": []
+      },
+      {
+        "source_pdf": "motor_vehicles_driving_regulations_2017.PDF",
+        "act": "Motor Vehicles (Driving) Regulations, 2017",
+        "cleaned_file": "motor_vehicles_driving_regulations_2017.md",
+        "pages_in": 16,
+        "pages_kept": 16,
+        "pages_removed": 0,
+        "removed_by_reason": {},
+        "removed_pages": []
+      }
+    ],
+    "pages_in": 854,
+    "pages_kept": 772,
+    "pages_removed": 82,
+    "elapsed_seconds": 0.3,
+    "status": "ok"
+  },
+  "phase_4": {
+    "phase": 4,
+    "dataset": "C:\\Users\\karan\\OneDrive\\Desktop\\traffic-shield\\data\\dataset.jsonl",
+    "total_records": 1317,
+    "documents": [
+      {
+        "source_pdf": "bharatiya_sakshya_adhiniyam_2023.pdf",
+        "act": "Bharatiya Sakshya Adhiniyam, 2023",
+        "parser_style": "act",
+        "headers_found": 170,
+        "records": 170,
+        "skipped_too_short": 0,
+        "section_range": "1–170"
+      },
+      {
+        "source_pdf": "central_motor_vehicle_rules_1989.pdf",
+        "act": "Central Motor Vehicles Rules, 1989",
+        "parser_style": "rule_heading",
+        "headers_found": 608,
+        "records": 545,
+        "skipped_too_short": 63,
+        "section_range": "1–9"
+      },
+      {
+        "source_pdf": "haryana_motor_vehicle_rules.pdf",
+        "act": "Haryana Motor Vehicle Rules, 1993",
+        "parser_style": "haryana",
+        "headers_found": 234,
+        "records": 233,
+        "skipped_too_short": 1,
+        "section_range": "1–230"
+      },
+      {
+        "source_pdf": "motor_vehicles_act_1988.pdf",
+        "act": "Motor Vehicles Act, 1988",
+        "parser_style": "act",
+        "headers_found": 256,
+        "records": 256,
+        "skipped_too_short": 0,
+        "section_range": "1–217A"
+      },
+      {
+        "source_pdf": "motor_vehicles_amendment_2019.pdf",
+        "act": "Motor Vehicles (Amendment) Act, 2019",
+        "parser_style": "amendment",
+        "headers_found": 74,
+        "records": 74,
+        "skipped_too_short": 0,
+        "section_range": "2–215D"
+      },
+      {
+        "source_pdf": "motor_vehicles_driving_regulations_2017.PDF",
+        "act": "Motor Vehicles (Driving) Regulations, 2017",
+        "parser_style": "regulation",
+        "headers_found": 39,
+        "records": 39,
+        "skipped_too_short": 0,
+        "section_range": "1–39"
+      }
+    ],
+    "elapsed_seconds": 0.5,
+    "status": "ok"
+  },
+  "phase_5": {
+    "phase": 5,
+    "required_fields": [
+      "id",
+      "act",
+      "section",
+      "title",
+      "content",
+      "page",
+      "source_pdf",
+      "state"
+    ],
+    "records_in": 1317,
+    "accepted": 1317,
+    "rejected": 0,
+    "rejection_reasons": {},
+    "accepted_without_page_reference": 0,
+    "by_act": {
+      "Bharatiya Sakshya Adhiniyam, 2023": {
+        "accepted": 170,
+        "rejected": 0
+      },
+      "Central Motor Vehicles Rules, 1989": {
+        "accepted": 545,
+        "rejected": 0
+      },
+      "Haryana Motor Vehicle Rules, 1993": {
+        "accepted": 233,
+        "rejected": 0
+      },
+      "Motor Vehicles Act, 1988": {
+        "accepted": 256,
+        "rejected": 0
+      },
+      "Motor Vehicles (Amendment) Act, 2019": {
+        "accepted": 74,
+        "rejected": 0
+      },
+      "Motor Vehicles (Driving) Regulations, 2017": {
+        "accepted": 39,
+        "rejected": 0
+      }
+    },
+    "elapsed_seconds": 0.1,
+    "status": "ok"
+  },
+  "phase_6": {
+    "phase": 6,
+    "chunks_file": "C:\\Users\\karan\\OneDrive\\Desktop\\traffic-shield\\data\\chunks.jsonl",
+    "total_chunks": 1675,
+    "sections_split_into_multiple_chunks": 117,
+    "chunk_target_tokens": 800,
+    "chunk_overlap_ratio": 0.15,
+    "token_estimate": {
+      "min": 15,
+      "max": 880,
+      "mean": 305.1,
+      "over_target": 13
+    },
+    "embeddings": "ollama",
+    "chroma_collection": "trafficshield_sections",
+    "chroma_count": 1675,
+    "embedding_dimensions": 768,
+    "elapsed_seconds": 37.1,
+    "status": "ok"
+  },
+  "phase_7": {
+    "phase": 7,
+    "entities_file": "C:\\Users\\karan\\OneDrive\\Desktop\\traffic-shield\\data\\graph\\entities.json",
+    "relationships_file": "C:\\Users\\karan\\OneDrive\\Desktop\\traffic-shield\\data\\graph\\relationships.json",
+    "concept_entities": 13,
+    "legal_section_entities": 1317,
+    "relationships": 1377,
+    "domain_relationships": [
+      {
+        "edge": "Driver -MUST_OBEY-> Traffic Signal",
+        "evidence_count": 19
+      },
+      {
+        "edge": "Police Officer -MAY_ASK-> Driving Licence",
+        "evidence_count": 11
+      },
+      {
+        "edge": "Police Officer -MAY_ISSUE-> Challan",
+        "evidence_count": 1
+      },
+      {
+        "edge": "Challan -HAS_FINE-> Fine",
+        "evidence_count": 4
+      },
+      {
+        "edge": "Legal Section -GOVERNS-> Driver",
+        "evidence_count": 226
+      }
+    ],
+    "elapsed_seconds": 0.7,
+    "status": "ok"
+  }
+}

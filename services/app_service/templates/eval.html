@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Eval — Haryana Traffic Legal Assistant</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="top">
+    <h1>🧪 Model &amp; Retrieval Comparison</h1>
+    <p class="tagline">Evaluator view — same question, four arms: model (Ollama / Gemini) × retrieval (none / hybrid RAG).</p>
+    <nav class="tabs">
+      <a href="/">Ask</a>
+      <a href="/eval" class="active">Eval</a>
+    </nav>
+  </header>
+
+  <main class="wide">
+    <div class="card">
+      <textarea id="question" placeholder="e.g. Can the officer ask for my RC?"></textarea>
+      <div class="row">
+        <button class="primary" id="evalBtn">Run comparison</button>
+      </div>
+    </div>
+
+    <div id="grid"></div>
+  </main>
+
+  <script>
+    const evalBtn = document.getElementById("evalBtn");
+    const questionEl = document.getElementById("question");
+    const gridEl = document.getElementById("grid");
+
+    const CELLS = [
+      { key: "ollama_only", title: "Ollama — no retrieval", cls: "no-rag" },
+      { key: "ollama_rag",  title: "Ollama — hybrid RAG",   cls: "rag" },
+      { key: "gemini_only", title: "Gemini — no retrieval", cls: "no-rag" },
+      { key: "gemini_rag",  title: "Gemini — hybrid RAG",   cls: "rag" },
+    ];
+
+    function escapeHtml(str) {
+      const div = document.createElement("div");
+      div.innerText = str;
+      return div.innerHTML;
+    }
+
+    function citationChips(citations) {
+      if (!citations || citations.length === 0) return "";
+      const chips = citations
+        .filter(c => c.act)
+        .map(c => `<span class="citation-chip">${c.act}${c.section ? " — Sec " + c.section : ""}${c.page ? ", p." + c.page : ""}</span>`)
+        .join("");
+      return chips ? `<div class="citations"><h4>Cited sources</h4>${chips}</div>` : "";
+    }
+
+    function renderCell(def, cell) {
+      return `
+        <div class="card cell ${def.cls}">
+          <h3>${def.title} <span class="badge">${cell.latency_ms.toFixed(0)} ms</span></h3>
+          <div class="answer">${escapeHtml(cell.answer)}</div>
+          ${citationChips(cell.citations)}
+        </div>`;
+    }
+
+    async function runEval() {
+      const question = questionEl.value.trim();
+      if (!question) return;
+
+      evalBtn.disabled = true;
+      gridEl.innerHTML = `<p class="loading" style="margin-top:1rem;">Running all four combinations — this calls Ollama and Gemini twice each…</p>`;
+
+      try {
+        const res = await fetch("/api/eval", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ question }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.detail || "request failed");
+
+        gridEl.innerHTML = `<div class="grid-2x2">${CELLS.map(def => renderCell(def, data[def.key])).join("")}</div>`;
+      } catch (err) {
+        gridEl.innerHTML = `<div class="error-box">${escapeHtml(err.message)}</div>`;
+      } finally {
+        evalBtn.disabled = false;
+      }
+    }
+
+    evalBtn.addEventListener("click", runEval);
+  </script>
+</body>
+</html>

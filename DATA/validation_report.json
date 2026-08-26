@@ -1,0 +1,44 @@
+{
+  "phase": 5,
+  "required_fields": [
+    "id",
+    "act",
+    "section",
+    "title",
+    "content",
+    "page",
+    "source_pdf",
+    "state"
+  ],
+  "records_in": 1317,
+  "accepted": 1317,
+  "rejected": 0,
+  "rejection_reasons": {},
+  "accepted_without_page_reference": 0,
+  "by_act": {
+    "Bharatiya Sakshya Adhiniyam, 2023": {
+      "accepted": 170,
+      "rejected": 0
+    },
+    "Central Motor Vehicles Rules, 1989": {
+      "accepted": 545,
+      "rejected": 0
+    },
+    "Haryana Motor Vehicle Rules, 1993": {
+      "accepted": 233,
+      "rejected": 0
+    },
+    "Motor Vehicles Act, 1988": {
+      "accepted": 256,
+      "rejected": 0
+    },
+    "Motor Vehicles (Amendment) Act, 2019": {
+      "accepted": 74,
+      "rejected": 0
+    },
+    "Motor Vehicles (Driving) Regulations, 2017": {
+      "accepted": 39,
+      "rejected": 0
+    }
+  }
+}

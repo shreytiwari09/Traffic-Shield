@@ -1,0 +1,63 @@
+{
+  "phase": 1,
+  "raw_pdf_dir": "C:\\Users\\karan\\OneDrive\\Desktop\\traffic-shield\\data\\raw_pdfs",
+  "documents_collected": 6,
+  "required_sources": 6,
+  "missing_sources": [],
+  "documents": [
+    {
+      "filename": "motor_vehicles_act_1988.pdf",
+      "stem": "motor_vehicles_act_1988",
+      "registered": true,
+      "act": "Motor Vehicles Act, 1988",
+      "id_prefix": "MVA",
+      "size_bytes": 3740289,
+      "sha256": "be5bac906607cb2ac902d5c113c42c7f89142be3591a81ccb825cfbb7ee5d50d"
+    },
+    {
+      "filename": "motor_vehicles_amendment_2019.pdf",
+      "stem": "motor_vehicles_amendment_2019",
+      "registered": true,
+      "act": "Motor Vehicles (Amendment) Act, 2019",
+      "id_prefix": "MVA19",
+      "size_bytes": 1250015,
+      "sha256": "488b7fc7b2051f4583501e6c06de8afb75a65a1de4f003cd8979f93c066b2b8d"
+    },
+    {
+      "filename": "central_motor_vehicle_rules_1989.pdf",
+      "stem": "central_motor_vehicle_rules_1989",
+      "registered": true,
+      "act": "Central Motor Vehicles Rules, 1989",
+      "id_prefix": "CMVR",
+      "size_bytes": 5141574,
+      "sha256": "ccee16f8b698da0ee524fc6e42fcf99fda0aaecd02524c306dec20865aad587f"
+    },
+    {
+      "filename": "motor_vehicles_driving_regulations_2017.PDF",
+      "stem": "motor_vehicles_driving_regulations_2017",
+      "registered": true,
+      "act": "Motor Vehicles (Driving) Regulations, 2017",
+      "id_prefix": "MVDR",
+      "size_bytes": 209877,
+      "sha256": "48e4b7fd7c84ef20c52c5b40777c1465dbd093b130aae6cd75a60621e05b294f"
+    },
+    {
+      "filename": "haryana_motor_vehicle_rules.pdf",
+      "stem": "haryana_motor_vehicle_rules",
+      "registered": true,
+      "act": "Haryana Motor Vehicle Rules, 1993",
+      "id_prefix": "HMVR",
+      "size_bytes": 828751,
+      "sha256": "20af6d3f6ad0c12a4ba6e166f68d44bb34f966e2cd78425af1f66c5ba5609390"
+    },
+    {
+      "filename": "bharatiya_sakshya_adhiniyam_2023.pdf",
+      "stem": "bharatiya_sakshya_adhiniyam_2023",
+      "registered": true,
+      "act": "Bharatiya Sakshya Adhiniyam, 2023",
+      "id_prefix": "BSA",
+      "size_bytes": 525216,
+      "sha256": "993882ad0ae7ded6ae8087351edd61caeb6faa1a2d6c8fff8c269a9cf149b9ac"
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+:root {
+  --bg: #0f1720;
+  --panel: #172333;
+  --panel-2: #1e2c40;
+  --border: #2a3a52;
+  --text: #e7edf5;
+  --muted: #93a4bd;
+  --accent: #4f8cff;
+  --accent-2: #34c98d;
+  --warn: #e2b93b;
+  --danger: #e2593b;
+}
+
+* { box-sizing: border-box; }
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+a { color: var(--accent); }
+
+/* Browsers apply their own default text color to form controls that does
+   NOT inherit from the page — without this, any <button> that doesn't set
+   its own `color` renders near-black text on this dark theme. Found via
+   screenshot: Rights Library's category-card buttons were unreadable. */
+button {
+  font-family: inherit;
+  color: inherit;
+}
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 6px; }

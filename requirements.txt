@@ -1,0 +1,24 @@
+# Haryana Traffic Legal Assistant — service layer + data pipeline dependencies
+#
+# Install with: pip install -r requirements.txt
+# (Uses the machine's global Python 3.12 environment — no venv/Docker in this
+#  phase; see README.md for how the pieces run together.)
+
+fastapi==0.110.3
+uvicorn[standard]==0.30.6
+httpx==0.27.2
+pydantic==2.12.5
+pydantic-settings==2.15.0
+jinja2==3.1.6
+python-multipart==0.0.9
+python-dotenv==1.0.1
+
+# Vector store (Data Service + data_pipeline Phase 6)
+chromadb==0.5.23
+
+# data_pipeline Phase 2 (PDF parsing) — pre-existing pipeline dependency,
+# not previously pinned anywhere in the repo
+pymupdf==1.24.11
+
+# Gemini provider (LLM Service)
+google-genai==1.2.0

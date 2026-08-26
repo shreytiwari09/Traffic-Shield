@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Haryana Traffic Legal Assistant</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="top">
+    <h1>🚦 Haryana Traffic Legal Assistant</h1>
+    <p class="tagline">Know your rights during a roadside stop — answers cited from official Haryana &amp; Indian motor vehicle law.</p>
+    <nav class="tabs">
+      <a href="/" class="active">Ask</a>
+      <a href="/eval">Eval</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="card">
+      <textarea id="question" placeholder="e.g. Can the officer ask for my RC? Can my licence be seized on the spot?"></textarea>
+      <div class="row">
+        <div class="provider-picker">
+          <label><input type="radio" name="provider" value="ollama" checked><span>Ollama (Llama 3.1 8B)</span></label>
+          <label><input type="radio" name="provider" value="gemini"><span>Gemini</span></label>
+        </div>
+        <button class="primary" id="askBtn">Ask</button>
+      </div>
+    </div>
+
+    <div id="result"></div>
+
+    <p class="disclaimer">
+      This assistant explains legal rights and obligations under official Haryana/Indian motor vehicle law.
+      It is not a substitute for a lawyer, and it will say so plainly if no official source supports an
+      answer rather than guessing.
+    </p>
+  </main>
+
+  <script>
+    const askBtn = document.getElementById("askBtn");
+    const questionEl = document.getElementById("question");
+    const resultEl = document.getElementById("result");
+
+    function citationChips(citations) {
+      if (!citations || citations.length === 0) return "";
+      const chips = citations
+        .filter(c => c.act)
+        .map(c => `<span class="citation-chip">${c.act}${c.section ? " — Sec " + c.section : ""}${c.page ? ", p." + c.page : ""}</span>`)
+        .join("");
+      return chips ? `<div class="citations"><h4>Cited sources</h4>${chips}</div>` : "";
+    }
+
+    async function ask() {
+      const question = questionEl.value.trim();
+      if (!question) return;
+      const provider = document.querySelector('input[name="provider"]:checked').value;
+
+      askBtn.disabled = true;
+      resultEl.innerHTML = `<div class="card result"><p class="loading">Retrieving context and asking ${provider}…</p></div>`;
+
+      try {
+        const res = await fetch("/api/ask", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ question, provider }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.detail || "request failed");
+
+        resultEl.innerHTML = `
+          <div class="card result">
+            <div class="answer">${escapeHtml(data.answer)}</div>
+            ${citationChips(data.citations)}
+            <div class="meta-line">${data.provider} · ${data.model} · context used: ${data.used_context}</div>
+          </div>`;
+      } catch (err) {
+        resultEl.innerHTML = `<div class="error-box">${escapeHtml(err.message)}</div>`;
+      } finally {
+        askBtn.disabled = false;
+      }
+    }
+
+    function escapeHtml(str) {
+      const div = document.createElement("div");
+      div.innerText = str;
+      return div.innerHTML;
+    }
+
+    askBtn.addEventListener("click", ask);
+    questionEl.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) ask();
+    });
+  </script>
+</body>
+</html>
