@@ -100,6 +100,17 @@ _HEADING_LINE_HEADER = re.compile(
 # terminated by an em-dash or a bracketed repeal note.
 _MIDLINE_SAFE = (_OMITTED_HEADER, _ACT_HEADER)
 
+# A document's LAST section has no next header to bound it, so extraction
+# would otherwise run to the end of the file — straight into a trailing
+# Schedule (form templates) or Statement of Objects and Reasons (legislative
+# history), neither of which is operative section text. Confirmed necessary:
+# BSA 2023's Section 170 (its last) picked up both, inflating one record from
+# ~400 to ~6,300 characters. Applied to every section, not just the last, in
+# case a mid-document schedule ever precedes the next real header.
+_TRAILING_APPENDIX_MARKER = re.compile(
+    r"###\s*(?:THE SCHEDULE|STATEMENT OF OBJECTS AND REASONS)\b", re.IGNORECASE
+)
+
 _HEADER_PATTERNS: dict[str, list[re.Pattern]] = {
     "act": [_OMITTED_HEADER, _ACT_HEADER],
     "amendment": [_ACT_HEADER],
@@ -308,7 +319,11 @@ def extract_document(md_path: Path) -> tuple[list[dict], dict]:
 
     for i, header in enumerate(headers):
         end = headers[i + 1]["start"] if i + 1 < len(headers) else len(body)
-        content = _tidy_content(strip_page_markers(body[header["body_start"]:end]))
+        section_body = body[header["body_start"]:end]
+        appendix_match = _TRAILING_APPENDIX_MARKER.search(section_body)
+        if appendix_match:
+            section_body = section_body[:appendix_match.start()]
+        content = _tidy_content(strip_page_markers(section_body))
 
         # A repealed section is a one-line note by nature, so the length floor
         # applies only to provisions still in force.

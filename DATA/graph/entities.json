@@ -1,5 +1,5 @@
 {
-  "entity_count": 1330,
+  "entity_count": 1331,
   "concepts": [
     {
       "id": "ENT_DRIVER",
@@ -39,7 +39,7 @@
       "name": "Vehicle",
       "type": "Object",
       "kind": "concept",
-      "mention_count": 4617,
+      "mention_count": 4604,
       "section_count": 685,
       "aliases": [
         "motor vehicle",
@@ -180,6 +180,23 @@
       ]
     },
     {
+      "id": "ENT_ELECTRONIC_RECORD",
+      "name": "Electronic Record",
+      "type": "Evidence",
+      "kind": "concept",
+      "mention_count": 48,
+      "section_count": 13,
+      "aliases": [
+        "electronic record",
+        "electronic records",
+        "digital record",
+        "digital records",
+        "computer output",
+        "digital evidence",
+        "electronic evidence"
+      ]
+    },
+    {
       "id": "ENT_LEGAL_SECTION",
       "name": "Legal Section",
       "type": "Law",
@@ -218,7 +235,9 @@
       "state": "Haryana",
       "jurisdiction": "India",
       "priority": 4,
-      "mentions": []
+      "mentions": [
+        "Electronic Record"
+      ]
     },
     {
       "id": "HR_BSA_3",
@@ -625,7 +644,9 @@
       "state": "Haryana",
       "jurisdiction": "India",
       "priority": 4,
-      "mentions": []
+      "mentions": [
+        "Electronic Record"
+      ]
     },
     {
       "id": "HR_BSA_30",
@@ -685,7 +706,9 @@
       "state": "Haryana",
       "jurisdiction": "India",
       "priority": 4,
-      "mentions": []
+      "mentions": [
+        "Electronic Record"
+      ]
     },
     {
       "id": "HR_BSA_34",
@@ -775,7 +798,9 @@
       "state": "Haryana",
       "jurisdiction": "India",
       "priority": 4,
-      "mentions": []
+      "mentions": [
+        "Electronic Record"
+      ]
     },
     {
       "id": "HR_BSA_40",
@@ -1045,7 +1070,9 @@
       "state": "Haryana",
       "jurisdiction": "India",
       "priority": 4,
-      "mentions": []
+      "mentions": [
+        "Electronic Record"
+      ]
     },
     {
       "id": "HR_BSA_58",
@@ -1105,7 +1132,9 @@
       "state": "Haryana",
       "jurisdiction": "India",
       "priority": 4,
-      "mentions": []
+      "mentions": [
+        "Electronic Record"
+      ]
     },
     {
       "id": "HR_BSA_62",
@@ -1120,7 +1149,9 @@
       "state": "Haryana",
       "jurisdiction": "India",
       "priority": 4,
-      "mentions": []
+      "mentions": [
+        "Electronic Record"
+      ]
     },
     {
       "id": "HR_BSA_63",
@@ -1135,7 +1166,9 @@
       "state": "Haryana",
       "jurisdiction": "India",
       "priority": 4,
-      "mentions": []
+      "mentions": [
+        "Electronic Record"
+      ]
     },
     {
       "id": "HR_BSA_64",
@@ -1180,7 +1213,9 @@
       "state": "Haryana",
       "jurisdiction": "India",
       "priority": 4,
-      "mentions": []
+      "mentions": [
+        "Electronic Record"
+      ]
     },
     {
       "id": "HR_BSA_67",
@@ -1407,7 +1442,9 @@
       "state": "Haryana",
       "jurisdiction": "India",
       "priority": 4,
-      "mentions": []
+      "mentions": [
+        "Electronic Record"
+      ]
     },
     {
       "id": "HR_BSA_82",
@@ -1482,7 +1519,9 @@
       "state": "Haryana",
       "jurisdiction": "India",
       "priority": 4,
-      "mentions": []
+      "mentions": [
+        "Electronic Record"
+      ]
     },
     {
       "id": "HR_BSA_87",
@@ -1587,7 +1626,9 @@
       "state": "Haryana",
       "jurisdiction": "India",
       "priority": 4,
-      "mentions": []
+      "mentions": [
+        "Electronic Record"
+      ]
     },
     {
       "id": "HR_BSA_94",
@@ -2236,7 +2277,9 @@
       "state": "Haryana",
       "jurisdiction": "India",
       "priority": 4,
-      "mentions": []
+      "mentions": [
+        "Electronic Record"
+      ]
     },
     {
       "id": "HR_BSA_137",

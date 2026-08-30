@@ -152,6 +152,18 @@ class AskRequest(BaseModel):
 Confidence = Literal["high", "medium", "low", "none"]
 
 
+class GroundingCheck(BaseModel):
+    """Result of checking the answer's cited section numbers and rupee
+    amounts against what was actually in the retrieved context — see
+    services/orchestration_service/grounding.py for what this can and can't
+    catch."""
+    total_claims: int
+    verified_claims: int
+    unverified_claims: int
+    unverified_sections: list[str] = Field(default_factory=list)
+    unverified_amounts: list[int] = Field(default_factory=list)
+
+
 class AskResponse(BaseModel):
     answer: str
     citations: list[Citation]
@@ -161,6 +173,7 @@ class AskResponse(BaseModel):
     confidence: Confidence
     context: list[ContextItem]  # the actual top-k chunks — Legal Evidence View / Response Card need these
     matched_entities: list[str]
+    grounding: GroundingCheck
 
 
 class EvalRequest(BaseModel):
@@ -174,6 +187,7 @@ class EvalCell(BaseModel):
     model: str
     used_context: bool
     latency_ms: float
+    grounding: GroundingCheck
 
 
 class EvalResponse(BaseModel):

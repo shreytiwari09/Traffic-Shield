@@ -32,6 +32,11 @@ function Cell({ def, cell }) {
       )}
       <div className="meta-line" style={{ marginTop: '0.6rem', fontSize: '0.75rem', color: 'var(--muted)' }}>
         {cell.model} · {Math.round(cell.latency_ms)} ms
+        {cell.grounding?.total_claims > 0 && (
+          <span className={cell.grounding.unverified_claims === 0 ? 'grounding-ok' : 'grounding-warn'}>
+            {' · '}{cell.grounding.unverified_claims === 0 ? '✓' : '⚠'} grounding {cell.grounding.verified_claims}/{cell.grounding.total_claims}
+          </span>
+        )}
       </div>
     </div>
   )

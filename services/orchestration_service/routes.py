@@ -6,6 +6,7 @@ from fastapi import APIRouter, HTTPException
 from fastapi.responses import StreamingResponse
 
 from services.orchestration_service import clients
+from services.orchestration_service.grounding import check_grounding
 from services.shared.confidence import compute_confidence
 from services.shared.schemas import (
     AskRequest,
@@ -14,10 +15,13 @@ from services.shared.schemas import (
     EvalCell,
     EvalRequest,
     EvalResponse,
+    GroundingCheck,
 )
 from services.shared.settings import settings
 
 router = APIRouter()
+
+_NO_CLAIMS = GroundingCheck(total_claims=0, verified_claims=0, unverified_claims=0)
 
 
 def _citations(context: list[dict]) -> list[Citation]:
@@ -87,6 +91,7 @@ async def ask(req: AskRequest):
         confidence=compute_confidence(context, matched_entities),
         context=context,
         matched_entities=matched_entities,
+        grounding=GroundingCheck(**check_grounding(result["answer"], context)),
     )
 
 
@@ -151,6 +156,17 @@ async def ask_stream(question: str, provider: str = "ollama"):
             return
         gen_elapsed = round((time.perf_counter() - gen_start) * 1000, 1)
 
+        grounding = check_grounding(result["answer"], context)
+        yield _sse({
+            "step": "grounding_check",
+            "message": (
+                f"Checked {grounding['total_claims']} claim(s) against retrieved sources — "
+                f"{grounding['verified_claims']} verified, {grounding['unverified_claims']} unverified"
+                if grounding["total_claims"] else
+                "No checkable section/rupee claims found in the answer"
+            ),
+        })
+
         yield _sse({
             "step": "done",
             "message": "Answer generated",
@@ -164,6 +180,7 @@ async def ask_stream(question: str, provider: str = "ollama"):
             "confidence": compute_confidence(context, matched_entities),
             "context": context,
             "matched_entities": matched_entities,
+            "grounding": grounding,
         })
 
     return StreamingResponse(
@@ -197,6 +214,7 @@ async def eval_grid(req: EvalRequest):
                 model="-",
                 used_context=bool(ctx),
                 latency_ms=0.0,
+                grounding=_NO_CLAIMS,
             )
         return EvalCell(
             answer=result["answer"],
@@ -205,6 +223,7 @@ async def eval_grid(req: EvalRequest):
             model=result["model"],
             used_context=result["used_context"],
             latency_ms=result["latency_ms"],
+            grounding=GroundingCheck(**check_grounding(result["answer"], ctx)),
         )
 
     # Persona/hard-rules prompt only applies alongside real retrieval — the
@@ -229,6 +248,7 @@ async def eval_grid(req: EvalRequest):
         ollama_graph_rag = EvalCell(
             answer=f"(unavailable — retrieval failed: {graph_retrieval_error})",
             citations=[], provider="ollama", model="-", used_context=False, latency_ms=0.0,
+            grounding=_NO_CLAIMS,
         )
     else:
         ollama_graph_rag = await cell("ollama", graph_context, use_persona=True)

@@ -208,6 +208,19 @@ ENTITY_ALIASES: dict[str, list[str]] = {
     "Seat Belt": ["seat belt", "seat belts", "safety belt", "seatbelt"],
     "Parking": ["parking", "parked", "park a motor vehicle"],
     "Speed Limit": ["speed limit", "speed limits", "speeding", "limits of speed"],
+    # Added alongside Bharatiya Sakshya Adhiniyam, 2023 — without this, that
+    # source's content (e.g. "Admissibility of electronic records") reaches
+    # vector search but never the graph path, since no existing entity's
+    # aliases match its vocabulary. Confirmed gap during testing.
+    "Electronic Record": [
+        "electronic record",
+        "electronic records",
+        "digital record",
+        "digital records",
+        "computer output",
+        "digital evidence",
+        "electronic evidence",
+    ],
     "Legal Section": [],  # instantiated per dataset record, not keyword-matched
 }
 
@@ -224,6 +237,7 @@ ENTITY_TYPES: dict[str, str] = {
     "Seat Belt": "Equipment",
     "Parking": "Activity",
     "Speed Limit": "Constraint",
+    "Electronic Record": "Evidence",
     "Legal Section": "Law",
 }
 

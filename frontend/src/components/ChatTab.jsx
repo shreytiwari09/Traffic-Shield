@@ -2,6 +2,7 @@ import { useRef, useState } from 'react'
 import { streamAsk } from '../api'
 import PipelineTrace from './PipelineTrace'
 import ResponseCard from './ResponseCard'
+import { matchSuggestions } from '../suggestions'
 
 export default function ChatTab() {
   const [question, setQuestion] = useState('')
@@ -10,12 +11,16 @@ export default function ChatTab() {
   const [result, setResult] = useState(null)
   const [error, setError] = useState(null)
   const [busy, setBusy] = useState(false)
+  const [showSuggestions, setShowSuggestions] = useState(false)
   const stopRef = useRef(null)
 
-  function ask() {
-    const q = question.trim()
+  const suggestions = showSuggestions ? matchSuggestions(question) : []
+
+  function ask(overrideQuestion) {
+    const q = (overrideQuestion ?? question).trim()
     if (!q || busy) return
 
+    setShowSuggestions(false)
     stopRef.current?.()
     setEvents([])
     setResult(null)
@@ -35,18 +40,45 @@ export default function ChatTab() {
     })
   }
 
+  function pickSuggestion(text) {
+    setQuestion(text)
+    setShowSuggestions(false)
+    ask(text)
+  }
+
   return (
     <div>
       <div className="card">
-        <textarea
-          className="question-box"
-          placeholder="e.g. Can the officer ask for my RC? Can my driving licence be seized on the spot?"
-          value={question}
-          onChange={(e) => setQuestion(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) ask()
-          }}
-        />
+        <div style={{ position: 'relative' }}>
+          <textarea
+            className="question-box"
+            placeholder="e.g. Can the officer ask for my RC? Can my driving licence be seized on the spot?"
+            value={question}
+            onChange={(e) => {
+              setQuestion(e.target.value)
+              setShowSuggestions(true)
+            }}
+            onFocus={() => setShowSuggestions(true)}
+            onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) ask()
+            }}
+          />
+          {suggestions.length > 0 && (
+            <div className="suggestion-list">
+              {suggestions.map((s, i) => (
+                <button
+                  key={i}
+                  className="suggestion-item"
+                  onMouseDown={(e) => e.preventDefault()}
+                  onClick={() => pickSuggestion(s.question)}
+                >
+                  {s.question}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
         <div className="row">
           <div className="provider-toggle">
             {['ollama', 'gemini'].map((p) => (
@@ -62,7 +94,7 @@ export default function ChatTab() {
               </label>
             ))}
           </div>
-          <button className="primary" onClick={ask} disabled={busy}>
+          <button className="primary" onClick={() => ask()} disabled={busy}>
             {busy ? 'Asking…' : 'Ask'}
           </button>
         </div>

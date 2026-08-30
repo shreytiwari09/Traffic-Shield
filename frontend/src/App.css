@@ -296,6 +296,38 @@ button.ghost:hover { color: var(--text); border-color: var(--accent); }
 
 .loading { color: var(--muted); font-style: italic; }
 
+.grounding-ok { color: var(--accent-2); }
+.grounding-warn { color: var(--warn); font-weight: 600; }
+
+/* --- prompt suggestions --- */
+.suggestion-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  margin-top: 0.3rem;
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+.suggestion-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  padding: 0.55rem 0.8rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+.suggestion-item:last-child { border-bottom: none; }
+.suggestion-item:hover { background: var(--panel); color: var(--accent); }
+
 /* --- eval dashboard --- */
 .stat-row {
   display: flex;

@@ -1,7 +1,7 @@
 {
-  "relationship_count": 1377,
+  "relationship_count": 1390,
   "domain_relationship_count": 5,
-  "derived_relationship_count": 1372,
+  "derived_relationship_count": 1385,
   "relationships": [
     {
       "id": "REL_DRIVER_MUST_OBEY_TRAFFIC_SIGNAL",
@@ -424,6 +424,24 @@
       ]
     },
     {
+      "id": "REL_HR_BSA_2_MENTIONS_ELECTRONIC_RECORD",
+      "source": "HR_BSA_2",
+      "source_name": "Bharatiya Sakshya Adhiniyam, 2023 — 2",
+      "relation": "MENTIONS",
+      "target": "ENT_ELECTRONIC_RECORD",
+      "target_name": "Electronic Record",
+      "kind": "derived",
+      "evidence_count": 1,
+      "evidence": [
+        {
+          "section_id": "HR_BSA_2",
+          "act": "Bharatiya Sakshya Adhiniyam, 2023",
+          "section": "2",
+          "page": 10
+        }
+      ]
+    },
+    {
       "id": "REL_HR_BSA_23_MENTIONS_POLICE_OFFICER",
       "source": "HR_BSA_23",
       "source_name": "Bharatiya Sakshya Adhiniyam, 2023 — 23",
@@ -442,6 +460,150 @@
       ]
     },
     {
+      "id": "REL_HR_BSA_29_MENTIONS_ELECTRONIC_RECORD",
+      "source": "HR_BSA_29",
+      "source_name": "Bharatiya Sakshya Adhiniyam, 2023 — 29",
+      "relation": "MENTIONS",
+      "target": "ENT_ELECTRONIC_RECORD",
+      "target_name": "Electronic Record",
+      "kind": "derived",
+      "evidence_count": 1,
+      "evidence": [
+        {
+          "section_id": "HR_BSA_29",
+          "act": "Bharatiya Sakshya Adhiniyam, 2023",
+          "section": "29",
+          "page": 22
+        }
+      ]
+    },
+    {
+      "id": "REL_HR_BSA_33_MENTIONS_ELECTRONIC_RECORD",
+      "source": "HR_BSA_33",
+      "source_name": "Bharatiya Sakshya Adhiniyam, 2023 — 33",
+      "relation": "MENTIONS",
+      "target": "ENT_ELECTRONIC_RECORD",
+      "target_name": "Electronic Record",
+      "kind": "derived",
+      "evidence_count": 1,
+      "evidence": [
+        {
+          "section_id": "HR_BSA_33",
+          "act": "Bharatiya Sakshya Adhiniyam, 2023",
+          "section": "33",
+          "page": 22
+        }
+      ]
+    },
+    {
+      "id": "REL_HR_BSA_39_MENTIONS_ELECTRONIC_RECORD",
+      "source": "HR_BSA_39",
+      "source_name": "Bharatiya Sakshya Adhiniyam, 2023 — 39",
+      "relation": "MENTIONS",
+      "target": "ENT_ELECTRONIC_RECORD",
+      "target_name": "Electronic Record",
+      "kind": "derived",
+      "evidence_count": 1,
+      "evidence": [
+        {
+          "section_id": "HR_BSA_39",
+          "act": "Bharatiya Sakshya Adhiniyam, 2023",
+          "section": "39",
+          "page": 24
+        }
+      ]
+    },
+    {
+      "id": "REL_HR_BSA_57_MENTIONS_ELECTRONIC_RECORD",
+      "source": "HR_BSA_57",
+      "source_name": "Bharatiya Sakshya Adhiniyam, 2023 — 57",
+      "relation": "MENTIONS",
+      "target": "ENT_ELECTRONIC_RECORD",
+      "target_name": "Electronic Record",
+      "kind": "derived",
+      "evidence_count": 1,
+      "evidence": [
+        {
+          "section_id": "HR_BSA_57",
+          "act": "Bharatiya Sakshya Adhiniyam, 2023",
+          "section": "57",
+          "page": 28
+        }
+      ]
+    },
+    {
+      "id": "REL_HR_BSA_61_MENTIONS_ELECTRONIC_RECORD",
+      "source": "HR_BSA_61",
+      "source_name": "Bharatiya Sakshya Adhiniyam, 2023 — 61",
+      "relation": "MENTIONS",
+      "target": "ENT_ELECTRONIC_RECORD",
+      "target_name": "Electronic Record",
+      "kind": "derived",
+      "evidence_count": 1,
+      "evidence": [
+        {
+          "section_id": "HR_BSA_61",
+          "act": "Bharatiya Sakshya Adhiniyam, 2023",
+          "section": "61",
+          "page": 29
+        }
+      ]
+    },
+    {
+      "id": "REL_HR_BSA_62_MENTIONS_ELECTRONIC_RECORD",
+      "source": "HR_BSA_62",
+      "source_name": "Bharatiya Sakshya Adhiniyam, 2023 — 62",
+      "relation": "MENTIONS",
+      "target": "ENT_ELECTRONIC_RECORD",
+      "target_name": "Electronic Record",
+      "kind": "derived",
+      "evidence_count": 1,
+      "evidence": [
+        {
+          "section_id": "HR_BSA_62",
+          "act": "Bharatiya Sakshya Adhiniyam, 2023",
+          "section": "62",
+          "page": 29
+        }
+      ]
+    },
+    {
+      "id": "REL_HR_BSA_63_MENTIONS_ELECTRONIC_RECORD",
+      "source": "HR_BSA_63",
+      "source_name": "Bharatiya Sakshya Adhiniyam, 2023 — 63",
+      "relation": "MENTIONS",
+      "target": "ENT_ELECTRONIC_RECORD",
+      "target_name": "Electronic Record",
+      "kind": "derived",
+      "evidence_count": 1,
+      "evidence": [
+        {
+          "section_id": "HR_BSA_63",
+          "act": "Bharatiya Sakshya Adhiniyam, 2023",
+          "section": "63",
+          "page": 30
+        }
+      ]
+    },
+    {
+      "id": "REL_HR_BSA_66_MENTIONS_ELECTRONIC_RECORD",
+      "source": "HR_BSA_66",
+      "source_name": "Bharatiya Sakshya Adhiniyam, 2023 — 66",
+      "relation": "MENTIONS",
+      "target": "ENT_ELECTRONIC_RECORD",
+      "target_name": "Electronic Record",
+      "kind": "derived",
+      "evidence_count": 1,
+      "evidence": [
+        {
+          "section_id": "HR_BSA_66",
+          "act": "Bharatiya Sakshya Adhiniyam, 2023",
+          "section": "66",
+          "page": 31
+        }
+      ]
+    },
+    {
       "id": "REL_HR_BSA_79_MENTIONS_POLICE_OFFICER",
       "source": "HR_BSA_79",
       "source_name": "Bharatiya Sakshya Adhiniyam, 2023 — 79",
@@ -456,6 +618,60 @@
           "act": "Bharatiya Sakshya Adhiniyam, 2023",
           "section": "79",
           "page": 33
+        }
+      ]
+    },
+    {
+      "id": "REL_HR_BSA_81_MENTIONS_ELECTRONIC_RECORD",
+      "source": "HR_BSA_81",
+      "source_name": "Bharatiya Sakshya Adhiniyam, 2023 — 81",
+      "relation": "MENTIONS",
+      "target": "ENT_ELECTRONIC_RECORD",
+      "target_name": "Electronic Record",
+      "kind": "derived",
+      "evidence_count": 1,
+      "evidence": [
+        {
+          "section_id": "HR_BSA_81",
+          "act": "Bharatiya Sakshya Adhiniyam, 2023",
+          "section": "81",
+          "page": 34
+        }
+      ]
+    },
+    {
+      "id": "REL_HR_BSA_86_MENTIONS_ELECTRONIC_RECORD",
+      "source": "HR_BSA_86",
+      "source_name": "Bharatiya Sakshya Adhiniyam, 2023 — 86",
+      "relation": "MENTIONS",
+      "target": "ENT_ELECTRONIC_RECORD",
+      "target_name": "Electronic Record",
+      "kind": "derived",
+      "evidence_count": 1,
+      "evidence": [
+        {
+          "section_id": "HR_BSA_86",
+          "act": "Bharatiya Sakshya Adhiniyam, 2023",
+          "section": "86",
+          "page": 34
+        }
+      ]
+    },
+    {
+      "id": "REL_HR_BSA_93_MENTIONS_ELECTRONIC_RECORD",
+      "source": "HR_BSA_93",
+      "source_name": "Bharatiya Sakshya Adhiniyam, 2023 — 93",
+      "relation": "MENTIONS",
+      "target": "ENT_ELECTRONIC_RECORD",
+      "target_name": "Electronic Record",
+      "kind": "derived",
+      "evidence_count": 1,
+      "evidence": [
+        {
+          "section_id": "HR_BSA_93",
+          "act": "Bharatiya Sakshya Adhiniyam, 2023",
+          "section": "93",
+          "page": 35
         }
       ]
     },
@@ -492,6 +708,24 @@
           "act": "Bharatiya Sakshya Adhiniyam, 2023",
           "section": "131",
           "page": 44
+        }
+      ]
+    },
+    {
+      "id": "REL_HR_BSA_136_MENTIONS_ELECTRONIC_RECORD",
+      "source": "HR_BSA_136",
+      "source_name": "Bharatiya Sakshya Adhiniyam, 2023 — 136",
+      "relation": "MENTIONS",
+      "target": "ENT_ELECTRONIC_RECORD",
+      "target_name": "Electronic Record",
+      "kind": "derived",
+      "evidence_count": 1,
+      "evidence": [
+        {
+          "section_id": "HR_BSA_136",
+          "act": "Bharatiya Sakshya Adhiniyam, 2023",
+          "section": "136",
+          "page": 45
         }
       ]
     },
