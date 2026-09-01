@@ -22,3 +22,6 @@ pymupdf==1.24.11
 
 # Gemini provider (LLM Service)
 google-genai==1.2.0
+
+# Week 4 evaluation harness (evaluation/run_eval.py) — CPU/RAM sampling
+psutil==7.2.2

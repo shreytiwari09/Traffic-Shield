@@ -193,9 +193,11 @@ async def ask_stream(question: str, provider: str = "ollama"):
 @router.post("/v1/eval", response_model=EvalResponse)
 async def eval_grid(req: EvalRequest):
     """Eval tab — one hybrid retrieval (+ one graph-only retrieval for the
-    5th cell), then: {ollama, gemini} x {no context, hybrid RAG context},
-    plus ollama + graph-only RAG in isolation. Each cell fails independently
-    (e.g. a missing Gemini key shows up only in the Gemini cells)."""
+    graph cell), then: {ollama, gemini} x {no context, hybrid RAG context},
+    ollama + graph-only RAG in isolation, and codellama/starcoder2 + hybrid
+    RAG (the two extra local models from the Week 4 model-comparison
+    exercise). Each cell fails independently (e.g. a missing Gemini key
+    shows up only in the Gemini cells)."""
     try:
         retrieval = await clients.retrieve(req.question, settings.default_top_k)
     except Exception as exc:
@@ -253,6 +255,9 @@ async def eval_grid(req: EvalRequest):
     else:
         ollama_graph_rag = await cell("ollama", graph_context, use_persona=True)
 
+    codellama_rag = await cell("codellama", context, use_persona=True)
+    starcoder2_rag = await cell("starcoder2", context, use_persona=True)
+
     return EvalResponse(
         retrieval=retrieval,
         ollama_only=ollama_only,
@@ -260,4 +265,6 @@ async def eval_grid(req: EvalRequest):
         gemini_only=gemini_only,
         gemini_rag=gemini_rag,
         ollama_graph_rag=ollama_graph_rag,
+        codellama_rag=codellama_rag,
+        starcoder2_rag=starcoder2_rag,
     )

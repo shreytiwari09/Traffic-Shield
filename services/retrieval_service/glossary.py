@@ -42,6 +42,12 @@ GLOSSARY: dict[str, str] = {
     "disabled": "disease or disability",
     "disability": "disease or disability",
     "handicapped": "disease or disability",
+    # MVA Sec 129 (the actual helmet-wearing requirement) literally says
+    # "protective headgear," never "helmet" — confirmed necessary during
+    # testing: "no helmet" fine questions scored Sec 129 (0.629) and Sec 194D
+    # (0.644, the actual ₹1,000 penalty) BELOW several unrelated sections,
+    # so retrieval missed both and the model fabricated a citation instead.
+    "helmet": "protective headgear",
 }
 
 

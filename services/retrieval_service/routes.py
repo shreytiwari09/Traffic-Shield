@@ -3,7 +3,7 @@ import time
 
 from fastapi import APIRouter, HTTPException
 
-from services.retrieval_service import categories, clients, fusion, glossary, graph_store
+from services.retrieval_service import categories, clients, core_sections, fusion, glossary, graph_store
 from services.shared.schemas import (
     CategorySectionsResponse,
     GraphRelationship,
@@ -81,14 +81,24 @@ async def retrieve(req: RetrieveRequest):
     relationships = graph_store.relationships_for(matched_entities)
     evidence_ids = graph_store.evidence_record_ids(relationships)[:_MAX_GRAPH_EVIDENCE]
 
+    # Hand-verified core sections supplement the noisy auto-derived MENTIONS
+    # edges above — same candidate pool, same fair scoring below, just a
+    # higher-precision source. Confirmed necessary during testing across
+    # several topics (helmet, RC, driving licence, police authority during a
+    # stop) where the correct section either scored too low among the noisy
+    # candidates to be fetched at all, or wasn't evidenced by any graph edge
+    # in the first place.
+    core_ids = set(core_sections.core_section_ids(matched_entities))
+    candidate_ids = list(dict.fromkeys(evidence_ids + list(core_ids)))
+
     graph_candidates = await asyncio.gather(
-        *(_score_graph_candidate(rid, embedding) for rid in evidence_ids)
+        *(_score_graph_candidate(rid, embedding) for rid in candidate_ids)
     )
     graph_candidates = [c for c in graph_candidates if c is not None]
     graph_ms = (time.perf_counter() - t_graph_start) * 1000
 
     boost_terms = glossary.matched_canonical_terms(req.question)
-    context = fusion.fuse(vector_hits, graph_candidates, req.top_k, boost_terms=boost_terms)
+    context = fusion.fuse(vector_hits, graph_candidates, req.top_k, boost_terms=boost_terms, core_ids=core_ids)
 
     if "Fine" in matched_entities and not any(c["source_pdf"] == "motor_vehicles_act_1988.pdf" and c["section"] == "177" for c in context):
         general_penalty = await clients.get_record(_GENERAL_PENALTY_RECORD_ID)

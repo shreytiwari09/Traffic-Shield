@@ -1,0 +1,162 @@
+
+=== [1/27] Q1 (document_retrieval): Can the officer ask for my RC?
+    llama3.1:8b              ok     13272 ms  grounding=0/1
+    codellama:7b             ok     40313 ms  grounding=2/3
+    starcoder2:3b            ok      4213 ms  grounding=0/0
+    gemini-3.5-flash-lite    ok      1716 ms  grounding=0/0
+
+=== [2/27] Q2 (document_retrieval): Can my driving licence be seized on the spot?
+    llama3.1:8b              ok     17805 ms  grounding=2/2
+    codellama:7b             ok     20518 ms  grounding=0/0
+    starcoder2:3b            ok      4117 ms  grounding=0/0
+    gemini-3.5-flash-lite    ok     11157 ms  grounding=1/1
+
+=== [3/27] Q3 (document_retrieval): Do I need to carry a PUC certificate?
+    llama3.1:8b              ok     12770 ms  grounding=1/1
+    codellama:7b             ok     21132 ms  grounding=2/2
+    starcoder2:3b            ok      5901 ms  grounding=0/0
+    gemini-3.5-flash-lite    ok      9713 ms  grounding=0/0
+
+=== [4/27] Q4 (document_retrieval): Can the officer ask for my insurance certificate?
+    llama3.1:8b              ok     13223 ms  grounding=1/1
+    codellama:7b             ok     16142 ms  grounding=2/2
+    starcoder2:3b            ok      3902 ms  grounding=0/0
+    gemini-3.5-flash-lite    ok      6475 ms  grounding=2/2
+
+=== [5/27] Q5 (penalty_lookup): What is the fine for not wearing a helmet?
+    llama3.1:8b              ok     14752 ms  grounding=3/3
+    codellama:7b             ok     24824 ms  grounding=1/6
+    starcoder2:3b            ok      4621 ms  grounding=0/0
+    gemini-3.5-flash-lite    ok      2776 ms  grounding=5/5
+
+=== [6/27] Q6 (penalty_lookup): What is the fine for not wearing a seatbelt?
+    llama3.1:8b              ok     16887 ms  grounding=2/2
+    codellama:7b             ok     12262 ms  grounding=2/2
+    starcoder2:3b            ok      8450 ms  grounding=0/5
+    gemini-3.5-flash-lite    ok      1976 ms  grounding=3/3
+
+=== [7/27] Q7 (penalty_lookup): What is the fine for overspeeding?
+    llama3.1:8b              ok     19597 ms  grounding=3/4
+    codellama:7b             ok     19958 ms  grounding=2/2
+    starcoder2:3b            ok      4706 ms  grounding=0/0
+    gemini-3.5-flash-lite    ok      3090 ms  grounding=3/4
+
+=== [8/27] Q8 (penalty_lookup): How much fine for using a mirror film with 20 percent black tint?
+    llama3.1:8b              ok     19516 ms  grounding=3/4
+    codellama:7b             ok     14736 ms  grounding=1/4
+    starcoder2:3b            ok      4959 ms  grounding=0/0
+    gemini-3.5-flash-lite    ok      5977 ms  grounding=3/3
+
+=== [9/27] Q9 (penalty_lookup): What is the penalty for drunk driving?
+  RETRIEVAL FAILED: Server error '500 Internal Server Error' for url 'http://localhost:8002/v1/retrieve'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/500
+
+=== [10/27] Q10 (authority_scope): Can a police officer charge me 1000 rupees for no helmet? Since they a
+    llama3.1:8b              ok     13608 ms  grounding=3/3
+    codellama:7b             ok     15030 ms  grounding=1/1
+    starcoder2:3b            ok      3918 ms  grounding=0/0
+    gemini-3.5-flash-lite    ok      2221 ms  grounding=3/3
+
+=== [11/27] Q11 (authority_scope): Can a police officer take my keys from my vehicle without permission?
+    llama3.1:8b              ok     13558 ms  grounding=1/5
+    codellama:7b             ok     32511 ms  grounding=0/4
+    starcoder2:3b            ok      4967 ms  grounding=0/0
+    gemini-3.5-flash-lite    ok      2026 ms  grounding=0/0
+
+=== [12/27] Q12 (authority_scope): Can I ask to see the officer's ID before showing my documents?
+    llama3.1:8b              ok     15848 ms  grounding=1/2
+    codellama:7b             ok     24106 ms  grounding=1/1
+    starcoder2:3b            ok      5451 ms  grounding=0/0
+    gemini-3.5-flash-lite    ok      1421 ms  grounding=0/0
+
+=== [13/27] Q13 (authority_scope): Can the police seize my vehicle on the spot?
+    llama3.1:8b              ok     15524 ms  grounding=1/1
+    codellama:7b             ok     23150 ms  grounding=1/4
+    starcoder2:3b            ok      4676 ms  grounding=0/0
+    gemini-3.5-flash-lite    ok      6748 ms  grounding=-
+
+=== [14/27] Q14 (compound_question): I have used a 20 percent tint film on my mirrors in my car, police is 
+    llama3.1:8b              ok     18288 ms  grounding=3/3
+    codellama:7b             ok     19925 ms  grounding=1/3
+    starcoder2:3b            ok      4417 ms  grounding=-
+    gemini-3.5-flash-lite    ok      1480 ms  grounding=0/0
+
+=== [15/27] Q15 (compound_question): What are the rules for a disabled person driving, and can they be fine
+    llama3.1:8b              ok     13036 ms  grounding=3/3
+    codellama:7b             ok     18580 ms  grounding=1/1
+    starcoder2:3b            ok      8254 ms  grounding=0/0
+    gemini-3.5-flash-lite    ok      2638 ms  grounding=3/3
+
+=== [16/27] Q16 (edge_case_no_source): Is it illegal to modify my vehicle's silencer?
+    llama3.1:8b              ok     14222 ms  grounding=2/2
+    codellama:7b             ok     35532 ms  grounding=0/0
+    starcoder2:3b            ok      5184 ms  grounding=0/0
+    gemini-3.5-flash-lite    ok      2567 ms  grounding=5/5
+
+=== [17/27] Q17 (edge_case_no_source): Is a fancy number plate font illegal?
+    llama3.1:8b              ok     12598 ms  grounding=1/1
+    codellama:7b             ok     16126 ms  grounding=0/1
+    starcoder2:3b            ok      3889 ms  grounding=0/0
+    gemini-3.5-flash-lite    ok      5968 ms  grounding=2/2
+
+=== [18/27] Q18 (edge_case_no_source): What happens if a minor is caught driving?
+    llama3.1:8b              ok     12326 ms  grounding=0/1
+    codellama:7b             ok     21388 ms  grounding=1/2
+    starcoder2:3b            ok      4205 ms  grounding=0/0
+    gemini-3.5-flash-lite    ok      3074 ms  grounding=2/4
+
+=== [19/27] Q19 (out_of_scope): What is the speed limit on a German autobahn?
+    llama3.1:8b              ok     10232 ms  grounding=0/0
+    codellama:7b             ok     16445 ms  grounding=0/0
+    starcoder2:3b            ok      4458 ms  grounding=0/0
+    gemini-3.5-flash-lite    ok      5336 ms  grounding=0/0
+
+=== [20/27] Q20 (out_of_scope): How do I file an income tax return?
+    llama3.1:8b              ok     13964 ms  grounding=0/1
+    codellama:7b             ok     24526 ms  grounding=0/0
+    starcoder2:3b            ok     38829 ms  grounding=0/0
+    gemini-3.5-flash-lite    ok      8981 ms  grounding=0/0
+
+=== [21/27] Q21 (rights_explanation): Is dashcam footage admissible as evidence against me?
+    llama3.1:8b              ok     17175 ms  grounding=2/3
+    codellama:7b             ok     28548 ms  grounding=1/1
+    starcoder2:3b            ok      4646 ms  grounding=0/0
+    gemini-3.5-flash-lite    ok      1319 ms  grounding=0/0
+
+=== [22/27] Q22 (rights_explanation): Is my window tint legal?
+    llama3.1:8b              ok     14331 ms  grounding=0/0
+    codellama:7b             ok     17417 ms  grounding=0/0
+    starcoder2:3b            ok     10047 ms  grounding=0/0
+    gemini-3.5-flash-lite    ok      1410 ms  grounding=0/0
+
+=== [23/27] Q23 (rights_explanation): What happens if I jump a red light?
+    llama3.1:8b              ok     13867 ms  grounding=1/1
+    codellama:7b             ok     33618 ms  grounding=1/1
+    starcoder2:3b            ok      4886 ms  grounding=0/0
+    gemini-3.5-flash-lite    ok      6054 ms  grounding=0/0
+
+=== [24/27] Q24 (cross_reference): If I don't have my RC, can my vehicle be detained, and what documents 
+    llama3.1:8b              ok     15804 ms  grounding=1/1
+    codellama:7b             ok     21148 ms  grounding=0/0
+    starcoder2:3b            ok      5882 ms  grounding=0/0
+    gemini-3.5-flash-lite    ok      1944 ms  grounding=0/0
+
+=== [25/27] Q25 (cross_reference): What documents can an officer demand from me in one single stop, and u
+    llama3.1:8b              ok     10890 ms  grounding=2/2
+    codellama:7b             ok     18938 ms  grounding=1/1
+    starcoder2:3b            ok      7766 ms  grounding=0/0
+    gemini-3.5-flash-lite    ok      2364 ms  grounding=2/2
+
+=== [26/27] Q26 (document_retrieval): Can my car be towed for illegal parking?
+    llama3.1:8b              ok     11888 ms  grounding=2/2
+    codellama:7b             ok     13822 ms  grounding=0/0
+    starcoder2:3b            ok      3589 ms  grounding=0/0
+    gemini-3.5-flash-lite    ok      2648 ms  grounding=1/1
+
+=== [27/27] Q27 (penalty_lookup): Can I be fined for using a mobile phone while driving?
+    llama3.1:8b              ok     11666 ms  grounding=1/1
+    codellama:7b             ok     16684 ms  grounding=1/3
+    starcoder2:3b            ok      4468 ms  grounding=0/0
+    gemini-3.5-flash-lite    ok      8919 ms  grounding=2/2
+
+Done. 104 records saved to C:\Users\karan\OneDrive\Desktop\traffic-shield\evaluation\results.jsonl

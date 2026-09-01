@@ -10,6 +10,14 @@ from pydantic import BaseModel, Field
 
 Provider = Literal["ollama", "gemini"]
 
+# Eval tab only — extra local models pulled purely for the Week 4
+# model-comparison exercise (see evaluation/run_eval.py). Never offered on
+# the citizen-facing Ask tab: both are far weaker on this task (see
+# evaluation/metrics_report.json — starcoder2 essentially ignores the
+# injected legal context, codellama has the highest hallucination rate of
+# the four models tested).
+EvalProvider = Literal["ollama", "gemini", "codellama", "starcoder2"]
+
 
 # ---------------------------------------------------------------------------
 # Data Service
@@ -46,6 +54,7 @@ class EmbedResponse(BaseModel):
 
 class ContextItem(BaseModel):
     text: str
+    title: str | None = None
     act: str | None = None
     section: str | None = None
     page: int | None = None
@@ -57,7 +66,7 @@ class ContextItem(BaseModel):
 class GenerateRequest(BaseModel):
     question: str
     context: list[ContextItem] = Field(default_factory=list)
-    provider: Provider = "ollama"
+    provider: EvalProvider = "ollama"
     # True (default, always used by the Ask tab): the fixed legal persona +
     # hard rules + context. False (Eval tab's no-retrieval cells only): no
     # system prompt at all — the model's raw, unguided behavior, so the
@@ -69,7 +78,7 @@ class GenerateRequest(BaseModel):
 
 class GenerateResponse(BaseModel):
     answer: str
-    provider: Provider
+    provider: EvalProvider
     model: str
     used_context: bool
     latency_ms: float
@@ -183,7 +192,7 @@ class EvalRequest(BaseModel):
 class EvalCell(BaseModel):
     answer: str
     citations: list[Citation] = Field(default_factory=list)
-    provider: Provider
+    provider: EvalProvider
     model: str
     used_context: bool
     latency_ms: float
@@ -204,3 +213,9 @@ class EvalResponse(BaseModel):
     # persona — isolates what the graph path alone contributes, separate
     # from the hybrid retrieval used by ollama_rag above.
     ollama_graph_rag: EvalCell
+    # The two extra local models pulled for the Week 4 model-comparison
+    # exercise — RAG-only (no raw/no-context twin, unlike ollama/gemini
+    # above): both are instruction-following-weak enough that the raw cell
+    # added little signal while roughly doubling this endpoint's latency.
+    codellama_rag: EvalCell
+    starcoder2_rag: EvalCell

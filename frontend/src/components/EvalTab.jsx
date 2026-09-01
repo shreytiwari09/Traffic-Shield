@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { runEval } from '../api'
 import LegalEvidenceView from './LegalEvidenceView'
+import { matchSmartSuggestions } from '../suggestions'
+import { addToHistory, getHistory } from '../history'
 
 const CELLS = [
   { key: 'ollama_only', title: 'Ollama — raw (no persona, no retrieval)', cls: 'raw', badge: 'RAW MODEL' },
@@ -12,6 +14,16 @@ const CELLS = [
 const GRAPH_ONLY_CELL = {
   key: 'ollama_graph_rag', title: 'Ollama — graph RAG only (vector search skipped)', cls: 'rag', badge: 'PERSONA + GRAPH ONLY',
 }
+
+// The two extra local models pulled for the Week 4 model-comparison
+// exercise — Eval tab only, never offered on the Ask tab (see
+// evaluation/metrics_report.json: starcoder2 essentially ignores the
+// injected context, codellama has the highest hallucination rate of the
+// four models tested).
+const EXTRA_MODEL_CELLS = [
+  { key: 'codellama_rag', title: 'CodeLlama 7B — this app’s pipeline', cls: 'rag', badge: 'PERSONA + RAG' },
+  { key: 'starcoder2_rag', title: 'StarCoder2 3B — this app’s pipeline', cls: 'rag', badge: 'PERSONA + RAG' },
+]
 
 function Cell({ def, cell }) {
   return (
@@ -48,10 +60,15 @@ export default function EvalTab() {
   const [error, setError] = useState(null)
   const [busy, setBusy] = useState(false)
   const [showEvidence, setShowEvidence] = useState(false)
+  const [showSuggestions, setShowSuggestions] = useState(false)
 
-  async function run() {
-    const q = question.trim()
+  const suggestions = showSuggestions ? matchSmartSuggestions(question, getHistory()) : []
+
+  async function run(overrideQuestion) {
+    const q = (overrideQuestion ?? question).trim()
     if (!q || busy) return
+    addToHistory(q)
+    setShowSuggestions(false)
     setBusy(true)
     setError(null)
     setResult(null)
@@ -65,6 +82,12 @@ export default function EvalTab() {
     }
   }
 
+  function pickSuggestion(text) {
+    setQuestion(text)
+    setShowSuggestions(false)
+    run(text)
+  }
+
   return (
     <div>
       <div className="card">
@@ -73,14 +96,35 @@ export default function EvalTab() {
           generations: each model with no persona/no retrieval (its raw, unguided behavior) versus
           this app's actual pipeline (persona + hybrid RAG context).
         </p>
-        <textarea
-          className="question-box"
-          placeholder="e.g. Can the officer ask for my RC?"
-          value={question}
-          onChange={(e) => setQuestion(e.target.value)}
-        />
+        <div style={{ position: 'relative' }}>
+          <textarea
+            className="question-box"
+            placeholder="e.g. Can the officer ask for my RC?"
+            value={question}
+            onChange={(e) => {
+              setQuestion(e.target.value)
+              setShowSuggestions(true)
+            }}
+            onFocus={() => setShowSuggestions(true)}
+            onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
+          />
+          {suggestions.length > 0 && (
+            <div className="suggestion-list">
+              {suggestions.map((text, i) => (
+                <button
+                  key={i}
+                  className="suggestion-item"
+                  onMouseDown={(e) => e.preventDefault()}
+                  onClick={() => pickSuggestion(text)}
+                >
+                  {text}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
         <div className="row">
-          <button className="primary" onClick={run} disabled={busy}>
+          <button className="primary" onClick={() => run()} disabled={busy}>
             {busy ? 'Running…' : 'Run comparison'}
           </button>
         </div>
@@ -157,6 +201,15 @@ export default function EvalTab() {
           </h4>
           <div className="grid-2x2" style={{ gridTemplateColumns: '1fr' }}>
             <Cell def={GRAPH_ONLY_CELL} cell={result.ollama_graph_rag} />
+          </div>
+
+          <h4 style={{ margin: '1.25rem 0 0', fontSize: '0.78rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+            Other local models on this app's pipeline — Week 4 comparison (not offered on the Ask tab)
+          </h4>
+          <div className="grid-2x2">
+            {EXTRA_MODEL_CELLS.map((def) => (
+              <Cell def={def} cell={result[def.key]} key={def.key} />
+            ))}
           </div>
         </>
       )}

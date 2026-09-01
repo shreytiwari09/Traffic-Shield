@@ -16,3 +16,9 @@ venv/
 .idea/
 .DS_Store
 Thumbs.db
+
+# Transient local-run service logs (evaluation/run_eval.py's own output,
+# evaluation/run_log.txt, is kept — these are just uvicorn/ollama stdout
+# from running services locally, not a deliverable)
+evaluation/_svc_*.log
+evaluation/_ollama.log

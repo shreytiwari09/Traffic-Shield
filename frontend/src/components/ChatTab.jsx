@@ -2,7 +2,8 @@ import { useRef, useState } from 'react'
 import { streamAsk } from '../api'
 import PipelineTrace from './PipelineTrace'
 import ResponseCard from './ResponseCard'
-import { matchSuggestions } from '../suggestions'
+import { matchSmartSuggestions } from '../suggestions'
+import { addToHistory, getHistory } from '../history'
 
 export default function ChatTab() {
   const [question, setQuestion] = useState('')
@@ -14,12 +15,13 @@ export default function ChatTab() {
   const [showSuggestions, setShowSuggestions] = useState(false)
   const stopRef = useRef(null)
 
-  const suggestions = showSuggestions ? matchSuggestions(question) : []
+  const suggestions = showSuggestions ? matchSmartSuggestions(question, getHistory()) : []
 
   function ask(overrideQuestion) {
     const q = (overrideQuestion ?? question).trim()
     if (!q || busy) return
 
+    addToHistory(q)
     setShowSuggestions(false)
     stopRef.current?.()
     setEvents([])
@@ -66,14 +68,14 @@ export default function ChatTab() {
           />
           {suggestions.length > 0 && (
             <div className="suggestion-list">
-              {suggestions.map((s, i) => (
+              {suggestions.map((text, i) => (
                 <button
                   key={i}
                   className="suggestion-item"
                   onMouseDown={(e) => e.preventDefault()}
-                  onClick={() => pickSuggestion(s.question)}
+                  onClick={() => pickSuggestion(text)}
                 >
-                  {s.question}
+                  {text}
                 </button>
               ))}
             </div>

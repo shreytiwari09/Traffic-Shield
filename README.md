@@ -208,4 +208,6 @@ digital evidence like dashcam footage, relevant to a traffic-stop assistant).
 Real Neo4j graph database · a "Legal Update Agent" to monitor Haryana gazettes for amendments · query
 decomposition for compound questions · Docker/containerization (Exercise 5) · broader glossary coverage
 for colloquial terms (e.g. "dashcam"/"CCTV" don't yet trigger the Electronic Record graph concept, only
-its formal name does).
+its formal name does) · **voice-based question input and spoken answers** — was part of the original
+Application Service vision ("voice interaction"), not yet built; needs a speech-tech decision first (see
+below) before implementation starts.

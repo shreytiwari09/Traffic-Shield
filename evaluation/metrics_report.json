@@ -1,0 +1,514 @@
+{
+  "retrieval_quality": {
+    "mean_recall": 0.595,
+    "hit_rate": 0.667,
+    "n_scored_questions": 21,
+    "per_question": [
+      {
+        "question_id": "Q1",
+        "category": "document_retrieval",
+        "expected_sections": [
+          "130",
+          "158"
+        ],
+        "retrieved_sections": [
+          "160",
+          "41",
+          "42",
+          "44",
+          "45",
+          "48",
+          "49",
+          "53"
+        ],
+        "recall": 0.0,
+        "hit": false
+      },
+      {
+        "question_id": "Q2",
+        "category": "document_retrieval",
+        "expected_sections": [
+          "130"
+        ],
+        "retrieved_sections": [
+          "10",
+          "130",
+          "14",
+          "16",
+          "19",
+          "206",
+          "210",
+          "88"
+        ],
+        "recall": 1.0,
+        "hit": true
+      },
+      {
+        "question_id": "Q3",
+        "category": "document_retrieval",
+        "expected_sections": [
+          "158"
+        ],
+        "retrieved_sections": [
+          "12",
+          "143",
+          "145",
+          "228",
+          "6"
+        ],
+        "recall": 0.0,
+        "hit": false
+      },
+      {
+        "question_id": "Q4",
+        "category": "document_retrieval",
+        "expected_sections": [
+          "158"
+        ],
+        "retrieved_sections": [
+          "141",
+          "143",
+          "145",
+          "156",
+          "158",
+          "200",
+          "51"
+        ],
+        "recall": 1.0,
+        "hit": true
+      },
+      {
+        "question_id": "Q5",
+        "category": "penalty_lookup",
+        "expected_sections": [
+          "129",
+          "194D"
+        ],
+        "retrieved_sections": [
+          "129",
+          "137",
+          "177",
+          "185",
+          "186",
+          "194D",
+          "44",
+          "47",
+          "49"
+        ],
+        "recall": 1.0,
+        "hit": true
+      },
+      {
+        "question_id": "Q6",
+        "category": "penalty_lookup",
+        "expected_sections": [
+          "194B"
+        ],
+        "retrieved_sections": [
+          "126",
+          "177",
+          "186",
+          "189",
+          "194B",
+          "194E",
+          "198",
+          "79"
+        ],
+        "recall": 1.0,
+        "hit": true
+      },
+      {
+        "question_id": "Q7",
+        "category": "penalty_lookup",
+        "expected_sections": [
+          "112",
+          "183"
+        ],
+        "retrieved_sections": [
+          "177",
+          "177A",
+          "183",
+          "184",
+          "186",
+          "189",
+          "194A",
+          "7"
+        ],
+        "recall": 0.5,
+        "hit": true
+      },
+      {
+        "question_id": "Q8",
+        "category": "penalty_lookup",
+        "expected_sections": [
+          "100",
+          "177"
+        ],
+        "retrieved_sections": [
+          "100",
+          "104",
+          "110",
+          "146",
+          "177",
+          "185",
+          "4",
+          "50"
+        ],
+        "recall": 1.0,
+        "hit": true
+      },
+      {
+        "question_id": "Q10",
+        "category": "authority_scope",
+        "expected_sections": [
+          "129",
+          "194D"
+        ],
+        "retrieved_sections": [
+          "129",
+          "137",
+          "18",
+          "186",
+          "194B",
+          "194D",
+          "194F",
+          "44"
+        ],
+        "recall": 1.0,
+        "hit": true
+      },
+      {
+        "question_id": "Q11",
+        "category": "authority_scope",
+        "expected_sections": [
+          "130",
+          "206",
+          "207"
+        ],
+        "retrieved_sections": [
+          "130",
+          "133",
+          "202",
+          "206",
+          "207",
+          "213",
+          "226B",
+          "88"
+        ],
+        "recall": 1.0,
+        "hit": true
+      },
+      {
+        "question_id": "Q13",
+        "category": "authority_scope",
+        "expected_sections": [
+          "207"
+        ],
+        "retrieved_sections": [
+          "127",
+          "136",
+          "206",
+          "207",
+          "226B",
+          "3",
+          "62",
+          "88"
+        ],
+        "recall": 1.0,
+        "hit": true
+      },
+      {
+        "question_id": "Q14",
+        "category": "compound_question",
+        "expected_sections": [
+          "100",
+          "177"
+        ],
+        "retrieved_sections": [
+          "177",
+          "177A",
+          "184",
+          "185",
+          "186",
+          "189",
+          "190",
+          "67"
+        ],
+        "recall": 0.5,
+        "hit": true
+      },
+      {
+        "question_id": "Q15",
+        "category": "compound_question",
+        "expected_sections": [
+          "16",
+          "181"
+        ],
+        "retrieved_sections": [
+          "14",
+          "16",
+          "164",
+          "186",
+          "19",
+          "21",
+          "24",
+          "9"
+        ],
+        "recall": 0.5,
+        "hit": true
+      },
+      {
+        "question_id": "Q19",
+        "category": "out_of_scope",
+        "expected_sections": [],
+        "retrieved_sections": [
+          "112",
+          "118",
+          "16",
+          "164",
+          "177",
+          "183",
+          "2",
+          "33"
+        ],
+        "recall": 1.0,
+        "hit": true
+      },
+      {
+        "question_id": "Q20",
+        "category": "out_of_scope",
+        "expected_sections": [],
+        "retrieved_sections": [
+          "11",
+          "14",
+          "159",
+          "21",
+          "22",
+          "24",
+          "54",
+          "7"
+        ],
+        "recall": 1.0,
+        "hit": true
+      },
+      {
+        "question_id": "Q21",
+        "category": "rights_explanation",
+        "expected_sections": [
+          "63"
+        ],
+        "retrieved_sections": [
+          "147",
+          "168",
+          "169",
+          "205",
+          "57",
+          "58",
+          "60",
+          "61"
+        ],
+        "recall": 0.0,
+        "hit": false
+      },
+      {
+        "question_id": "Q22",
+        "category": "rights_explanation",
+        "expected_sections": [
+          "100"
+        ],
+        "retrieved_sections": [
+          "100",
+          "146",
+          "16",
+          "174",
+          "20",
+          "31",
+          "50"
+        ],
+        "recall": 1.0,
+        "hit": true
+      },
+      {
+        "question_id": "Q23",
+        "category": "rights_explanation",
+        "expected_sections": [
+          "119"
+        ],
+        "retrieved_sections": [
+          "108",
+          "12",
+          "162",
+          "2",
+          "20"
+        ],
+        "recall": 0.0,
+        "hit": false
+      },
+      {
+        "question_id": "Q24",
+        "category": "cross_reference",
+        "expected_sections": [
+          "207"
+        ],
+        "retrieved_sections": [
+          "12",
+          "38",
+          "39",
+          "45",
+          "48",
+          "50",
+          "96"
+        ],
+        "recall": 0.0,
+        "hit": false
+      },
+      {
+        "question_id": "Q25",
+        "category": "cross_reference",
+        "expected_sections": [
+          "158"
+        ],
+        "retrieved_sections": [
+          "100",
+          "130",
+          "19",
+          "202",
+          "203",
+          "207",
+          "24",
+          "77"
+        ],
+        "recall": 0.0,
+        "hit": false
+      },
+      {
+        "question_id": "Q26",
+        "category": "document_retrieval",
+        "expected_sections": [
+          "117"
+        ],
+        "retrieved_sections": [
+          "122",
+          "127",
+          "15",
+          "166",
+          "179",
+          "201",
+          "3",
+          "30"
+        ],
+        "recall": 0.0,
+        "hit": false
+      }
+    ]
+  },
+  "models": {
+    "llama3.1:8b": {
+      "n_questions": 26,
+      "n_errors": 0,
+      "latency_ms": {
+        "mean": 14486.5,
+        "median": 13915.7,
+        "p95": 18287.6
+      },
+      "tokens": {
+        "mean_prompt": 2525.5,
+        "mean_completion": 200.3
+      },
+      "gpu_mem_used_mb_mean": 5350.7,
+      "cpu_percent_mean": 4.5,
+      "ram_used_mb_mean": 12244.4,
+      "hallucination_rate": 0.22,
+      "total_claims_checked": 50,
+      "relevance_mean_lexical_overlap": 0.803,
+      "test_pass_rate": 0.238,
+      "scorable_questions": 21,
+      "open_questions_excluded": 5,
+      "verdict_breakdown": {
+        "pass": 5,
+        "open": 5,
+        "fail": 16
+      }
+    },
+    "codellama:7b": {
+      "n_questions": 26,
+      "n_errors": 0,
+      "latency_ms": {
+        "mean": 21822.3,
+        "median": 20237.8,
+        "p95": 33618.0
+      },
+      "tokens": {
+        "mean_prompt": 2973.9,
+        "mean_completion": 207.2
+      },
+      "gpu_mem_used_mb_mean": 5052.1,
+      "cpu_percent_mean": 4.2,
+      "ram_used_mb_mean": 12389.6,
+      "hallucination_rate": 0.5,
+      "total_claims_checked": 44,
+      "relevance_mean_lexical_overlap": 0.784,
+      "test_pass_rate": 0.095,
+      "scorable_questions": 21,
+      "open_questions_excluded": 5,
+      "verdict_breakdown": {
+        "pass": 2,
+        "open": 5,
+        "fail": 19
+      }
+    },
+    "starcoder2:3b": {
+      "n_questions": 26,
+      "n_errors": 0,
+      "latency_ms": {
+        "mean": 6553.9,
+        "median": 4691.1,
+        "p95": 8449.9
+      },
+      "tokens": {
+        "mean_prompt": 22.3,
+        "mean_completion": 325.1
+      },
+      "gpu_mem_used_mb_mean": 2063.6,
+      "cpu_percent_mean": 3.0,
+      "ram_used_mb_mean": 11439.0,
+      "hallucination_rate": 1.0,
+      "total_claims_checked": 5,
+      "relevance_mean_lexical_overlap": 0.486,
+      "test_pass_rate": 0.0,
+      "scorable_questions": 21,
+      "open_questions_excluded": 5,
+      "verdict_breakdown": {
+        "open": 5,
+        "fail": 21
+      }
+    },
+    "gemini-3.5-flash-lite": {
+      "n_questions": 26,
+      "n_errors": 0,
+      "latency_ms": {
+        "mean": 4230.8,
+        "median": 2712.0,
+        "p95": 8981.0
+      },
+      "tokens": {
+        "mean_prompt": 2658.9,
+        "mean_completion": 184.8
+      },
+      "gpu_mem_used_mb_mean": 2063.6,
+      "cpu_percent_mean": 4.8,
+      "ram_used_mb_mean": 11462.4,
+      "hallucination_rate": 0.075,
+      "total_claims_checked": 40,
+      "relevance_mean_lexical_overlap": 0.47,
+      "test_pass_rate": 0.333,
+      "scorable_questions": 21,
+      "open_questions_excluded": 5,
+      "verdict_breakdown": {
+        "pass": 7,
+        "open": 5,
+        "fail": 14
+      }
+    }
+  }
+}

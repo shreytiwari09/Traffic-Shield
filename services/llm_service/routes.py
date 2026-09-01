@@ -10,6 +10,12 @@ from services.shared.settings import settings
 
 router = APIRouter()
 
+# Eval-tab-only providers that still run through Ollama, just with a
+# different pulled model instead of settings.ollama_model. See EvalProvider
+# in schemas.py for why these exist and why they're excluded from the
+# regular Provider type used by the Ask tab.
+_OLLAMA_MODEL_OVERRIDES = {"codellama": "codellama:7b", "starcoder2": "starcoder2:3b"}
+
 
 @router.get("/v1/health")
 async def health():
@@ -51,6 +57,9 @@ async def generate(req: GenerateRequest):
         if req.provider == "gemini":
             answer = await gemini_client.generate(req.question, system_message)
             model = settings.gemini_model
+        elif req.provider in _OLLAMA_MODEL_OVERRIDES:
+            model = _OLLAMA_MODEL_OVERRIDES[req.provider]
+            answer = await ollama_client.generate(req.question, system_message, model=model)
         else:
             answer = await ollama_client.generate(req.question, system_message)
             model = settings.ollama_model

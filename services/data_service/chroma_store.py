@@ -9,6 +9,23 @@ import chromadb
 
 from services.shared.settings import settings
 
+# Chroma 0.5.23's telemetry client has a real, confirmed bug: `Posthog.capture()`
+# mutates a plain, unsynchronized dict (`self.batched_events`) on EVERY call —
+# `posthog.disabled` / Settings(anonymized_telemetry=False) only gate the
+# outbound network call inside `_direct_capture`, not this batching bookkeeping.
+# Under concurrent collection.get() calls (Retrieval Service fires several at
+# once via asyncio.gather when scoring graph candidates — each asyncio.to_thread
+# call is a real OS thread), two threads can race on
+# `del self.batched_events[batch_key]` for the same key, raising an unhandled
+# KeyError that crashes the request (confirmed via traceback, root-caused to a
+# posthog>=3.x capture() signature change chromadb 0.5.23 never pinned against —
+# not a bug in our own retrieval/data-service logic). We don't use this
+# telemetry, so neuter the method itself rather than rely on a flag that
+# doesn't actually stop it running.
+from chromadb.telemetry.product.posthog import Posthog as _ChromaPosthog  # noqa: E402
+
+_ChromaPosthog.capture = lambda self, event: None
+
 _client = None
 _collection = None
 

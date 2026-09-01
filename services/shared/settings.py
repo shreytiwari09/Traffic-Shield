@@ -44,7 +44,7 @@ class Settings(BaseSettings):
     orchestration_service_url: str = "http://localhost:8001"
 
     # --- retrieval tuning ------------------------------------------------------
-    default_top_k: int = 5
+    default_top_k: int = 8  # was 5 — repeatedly found the correct section scoring just under a 5-slot cutoff
     request_timeout_seconds: float = 120.0
 
 
