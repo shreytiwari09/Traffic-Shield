@@ -1,0 +1,190 @@
+# Exercise 5 — the five services, containerised and talking to each other.
+#
+# What changes vs. running locally, and what deliberately does not:
+#
+#   * Inter-service URLs switch from localhost:PORT to Docker DNS names
+#     (http://data_service:8004 …). No code change was needed for this — every
+#     URL already came from services/shared/settings.py, so compose just sets
+#     the environment variables that were always there. That the architecture
+#     survived containerisation without a code edit is the point of Exercise 4's
+#     service split.
+#
+#   * Ollama stays on the HOST, reached via host.docker.internal. Containerising
+#     an 8B model alongside five services on a 15 GB CPU-only laptop would mean
+#     re-downloading ~5 GB of weights into a volume and running inference in a
+#     VM with less RAM than the host. The brief asks to containerise the
+#     application; Ollama is infrastructure it depends on, like a database you
+#     would point at rather than embed.
+#
+#   * data_pipeline/ is NOT a service. It is an offline batch tool that runs
+#     once to produce DATA/ and chroma_data/; the live services only ever read
+#     what it produced. Containerising it as a long-running service would
+#     misrepresent the architecture.
+#
+# Bring up:  docker compose up --build
+# Then open: http://localhost:5173/
+
+# Shared by all five Python services: same image, same env, same restart policy.
+# Only `command` and `ports` differ per service.
+x-service-base: &service-base
+  build:
+    context: .
+    dockerfile: Dockerfile
+  image: trafficshield-services:latest
+  restart: unless-stopped
+  networks: [trafficshield]
+  environment: &service-env
+    # Docker DNS names replace localhost — the only thing containerisation
+    # actually changed about how these five talk to each other.
+    DATA_SERVICE_URL: http://data_service:8004
+    LLM_SERVICE_URL: http://llm_service:8003
+    RETRIEVAL_SERVICE_URL: http://retrieval_service:8002
+    ORCHESTRATION_SERVICE_URL: http://orchestration_service:8001
+    # CPU-only inference overruns the 120s default and surfaces as a 502 from
+    # Orchestration; see .env for the measured numbers behind this.
+    REQUEST_TIMEOUT_SECONDS: "900"
+
+services:
+
+  # --- Data / Knowledge Service --------------------------------------------
+  # Owns the Chroma vector store and dataset.jsonl. Read-only at request time.
+  data_service:
+    <<: *service-base
+    container_name: ts_data_service
+    command: >
+      python -m uvicorn services.data_service.main:app
+      --host 0.0.0.0 --port 8004
+    ports: ["8004:8004"]
+    volumes:
+      # dataset.jsonl + graph/*.json are only ever read -> mount read-only so
+      # the container cannot corrupt a committed deliverable.
+      - ./DATA:/app/DATA:ro
+      # chroma_data must be writable even for pure queries: SQLite needs its
+      # journal/WAL. Mounted rather than baked in so a pipeline rerun on the
+      # host is picked up without rebuilding the image.
+      - ./chroma_data:/app/chroma_data
+    healthcheck:
+      # python, not curl — the slim base image ships no curl and adding one
+      # just for a healthcheck would grow every layer.
+      test: ["CMD", "python", "-c", "import urllib.request;urllib.request.urlopen('http://localhost:8004/v1/health',timeout=5)"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
+
+  # --- LLM Service ----------------------------------------------------------
+  # The only container permitted to talk to Ollama or Gemini.
+  llm_service:
+    <<: *service-base
+    container_name: ts_llm_service
+    command: >
+      python -m uvicorn services.llm_service.main:app
+      --host 0.0.0.0 --port 8003
+    ports: ["8003:8003"]
+    environment:
+      <<: *service-env
+      # Ollama runs on the host, not in a container (see header note).
+      OLLAMA_BASE_URL: http://host.docker.internal:11434
+      # CPU-only hosts need far more than the old hardcoded 180s: a cold model
+      # load plus a ~2k-token RAG prompt overran it and surfaced as an
+      # empty-message ReadTimeout. keep_alive stops the model being evicted
+      # after 5 idle minutes, which is what caused the cold load.
+      OLLAMA_TIMEOUT_SECONDS: ${OLLAMA_TIMEOUT_SECONDS:-600}
+      OLLAMA_KEEP_ALIVE: ${OLLAMA_KEEP_ALIVE:-30m}
+      # Supplied by compose from the host .env file. Never copied into the
+      # image — .env is in .dockerignore. Empty is valid: the Gemini provider
+      # then returns a clear 503 and the Ollama path still works.
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      GEMINI_MODEL: ${GEMINI_MODEL:-gemini-3.5-flash-lite}
+    extra_hosts:
+      # Docker Desktop provides host.docker.internal natively; this mapping
+      # makes the same compose file work on plain Linux Docker too.
+      - "host.docker.internal:host-gateway"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request;urllib.request.urlopen('http://localhost:8003/v1/health',timeout=5)"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 20s
+
+  # --- Retrieval / RAG Service ---------------------------------------------
+  # Query normalisation, vector similarity, graph lookup, fusion/scoring.
+  # Calls Data Service for vectors and LLM Service for the query embedding.
+  retrieval_service:
+    <<: *service-base
+    container_name: ts_retrieval_service
+    command: >
+      python -m uvicorn services.retrieval_service.main:app
+      --host 0.0.0.0 --port 8002
+    ports: ["8002:8002"]
+    volumes:
+      # graph/entities.json + relationships.json are loaded at startup.
+      - ./DATA:/app/DATA:ro
+    depends_on:
+      data_service: {condition: service_healthy}
+      llm_service: {condition: service_healthy}
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request;urllib.request.urlopen('http://localhost:8002/v1/health',timeout=5)"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 20s
+
+  # --- Orchestration Service ------------------------------------------------
+  # Sequences one request end to end; owns SSE progress and the Eval grid.
+  orchestration_service:
+    <<: *service-base
+    container_name: ts_orchestration_service
+    command: >
+      python -m uvicorn services.orchestration_service.main:app
+      --host 0.0.0.0 --port 8001
+    ports: ["8001:8001"]
+    depends_on:
+      retrieval_service: {condition: service_healthy}
+      llm_service: {condition: service_healthy}
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request;urllib.request.urlopen('http://localhost:8001/v1/health',timeout=5)"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 20s
+
+  # --- Application Service --------------------------------------------------
+  # The single front door: UI + thin /api passthrough. No retrieval or LLM
+  # work happens here.
+  app_service:
+    <<: *service-base
+    container_name: ts_app_service
+    command: >
+      python -m uvicorn services.app_service.main:app
+      --host 0.0.0.0 --port 8000
+    ports: ["8000:8000"]
+    depends_on:
+      orchestration_service: {condition: service_healthy}
+    healthcheck:
+      # Application Service exposes /health, not /v1/health — it is the UI
+      # front door rather than an internal API.
+      test: ["CMD", "python", "-c", "import urllib.request;urllib.request.urlopen('http://localhost:8000/health',timeout=5)"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 20s
+
+  # --- Frontend (React build served by nginx) -------------------------------
+  # Published on 5173 so the documented URL is unchanged from local dev, even
+  # though nginx itself listens on 80 inside the container.
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: trafficshield-frontend:latest
+    container_name: ts_frontend
+    restart: unless-stopped
+    networks: [trafficshield]
+    ports: ["5173:80"]
+    depends_on:
+      app_service: {condition: service_healthy}
+
+networks:
+  trafficshield:
+    driver: bridge

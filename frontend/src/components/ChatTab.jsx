@@ -61,9 +61,16 @@ export default function ChatTab() {
               setShowSuggestions(true)
             }}
             onFocus={() => setShowSuggestions(true)}
+            // Keep the delay. The suggestion list is IN-FLOW (see App.css), so
+            // it no longer covers the Ask button — but that also means closing
+            // it collapses its height and shifts the button upward. Closing on
+            // blur (i.e. on the button's own mousedown) moved the button out
+            // from under the cursor before mouseup, so the click landed on
+            // nothing. The delay keeps the layout still until the click lands.
             onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
             onKeyDown={(e) => {
               if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) ask()
+              if (e.key === 'Escape') setShowSuggestions(false)
             }}
           />
           {suggestions.length > 0 && (
@@ -102,7 +109,7 @@ export default function ChatTab() {
         </div>
       </div>
 
-      <PipelineTrace events={events} done={!!result || !!error} />
+      <PipelineTrace events={events} />
 
       {error && <div className="error-box">{error}</div>}
       {result && <ResponseCard result={result} />}

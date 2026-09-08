@@ -33,6 +33,21 @@ class Settings(BaseSettings):
     ollama_model: str = "llama3.1:8b"          # config-driven; swap to "codellama" with one edit
     ollama_embedding_model: str = "nomic-embed-text"
 
+    # How long to wait on one Ollama call. Was hardcoded at 180s in
+    # ollama_client.py, which is not enough on a CPU-only host: a *cold* model
+    # load (~5GB off disk) plus ~2k prompt tokens at ~25 tok/s plus generation
+    # at ~6.5 tok/s overruns it, and the request dies with an empty-message
+    # httpx.ReadTimeout. Config-driven now so slow hardware is a .env change,
+    # not a code edit.
+    ollama_timeout_seconds: float = 600.0
+
+    # Passed to Ollama as `keep_alive`, so the model stays resident between
+    # questions instead of being evicted after its default 5-minute idle. The
+    # cold reload is what pushed the first question after an idle gap over the
+    # old timeout; keeping it warm removes that cliff. Set "0" to free RAM
+    # immediately after each call on memory-constrained machines.
+    ollama_keep_alive: str = "30m"
+
     # --- Gemini --------------------------------------------------------------
     gemini_api_key: str = ""
     gemini_model: str = "gemini-3.5-flash-lite"  # override in .env if your account has a different model enabled/quota'd

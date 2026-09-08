@@ -1,0 +1,39 @@
+# Secrets — must never be baked into an image layer.
+# Compose still reads .env from the host for ${VAR} substitution; that is the
+# only path by which GEMINI_API_KEY reaches a container (see docker-compose.yml).
+.env
+
+# Local virtualenv — the image installs from requirements.txt instead, and a
+# Windows venv's binaries are useless in a Linux container anyway.
+.venv/
+venv/
+
+# Python bytecode built against the host interpreter
+__pycache__/
+*.pyc
+*.pyo
+
+# Bind-mounted at runtime, never copied in: the vector store is rebuildable
+# output of the offline pipeline, and baking a 25 MB store into the image would
+# make the image stale the moment the pipeline reruns.
+chroma_data/
+
+# Bind-mounted read-only at runtime (DATA/chunks.jsonl alone is ~20 MB)
+DATA/
+
+# Source PDFs — only the offline pipeline reads these, never a service
+trafficshield_kb/
+
+# The offline batch pipeline is deliberately not a service (see README)
+data_pipeline/
+
+# Frontend has its own build context and .dockerignore
+frontend/
+
+# Evaluation harness + its outputs are run from the host, not in a service
+evaluation/
+scripts/
+
+.git/
+.gitignore
+*.md

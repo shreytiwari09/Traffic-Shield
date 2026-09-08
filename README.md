@@ -116,7 +116,12 @@ traffic-shield/
 │   ├── llm_service/             # LLM Service (ollama_client.py, gemini_client.py)
 │   └── data_service/            # Data Service (chroma_store.py, dataset_store.py)
 ├── frontend/                  # React app — Chat, Rights Library, Eval, How It Works
+│   ├── Dockerfile             #   multi-stage: Vite build -> nginx serving static + /api proxy
+│   └── nginx.conf             #   container-side equivalent of the Vite dev proxy
+├── evaluation/                # Week 4 harness: run_eval.py, analyze.py, questions.json + write-ups
 ├── scripts/verify_kb.py       # Ex2 smoke test — direct Chroma query, no services needed
+├── Dockerfile                 # one shared image for all five Python services
+├── docker-compose.yml         # the five services + frontend, healthcheck-ordered
 └── requirements.txt
 ```
 
@@ -148,7 +153,40 @@ still works fully on Ollama; Gemini cells/options will show "unavailable" instea
 model name in `.env` gets deprecated (Gemini's free-tier models rotate), swap `GEMINI_MODEL` for another
 `*-flash*` model your key has access to.
 
-## Running the app
+## Running the app — with Docker
+
+One command brings up all five services plus the frontend:
+
+```bash
+docker compose up --build
+```
+
+Then open **http://localhost:5173/**. Same ports as the manual setup below, so every URL in this README
+works unchanged.
+
+**Ollama must already be running on the host** (`ollama serve`, with `llama3.1:8b` and `nomic-embed-text`
+pulled) — it is intentionally not containerized, see [Known limitations](#known-limitations-documented-not-silently-hidden).
+The knowledge base must also already be built: `chroma_data/` and `DATA/` are bind-mounted, not baked into
+the image, so run `python -m data_pipeline.run_pipeline --only 6` on the host first if `chroma_data/` is
+missing.
+
+Notes on how it's wired:
+
+- **One image, five services.** All five FastAPI services share `services/` and the same pinned
+  requirements, so `Dockerfile` is built once and compose overrides `command:` per service.
+- **No code changed to containerize.** Inter-service URLs already came from `services/shared/settings.py`,
+  so compose just sets the env vars that were always there — `localhost:8004` becomes `data_service:8004`.
+- **The frontend is a production build**, served by nginx (`frontend/Dockerfile` is multi-stage), with
+  nginx proxying `/api/*` to Application Service exactly as the Vite dev proxy does. `vite.config.js` is
+  untouched, so `npm run dev` on the host still works identically.
+- **Startup is ordered by healthchecks**, not guesswork: retrieval waits for data + llm, orchestration
+  waits for retrieval, app waits for orchestration, frontend waits for app.
+- `docker compose ps` shows health per service; `docker compose logs -f <service>` tails one of them.
+
+Your `GEMINI_API_KEY` is passed in from `.env` by compose at runtime. It is never copied into an image —
+`.env` is in `.dockerignore`.
+
+## Running the app — manually
 
 Start all five backend services, then the frontend — six terminals (or six background processes), from
 the repo root:
@@ -201,12 +239,16 @@ digital evidence like dashcam footage, relevant to a traffic-stop assistant).
   would fix this properly; not yet implemented.
 - The Grounding Checker is a text-matching check, not full NLU fact-checking — it catches invented section
   numbers/amounts, not every possible inaccuracy, and matches section numbers without disambiguating by Act.
-- No auth, no rate limiting, no Docker — a localhost coursework build. Docker is Exercise 5, deferred.
+- No auth and no rate limiting — a localhost coursework build.
+- Ollama is **not** containerized: it runs on the host and the containers reach it via
+  `host.docker.internal`. Deliberate — bundling an 8B model would mean shipping ~5GB of weights into a
+  volume and running inference inside the VM. It's treated as infrastructure the app depends on, the way
+  you'd point at a database rather than embed one.
 
 ## Reserved for later
 
 Real Neo4j graph database · a "Legal Update Agent" to monitor Haryana gazettes for amendments · query
-decomposition for compound questions · Docker/containerization (Exercise 5) · broader glossary coverage
+decomposition for compound questions · broader glossary coverage
 for colloquial terms (e.g. "dashcam"/"CCTV" don't yet trigger the Electronic Record graph concept, only
 its formal name does) · **voice-based question input and spoken answers** — was part of the original
 Application Service vision ("voice interaction"), not yet built; needs a speech-tech decision first (see
