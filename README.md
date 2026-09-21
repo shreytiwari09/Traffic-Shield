@@ -42,9 +42,13 @@ Orchestration Service (:8001)  — sequences one request end to end
   ▼                     ▼
 Retrieval Service (:8002)     LLM Service (:8003)
   │  embed / vector+graph       │  only thing that talks to Ollama or Gemini
-  ▼  fusion / scoring           ▼
-Data Service (:8004)          Ollama (localhost:11434) / Gemini API
-  │  Chroma + dataset.jsonl
+  │  fusion / scoring           ▼
+  ├──────────────┐            Ollama (localhost:11434) / Gemini API
+  ▼              ▼
+Data Service  Neo4j (bolt://localhost:7687)
+  (:8004)       Cypher: entity match, relationships,
+  │  Chroma      evidence ranking, multi-hop expansion
+  │  + dataset.jsonl
 ```
 
 | Service | Owns | Why it's separate |
@@ -65,9 +69,22 @@ services only ever read what it produced, never regenerate it at request time.
 
 ## Key features (beyond plain retrieve-then-generate)
 
-- **Hybrid retrieval, one relevance score** — vector search and a flat-JSON GraphRAG substitute both
+- **Hybrid retrieval, one relevance score** — vector search (Chroma) and graph search (Neo4j) both
   compete on the same cosine-similarity scale (graph candidates are scored against their own stored chunk
   embeddings), not a blind priority guess or a rule that always favors one path.
+- **Real graph database** — entity alias matching, relationship lookup and evidence ranking all run as
+  Cypher against Neo4j. Because sections are real nodes rather than string ids inside a JSON blob, the
+  graph is genuinely traversable: `GRAPH_EXPAND_HOPS=2` reaches evidence through *connected* entities, a
+  hop the previous flat-JSON store structurally could not make. (Measured caveat: hop-2 ids are appended
+  after all hop-1 ids and `_MAX_GRAPH_EVIDENCE` keeps only the first 20, so on questions that already have
+  20+ direct candidates the expansion is truncated away — see `graph_expand_hops` in `settings.py`.)
+  The JSON store is retained as a verified fallback — `scripts/verify_neo4j.py` asserts both backends
+  return identical entities, relationships and ranked evidence, so the swap is proven equivalent rather
+  than assumed.
+- **Multi-turn conversation** — the Chat tab is a real conversation, not a series of unrelated questions.
+  Follow-ups work (*"and if I refuse?"*), including for **retrieval**: a follow-up that would embed to
+  nothing useful on its own is resolved against the previous turn before it is searched on, so the model
+  never gets correct conversation history alongside a context block about something else.
 - **Query glossary** — normalizes citizen phrasing ("RC", "tint", "disabled") to the corpus's actual legal
   vocabulary, for both the embedding call and graph entity-matching.
 - **Guaranteed fallback context** — the general default-penalty section always surfaces for fine-related
@@ -76,6 +93,15 @@ services only ever read what it produced, never regenerate it at request time.
   actually states, and verifies each against the real retrieved text (scoped to the section the model
   itself cited, not the whole retrieved batch). Surfaced live: a badge + warning box on every answer, a
   step in the live pipeline trace, and a stat on every Eval-tab cell.
+- **Tells you when you're being charged for a non-offence** — "no source found" is split into two very
+  different cases, because collapsing them made the assistant useless in the situation where it matters
+  most. If the answer needs a legal fact that wasn't retrieved, it refuses honestly. But if the user is
+  being *accused* of something no retrieved provision makes an offence at all ("he's fining me for not
+  wearing sunglasses"), refusing would leave them paying for nothing — so it says so and hands them the
+  lever: make the officer name the section and write it on the challan. It states the limit of what it
+  knows ("nothing in the official sources I have makes this an offence"), never "this is legal" — and
+  when genuinely unsure which case it is in, it falls back to refusing, so a missed retrieval can never
+  become a false all-clear on a real offence.
 - **Dual model provider** — Ollama (local, free, private) or Gemini (hosted), switchable per question.
 - **Persona applied only when it should be** — the citizen-facing Ask flow always uses the legal
   persona+hard-rules prompt; the Eval tab's "raw model" cells deliberately strip it, so the "this app's
@@ -93,11 +119,11 @@ services only ever read what it produced, never regenerate it at request time.
 
 ## Tech stack
 
-- **Backend**: Python, FastAPI, httpx, pydantic-settings, Chroma (vector store), Ollama SDK/API,
-  `google-genai` (Gemini)
+- **Backend**: Python, FastAPI, httpx, pydantic-settings, Chroma (vector store), Neo4j (graph store,
+  via the official `neo4j` Bolt driver), Ollama SDK/API, `google-genai` (Gemini)
 - **Frontend**: React + Vite, plain CSS (no UI framework), native `EventSource` for SSE
 - **Data pipeline**: pymupdf (PDF parsing), Ollama `nomic-embed-text` (embeddings), a hand-rolled
-  section-boundary extractor and flat-JSON GraphRAG builder
+  section-boundary extractor and GraphRAG builder (emits JSON; `scripts/load_neo4j.py` loads it into Neo4j)
 
 ## Project structure
 
@@ -111,17 +137,27 @@ traffic-shield/
 ├── services/
 │   ├── shared/                # settings, pydantic schemas, the legal system prompt, confidence heuristic
 │   ├── app_service/            # Application Service (+ legacy Jinja2 pages, superseded by frontend/)
-│   ├── orchestration_service/   # Orchestration Service (+ grounding.py — the hallucination checker)
-│   ├── retrieval_service/       # Retrieval Service (+ glossary.py, fusion.py, graph_store.py)
+│   ├── orchestration_service/   # Orchestration Service (+ grounding.py — the hallucination checker,
+│   │                            #   conversation.py — multi-turn memory + follow-up query resolution)
+│   ├── retrieval_service/       # Retrieval Service (+ glossary.py, fusion.py; graph_store.py dispatches
+│   │                            #   to neo4j_store.py or graph_store_json.py)
 │   ├── llm_service/             # LLM Service (ollama_client.py, gemini_client.py)
 │   └── data_service/            # Data Service (chroma_store.py, dataset_store.py)
 ├── frontend/                  # React app — Chat, Rights Library, Eval, How It Works
 │   ├── Dockerfile             #   multi-stage: Vite build -> nginx serving static + /api proxy
 │   └── nginx.conf             #   container-side equivalent of the Vite dev proxy
-├── evaluation/                # Week 4 harness: run_eval.py, analyze.py, questions.json + write-ups
-├── scripts/verify_kb.py       # Ex2 smoke test — direct Chroma query, no services needed
+├── evaluation/                # RAG evaluation harness (see "Evaluation" below)
+│   ├── run_eval.py            #   streamed sweep: TTFT, tok/s, peak RAM, dynamic GPU detection
+│   ├── judge.py               #   RAGAS LLM-as-judge: Faithfulness + Answer Relevance
+│   ├── retrieval_metrics.py   #   rank-aware Context Precision, Recall, MRR
+│   ├── profiling.py           #   hardware capability detection + peak sampling
+│   └── analyze.py             #   -> metrics_report.json, consumed by the RAG Metrics tab
+├── scripts/
+│   ├── verify_kb.py           # Ex2 smoke test — direct Chroma query, no services needed
+│   ├── load_neo4j.py          # builds the Neo4j graph from DATA/graph/ (offline, idempotent)
+│   └── verify_neo4j.py        # asserts the Neo4j and JSON graph backends behave identically
 ├── Dockerfile                 # one shared image for all five Python services
-├── docker-compose.yml         # the five services + frontend, healthcheck-ordered
+├── docker-compose.yml         # five services + Neo4j + frontend, healthcheck-ordered
 └── requirements.txt
 ```
 
@@ -141,6 +177,40 @@ and the graph — takes ~1 minute):
 ```bash
 python -m data_pipeline.run_pipeline
 ```
+
+### Graph database (Neo4j)
+
+The graph half of hybrid retrieval runs on Neo4j. Like Ollama, the **server is infrastructure this app
+points at**, not something it embeds — `pip install neo4j` gives you the *driver* only.
+
+**Start a server** (any one of these):
+
+```bash
+docker compose up neo4j -d                      # easiest, if you use the Docker path below
+# or Neo4j Desktop (https://neo4j.com/download/), create a local DBMS
+# or Community Server: https://neo4j.com/deployment-center/ — unzip, then:
+#   bin/neo4j-admin dbms set-initial-password <password>
+#   bin/neo4j console
+```
+
+Neo4j 5.x requires **Java 17 or 21** — it warns and misbehaves on newer JDKs. If your default `java` is
+something else, point `JAVA_HOME` at a 17/21 JDK for the Neo4j process only.
+
+**Then set the password in `.env` and load the graph:**
+
+```bash
+# .env:  NEO4J_PASSWORD=<the password you set>
+python -m scripts.load_neo4j        # builds Entity/Section nodes + RELATES/EVIDENCED_BY edges
+python -m scripts.verify_neo4j      # proves it matches the JSON store exactly
+```
+
+`load_neo4j.py` is idempotent — rerun it after any pipeline rerun. Use `--wipe` if the rerun *removed*
+entities, since a plain reload MERGEs and would leave the deleted ones behind.
+
+**Don't want Neo4j at all?** Set `GRAPH_BACKEND=json` and everything still works on the original in-process
+flat-JSON store — you only lose multi-hop expansion. If Neo4j is configured but unreachable, the service
+falls back to JSON automatically rather than losing the graph path entirely, and reports it at
+`GET :8002/v1/health` as `"fell_back": true`.
 
 Verify it's queryable (no services need to be running for this):
 
@@ -170,6 +240,15 @@ The knowledge base must also already be built: `chroma_data/` and `DATA/` are bi
 the image, so run `python -m data_pipeline.run_pipeline --only 6` on the host first if `chroma_data/` is
 missing.
 
+Neo4j **is** containerized here (unlike Ollama — the graph is ~1.3k nodes, so there is no multi-GB
+download or CPU-inference penalty to avoid). Its graph is not baked into the image either; load it from
+the host once after the first `up`, which is what bolt on `7687` is published for:
+
+```bash
+python -m scripts.load_neo4j
+python -m scripts.verify_neo4j
+```
+
 Notes on how it's wired:
 
 - **One image, five services.** All five FastAPI services share `services/` and the same pinned
@@ -188,8 +267,8 @@ Your `GEMINI_API_KEY` is passed in from `.env` by compose at runtime. It is neve
 
 ## Running the app — manually
 
-Start all five backend services, then the frontend — six terminals (or six background processes), from
-the repo root:
+Start Neo4j and Ollama first (see above), then all five backend services and the frontend — six terminals
+(or six background processes), from the repo root:
 
 ```bash
 uvicorn services.data_service.main:app          --port 8004
@@ -198,6 +277,15 @@ uvicorn services.retrieval_service.main:app     --port 8002
 uvicorn services.orchestration_service.main:app --port 8001
 uvicorn services.app_service.main:app           --port 8000
 cd frontend && npm run dev                       # :5173
+```
+
+Confirm the graph backend actually connected — this is the one thing that fails *quietly*, since
+retrieval falls back to the JSON store rather than erroring:
+
+```bash
+curl localhost:8002/v1/health
+# {"graph": {"backend": "neo4j", "fell_back": false, ...}}   <- what you want
+# {"graph": {"backend": "json",  "fell_back": true,  ...}}   <- Neo4j unreachable, check neo4j_error
 ```
 
 Then open:
@@ -222,18 +310,67 @@ Then open:
 ## Data pipeline
 
 6 official documents → 1,317 legal-section records → 1,671 embedded chunks (768-dim, `nomic-embed-text`)
-→ a 14-concept flat-JSON graph (1,390 edges). Sources: Motor Vehicles Act 1988, its 2019 Amendment, Central
+→ a graph of 1,331 entities (14 alias-bearing domain concepts + the 1,317 sections) and 1,390 relationships,
+emitted as JSON by the pipeline and loaded into Neo4j by `scripts/load_neo4j.py`. Sources: Motor Vehicles Act 1988, its 2019 Amendment, Central
 Motor Vehicle Rules 1989, Motor Vehicles (Driving) Regulations 2017, Haryana Motor Vehicle Rules 1993, and
 Bharatiya Sakshya Adhiniyam 2023 (evidence law — added mid-project since it governs admissibility of
 digital evidence like dashcam footage, relevant to a traffic-stop assistant).
+
+## Evaluation
+
+The offline harness scores the pipeline on the four RAGAS metrics
+(Es, S., James, J., Espinosa-Anke, L., & Schockaert, S., 2024, *"RAGAS: Automated Evaluation of Retrieval
+Augmented Generation"*, EACL 2024, [arXiv:2309.15217](https://arxiv.org/abs/2309.15217)). Rank weighting for
+Context Precision follows the standard IR Average Precision formulation (Manning, Raghavan & Schütze,
+*Introduction to Information Retrieval*, 2008, ch. 8).
+
+```bash
+python -m evaluation.run_eval        # streamed sweep over 30 questions x 4 models
+python -m evaluation.analyze         # adds the LLM-as-judge metrics -> metrics_report.json
+python -m evaluation.analyze --no-judge   # deterministic metrics only, zero API calls
+```
+
+Results render in the app's **RAG Metrics** tab (`http://localhost:5173/`): executive KPIs, a model
+comparison chart, and a trace inspector that expands each question into its full pipeline — query,
+retrieved chunks (with the ground-truth chunk highlighted and its rank visible), the answer, and the
+judge's per-statement verdicts.
+
+| Metric | How it is computed |
+|---|---|
+| **Faithfulness** | Judge splits the answer into atomic pronoun-free statements, then returns an NLI verdict per statement against the retrieved context. Score = supported / total. |
+| **Answer Relevance** | Judge reverse-engineers 3 questions the answer resolves; score is mean cosine similarity to the real question (`nomic-embed-text`). Noncommittal answers score 0 by definition. |
+| **Context Precision** | Rank-weighted Average Precision over retrieved chunks — the correct section at rank 1 scores 1.0, at rank 7 scores 0.14. |
+| **Context Recall** | Fraction of hand-verified ground-truth sections the retriever surfaced. |
+
+Two deliberate choices worth knowing:
+
+- **The judge must not be a model under test.** `JUDGE_MODEL` defaults to Gemini; every verdict is cached
+  by content hash in `judge_cache.json`, so an interrupted sweep resumes instead of re-spending quota.
+- **Retrieval relevance is not LLM-judged.** `ground_truth.json` already records the exact sections a
+  correct answer must cite, verified against the corpus text — an objective, reproducible, zero-cost
+  signal that a judge would only re-derive worse.
+
+**Hardware metrics are capability-detected, never assumed.** If the host has no GPU, the report says so
+(`"gpu": {"available": false, "reason": "..."}`) rather than emitting a number. This matters: the previous
+committed report carried `gpu_mem_used_mb: 5350.7` recorded on entirely different hardware, and reported
+2063.6 MB of "GPU memory" for *Gemini* — a network call that touches no local GPU. TTFT and tokens/sec are
+measured from the real token stream, and tokens/sec states its own basis (`decode_window` vs
+`total_elapsed`) because a provider that returns an answer in two chunks has no meaningful decode window.
 
 ## Known limitations (documented, not silently hidden)
 
 - 51 image-only pages in the MV Act's First Schedule (road-sign plates) have no extractable text —
   correctly falls through to "no official source found," not a bug to chase.
 - 18 CMVR rules and ~12 chunks are pre-existing PDF-parsing edge cases; see `data_pipeline/README.md`.
-- The "graph" is flat JSON (entities.json/relationships.json), not a real graph database — a deliberate,
-  documented substitute for Neo4j.
+- Follow-up questions are resolved for retrieval by a **heuristic**, not an LLM rewrite: a message that
+  looks like a continuation gets the previous question prepended before it is embedded. An LLM-based
+  standalone-question rewriter would be more accurate, but on this project's CPU-only Ollama path it means
+  a second generation (~175s) on every follow-up. Both failure modes are cheap — a false positive slightly
+  dilutes the embedding, a false negative degrades to plain single-turn behavior. See
+  `services/orchestration_service/conversation.py`.
+- Conversation memory is **in-process**, so it is lost when Orchestration restarts. The browser keeps its
+  own transcript and pushes it back on load, which covers reloads and restarts, but two Orchestration
+  replicas behind a load balancer would not share memory — a real deployment would need Redis or similar.
 - Retrieval on **compound questions** (bundling two distinct concepts, e.g. "is this legal AND is this
   fine correct") can still favor whichever concept has the stronger keyword signal — query decomposition
   would fix this properly; not yet implemented.
@@ -247,8 +384,9 @@ digital evidence like dashcam footage, relevant to a traffic-stop assistant).
 
 ## Reserved for later
 
-Real Neo4j graph database · a "Legal Update Agent" to monitor Haryana gazettes for amendments · query
-decomposition for compound questions · broader glossary coverage
+A "Legal Update Agent" to monitor Haryana gazettes for amendments · query
+decomposition for compound questions · an LLM-based follow-up rewriter (viable once generation is not
+CPU-bound) · broader glossary coverage
 for colloquial terms (e.g. "dashcam"/"CCTV" don't yet trigger the Electronic Record graph concept, only
 its formal name does) · **voice-based question input and spoken answers** — was part of the original
 Application Service vision ("voice interaction"), not yet built; needs a speech-tech decision first (see

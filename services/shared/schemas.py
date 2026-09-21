@@ -20,6 +20,28 @@ EvalProvider = Literal["ollama", "gemini", "codellama", "starcoder2"]
 
 
 # ---------------------------------------------------------------------------
+# Conversation
+# ---------------------------------------------------------------------------
+Role = Literal["user", "assistant"]
+
+
+class ChatMessage(BaseModel):
+    """One prior turn of the conversation. Only user/assistant turns are ever
+    carried: the system turn is rebuilt from scratch on every request, because
+    it embeds the CURRENT turn's retrieved context — replaying a stale system
+    turn would let the model cite sources that this turn's retrieval never
+    returned, which is exactly what the grounding checker exists to catch."""
+    role: Role
+    content: str
+
+
+class RestoreConversationRequest(BaseModel):
+    """A transcript the client still holds, pushed back after a reload or a
+    service restart — see conversation.restore() for why this exists."""
+    messages: list[ChatMessage] = Field(default_factory=list)
+
+
+# ---------------------------------------------------------------------------
 # Data Service
 # ---------------------------------------------------------------------------
 class VectorSearchRequest(BaseModel):
@@ -67,6 +89,11 @@ class GenerateRequest(BaseModel):
     question: str
     context: list[ContextItem] = Field(default_factory=list)
     provider: EvalProvider = "ollama"
+    # Prior user/assistant turns, oldest first, EXCLUDING the current question.
+    # Empty for a first turn and for every Eval-tab cell (each eval cell is a
+    # one-shot generation on purpose, so the comparison isn't contaminated by
+    # whatever conversation the Ask tab happens to be in).
+    history: list[ChatMessage] = Field(default_factory=list)
     # True (default, always used by the Ask tab): the fixed legal persona +
     # hard rules + context. False (Eval tab's no-retrieval cells only): no
     # system prompt at all — the model's raw, unguided behavior, so the
@@ -156,9 +183,31 @@ class Citation(BaseModel):
 class AskRequest(BaseModel):
     question: str
     provider: Provider = "ollama"
+    # Opaque client-generated id tying this turn to an ongoing conversation.
+    # Omitted/None means a one-off question with no memory (the old behavior,
+    # still what the Eval tab and any direct API caller get by default).
+    conversation_id: str | None = None
 
 
 Confidence = Literal["high", "medium", "low", "none"]
+
+
+# ---------------------------------------------------------------------------
+# Guardrails
+# ---------------------------------------------------------------------------
+class GuardrailFlag(BaseModel):
+    check: str                          # e.g., "prompt_injection", "illegal_conduct", "pii_redaction"
+    severity: Literal["info", "warning", "blocked"]
+    message: str                        # Human readable notification
+    pattern_matched: str | None = None  # Specific tag e.g. "aadhaar", "bribe_officer"
+
+
+class GuardrailReport(BaseModel):
+    blocked: bool = False
+    refusal_reason: str | None = None
+    pii_redacted: bool = False
+    flags: list[GuardrailFlag] = Field(default_factory=list)
+    sanitized_question: str | None = None
 
 
 class GroundingCheck(BaseModel):
@@ -183,6 +232,17 @@ class AskResponse(BaseModel):
     context: list[ContextItem]  # the actual top-k chunks — Legal Evidence View / Response Card need these
     matched_entities: list[str]
     grounding: GroundingCheck
+    conversation_id: str | None = None
+    # What retrieval actually searched on. Differs from `question` only when
+    # the turn was a follow-up that had to be resolved against earlier turns
+    # ("what about at night?" alone retrieves nothing) — surfaced rather than
+    # hidden, in keeping with the rest of the app showing its real work.
+    retrieval_query: str | None = None
+    # Number of prior turns fed to the model on this request — 0 on a first
+    # turn. Lets the UI show that the answer really was context-aware.
+    history_turns: int = 0
+    guardrails: GuardrailReport | None = None
+
 
 
 class EvalRequest(BaseModel):

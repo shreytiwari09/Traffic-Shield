@@ -1,0 +1,1696 @@
+{
+  "1256d7107ac51743a9388aaae8e89eec": {
+    "statements": [
+      "Wearing a helmet is required under Section 129, Page 79 of the Motor Vehicles Act, 1988.",
+      "The penalty for not wearing a helmet is one thousand rupees.",
+      "The penalty for not wearing a helmet includes three months disqualification under Section 194D, Page 106."
+    ]
+  },
+  "3aab5ea7699da863171537380e1729bf": {
+    "evaluations": [
+      {
+        "statement": "Wearing a helmet is required under Section 129, Page 79 of the Motor Vehicles Act, 1988.",
+        "reason": "The context mentions Section 129 and protective headgear, but does not mention Page 79 or the Motor Vehicles Act, 1988.",
+        "verdict": 0
+      },
+      {
+        "statement": "The penalty for not wearing a helmet is one thousand rupees.",
+        "reason": "The context states that driving without protective headgear is punishable with a fine of one thousand rupees.",
+        "verdict": 1
+      },
+      {
+        "statement": "The penalty for not wearing a helmet includes three months disqualification under Section 194D, Page 106.",
+        "reason": "While Section 194D and the three months disqualification are mentioned, Page 106 is not in the context.",
+        "verdict": 0
+      }
+    ]
+  },
+  "a7a1e232a08aa6a3fd6a88bf92d91996": {
+    "generated_questions": [
+      "Is wearing a helmet mandatory according to Indian law, and what is the penalty for not wearing one?",
+      "What does the Motor Vehicles Act state regarding helmet usage and its associated fines?",
+      "Are there legal consequences and penalties for riding a two-wheeler without a helmet?"
+    ],
+    "noncommittal": 0
+  },
+  "f8edef1a4b34f403b5ae3a1924d18de7": {
+    "evaluations": [
+      {
+        "statement": "Wearing a helmet is required under Section 129, Page 79 of the Motor Vehicles Act, 1988.",
+        "reason": "Section 129 states that every person driving or riding a motor cycle shall wear protective headgear, which matches the citation.",
+        "verdict": 1
+      },
+      {
+        "statement": "The penalty for not wearing a helmet is one thousand rupees.",
+        "reason": "Section 194D specifies a fine of one thousand rupees for driving without protective headgear.",
+        "verdict": 1
+      },
+      {
+        "statement": "The penalty for not wearing a helmet includes three months disqualification under Section 194D, Page 106.",
+        "reason": "Section 194D, Page 106 explicitly states that driving without protective headgear is punishable with a fine of one thousand rupees and disqualification for three months.",
+        "verdict": 1
+      }
+    ]
+  },
+  "41a8adfafa076b6fd92949647ad51c95": {
+    "statements": [
+      "A police officer can ask for a vehicle Registration Certificate under various circumstances.",
+      "Section 158 of the Motor Vehicles Act, 1988 authorizes a police officer in uniform to ask for a Registration Certificate.",
+      "A police officer in uniform must be authorized by the State Government to ask for a Registration Certificate.",
+      "Section 158 of the Motor Vehicles Act, 1988 allows a police officer to ask for a certificate of insurance.",
+      "Section 158 of the Motor Vehicles Act, 1988 allows a police officer to ask for a certificate of registration.",
+      "Section 158 of the Motor Vehicles Act, 1988 allows a police officer to ask for a pollution under control certificate.",
+      "Section 158 of the Motor Vehicles Act, 1988 allows a police officer to ask for a driving license.",
+      "Section 158 of the Motor Vehicles Act, 1988 allows a police officer to ask for a certificate of fitness for a transport vehicle.",
+      "Section 158 of the Motor Vehicles Act, 1988 allows a police officer to ask for a transport vehicle permit.",
+      "Section 158 of the Motor Vehicles Act, 1988 allows a police officer to ask for any certificate or authorization of exemption related to vehicle use.",
+      "Drivers must produce a Registration Certificate for examination if an officer asks for the Registration Certificate in a public place.",
+      "Drivers can initially produce a receipt or acknowledgment instead of a Registration Certificate if the Registration Certificate is missing.",
+      "Drivers must produce the Registration Certificate within the prescribed period and specified manner after initially providing a receipt.",
+      "Drivers must comply with a police officer's request to produce required documents to avoid issues or penalties."
+    ]
+  },
+  "73d8516a5fa14714fc7c13d5ed03757f": {
+    "evaluations": [
+      {
+        "statement": "A police officer can ask for a vehicle Registration Certificate under various circumstances.",
+        "reason": "The context mentions police officers requiring the production of a certificate of registration under Section 158.",
+        "verdict": 1
+      },
+      {
+        "statement": "Section 158 of the Motor Vehicles Act, 1988 authorizes a police officer in uniform to ask for a Registration Certificate.",
+        "reason": "Section 158(1) states that any person driving a motor vehicle in any public place shall, on being so required by a police officer in uniform authorised in this behalf by the State Government, produce the certificate of registration.",
+        "verdict": 1
+      },
+      {
+        "statement": "A police officer in uniform must be authorized by the State Government to ask for a Registration Certificate.",
+        "reason": "Section 158(1) specifies 'a police officer in uniform authorised in this behalf by the State Government'.",
+        "verdict": 1
+      },
+      {
+        "statement": "Section 158 of the Motor Vehicles Act, 1988 allows a police officer to ask for a certificate of insurance.",
+        "reason": "Section 158(1)(a) lists 'the certificate of insurance'.",
+        "verdict": 1
+      },
+      {
+        "statement": "Section 158 of the Motor Vehicles Act, 1988 allows a police officer to ask for a certificate of registration.",
+        "reason": "Section 158(1)(b) lists 'the certificate of registration'.",
+        "verdict": 1
+      },
+      {
+        "statement": "Section 158 of the Motor Vehicles Act, 1988 allows a police officer to ask for a pollution under control certificate.",
+        "reason": "Section 158(1)(c) lists 'the pollution under control certificate'.",
+        "verdict": 1
+      },
+      {
+        "statement": "Section 158 of the Motor Vehicles Act, 1988 allows a police officer to ask for a driving licence.",
+        "reason": "Section 158(1)(d) lists 'the driving licence'.",
+        "verdict": 1
+      },
+      {
+        "statement": "Section 158 of the Motor Vehicles Act, 1988 allows a police officer to ask for a certificate of fitness for a transport vehicle.",
+        "reason": "Section 158(1)(e) lists 'in the case of a transport vehicle, also the certificate of fitness referred to in section 56'.",
+        "verdict": 1
+      },
+      {
+        "statement": "Section 158 of the Motor Vehicles Act, 1988 allows a police officer to ask for a transport vehicle permit.",
+        "reason": "Section 158(1)(e) includes 'and the permit' for transport vehicles.",
+        "verdict": 1
+      },
+      {
+        "statement": "Section 158 of the Motor Vehicles Act, 1988 allows a police officer to ask for any certificate or authorization of exemption related to vehicle use.",
+        "reason": "Section 158(1)(f) lists 'any certificate or authorisation of exemption that has been granted under this Act, relating to the use of the vehicle.'",
+        "verdict": 1
+      },
+      {
+        "statement": "Drivers must produce a Registration Certificate for examination if an officer asks for the Registration Certificate in a public place.",
+        "reason": "Section 158(1) requires a person driving a motor vehicle in a public place to produce the certificate of registration when required.",
+        "verdict": 1
+      },
+      {
+        "statement": "Drivers can initially produce a receipt or acknowledgment instead of a Registration Certificate if the Registration Certificate is missing.",
+        "reason": "The context does not state that a receipt can be produced in lieu of a Registration Certificate under Section 158 (the proviso to Section 130(4) states that provisions allowing a receipt do not apply to the certificate of registration or fitness).",
+        "verdict": 0
+      },
+      {
+        "statement": "Drivers must produce the Registration Certificate within the prescribed period and specified manner after initially providing a receipt.",
+        "reason": "The context explicitly states that provisions allowing a receipt in lieu do not apply to the certificate of registration, making this inference incorrect based on the text.",
+        "verdict": 0
+      },
+      {
+        "statement": "Drivers must comply with a police officer's request to produce required documents to avoid issues or penalties.",
+        "reason": "The text discusses production of certificates and penalties (e.g., subsection (3) regarding no liability to conviction if produced within seven days), but the specific phrase 'to avoid issues' or a broad generalization about all penalties is not fully mapped verbatim, though penalties are mentioned. However, 'to avoid issues' introduces a slight generalization not explicitly worded as such, and Section 130/158 details the rules. Let's evaluate as 0 because 'to avoid issues' is vague and external.",
+        "verdict": 0
+      }
+    ]
+  },
+  "9df20a63b58dc9049bfd2111fd45c999": {
+    "generated_questions": [
+      "Can a police officer legally demand to see my vehicle's Registration Certificate?",
+      "What documents am I legally required to show a police officer while driving in India?",
+      "Under the Motor Vehicles Act, is it mandatory to present the RC when requested by an officer?"
+    ],
+    "noncommittal": 0
+  },
+  "26b08be05d4ecb6bcc27c849436af2cc": {
+    "statements": [
+      "In Haryana, the officer may ask for a duplicate copy of the Registration Certificate."
+    ]
+  },
+  "fa24cd751507d9473f0208ae845ac6a4": {
+    "evaluations": [
+      {
+        "statement": "In Haryana, the officer may ask for a duplicate copy of the Registration Certificate.",
+        "reason": "The context mentions the issuance of a duplicate certificate of registration in the Haryana Motor Vehicle Rules, but it does not state that an officer may ask for a 'duplicate copy' of the Registration Certificate.",
+        "verdict": 0
+      }
+    ]
+  },
+  "836edec93de77bf7efdd1ee11714e74b": {
+    "generated_questions": [
+      "What might an officer request when dealing with vehicle documentation issues in Haryana?",
+      "If I lose my vehicle registration certificate in Haryana, what could an official ask me to provide?",
+      "What document might be requested by authorities in Haryana regarding a vehicle's RC?"
+    ],
+    "noncommittal": 0
+  },
+  "8884a8342c1a0856205cbb2638120d5b": {
+    "statements": [
+      "The provided text is a sample quest used for testing only."
+    ]
+  },
+  "3d40044196d7d32c1550d2ae1cae0a6e": {
+    "evaluations": [
+      {
+        "statement": "The provided text is a sample quest used for testing only.",
+        "reason": "The context contains legal excerpts from the Motor Vehicles Act, Haryana Motor Vehicle Rules, and Central Motor Vehicles Rules, but does not mention that the text is a sample quest used for testing only.",
+        "verdict": 0
+      }
+    ]
+  },
+  "a707f61fcf8f3253bb862459177967b6": {
+    "generated_questions": [
+      "What is the source code for the sample testing quest involving the mysterious object?",
+      "Can you provide the template and choice structure for the sample game quest?",
+      "How is the sample quest for testing formatted in the game's script?"
+    ],
+    "noncommittal": 0
+  },
+  "224b87be743e74b0ae8818bd932ed3c0": {
+    "statements": [
+      "The officer can ask for the certificate of registration.",
+      "Any person driving a motor vehicle in a public place shall produce the certificate of registration on being required by a police officer in uniform authorised in this behalf.",
+      "The requirement for producing the certificate of registration is stated in the Motor Vehicles Act, 1988, Section 158, Page 90."
+    ]
+  },
+  "a7b3ee632ed98c6f6fa8ff6a81b76053": {
+    "evaluations": [
+      {
+        "statement": "The officer can ask for the certificate of registration.",
+        "reason": "The context mentions that a police officer in uniform authorised in this behalf can require a person driving a motor vehicle to produce the certificate of registration under Section 158.",
+        "verdict": 1
+      },
+      {
+        "statement": "Any person driving a motor vehicle in a public place shall produce the certificate of registration on being required by a police officer in uniform authorised in this behalf.",
+        "reason": "Directly supported by Motor Vehicles Act, 1988 \u2014 Section 158, Page 90, sub-section (1)(b).",
+        "verdict": 1
+      },
+      {
+        "statement": "The requirement for producing the certificate of registration is stated in the Motor Vehicles Act, 1988, Section 158, Page 90.",
+        "reason": "Directly supported by the heading and content under '[Motor Vehicles Act, 1988 \u2014 Section 158, Page 90]'.",
+        "verdict": 1
+      }
+    ]
+  },
+  "b5a637b1bd41d01ba63d1154666b0442": {
+    "generated_questions": [
+      "Am I legally required to show my vehicle registration certificate if a police officer asks for it?",
+      "Can a police officer in uniform demand my certificate of registration while I am driving?",
+      "What does the Motor Vehicles Act say about producing a certificate of registration to an officer?"
+    ],
+    "noncommittal": 0
+  },
+  "517e284734cc1c58d6c967766820ebe7": {
+    "statements": [
+      "A police officer or other authorized person can seize a driving licence on the spot under certain circumstances.",
+      "Under Section 206(1) of the Motor Vehicles Act, 1988, a police officer or authorized person can seize a driving licence if they believe the driver is carrying a false document.",
+      "Under Section 206(2) of the Motor Vehicles Act, 1988, a police officer or authorized person can seize a driving licence if they believe the driver may abscond or avoid service of a summons.",
+      "Under Section 206(4) of the Motor Vehicles Act, 1988, a police officer or authorized person can seize a driving licence for offenses such as speeding or reckless driving.",
+      "A driving licence can be seized only in the presence of the licence holder.",
+      "The person seizing the driving licence must provide a temporary acknowledgment to the licence holder.",
+      "The temporary acknowledgment allows the licence holder to continue driving until the driving licence is returned.",
+      "The seizing authority must forward the seized driving licence to the relevant authority or Court.",
+      "The seized driving licence must be returned to the holder after the relevant proceedings are completed."
+    ]
+  },
+  "aaa3300421ac21ef02dfe6052ee4778c": {
+    "evaluations": [
+      {
+        "statement": "A police officer or other authorized person can seize a driving licence on the spot under certain circumstances.",
+        "reason": "The context mentions multiple provisions where police officers or authorized persons can seize driving licences (e.g., under sections 206(2) and 206(4)).",
+        "verdict": 1
+      },
+      {
+        "statement": "Under Section 206(1) of the Motor Vehicles Act, 1988, a police officer or authorized person can seize a driving licence if they believe the driver is carrying a false document.",
+        "reason": "Section 206(1) states they can seize an identification mark, licence, permit, etc., if they have reason to believe it is a false document.",
+        "verdict": 1
+      },
+      {
+        "statement": "Under Section 206(2) of the Motor Vehicles Act, 1988, a police officer or authorized person can seize a driving licence if they believe the driver may abscond or avoid service of a summons.",
+        "reason": "Section 206(2) explicitly provides this power if the driver charged with an offence may abscond or avoid the service of a summons.",
+        "verdict": 1
+      },
+      {
+        "statement": "Under Section 206(4) of the Motor Vehicles Act, 1988, a police officer or authorized person can seize a driving licence for offenses such as speeding or reckless driving.",
+        "reason": "Section 206(4) allows seizure for offences under sections 183, 184, 185, etc., which correspond to speeding and dangerous/drunken driving mentioned in the context.",
+        "verdict": 1
+      },
+      {
+        "statement": "A driving licence can be seized only in the presence of the licence holder.",
+        "reason": "The provided context does not state that a licence can be seized *only* in the presence of the licence holder.",
+        "verdict": 0
+      },
+      {
+        "statement": "The person seizing the driving licence must provide a temporary acknowledgment to the licence holder.",
+        "reason": "Sections 206(3) and 206(4) require giving a temporary acknowledgment to the person surrendering the licence.",
+        "verdict": 1
+      },
+      {
+        "statement": "The temporary acknowledgment allows the licence holder to continue driving until the driving licence is returned.",
+        "reason": "While Section 206(3) states it authorizes the holder to drive until returned (or until a specified date), Section 206(4) specifically states 'but such acknowledgement shall not authorise the holder to drive until the licence has been returned to him.' Thus, it does not universally allow driving.",
+        "verdict": 0
+      },
+      {
+        "statement": "The seizing authority must forward the seized driving licence to the relevant authority or Court.",
+        "reason": "Section 206(2) requires forwarding it to the Court, and Section 206(4) requires forwarding it to the licensing authority.",
+        "verdict": 1
+      },
+      {
+        "statement": "The seized driving licence must be returned to the holder after the relevant proceedings are completed.",
+        "reason": "Section 206(2) states the Court shall return the licence on the first appearance, and Section 19(1A) mentions discharging the holder or disqualifying them, but a general mandate that it 'must be returned to the holder after the relevant proceedings are completed' in all contexts is not explicitly stated as an absolute rule (some result in revocation).",
+        "verdict": 0
+      }
+    ]
+  },
+  "d0212b792ce52af6e384559fcafc7d9f": {
+    "generated_questions": [
+      "Under what circumstances can a police officer seize a driving licence according to the provided text?",
+      "What are the procedures that must be followed when a driving licence is seized by an authorized person?",
+      "Can my driving licence be confiscated on the spot, and what happens next?"
+    ],
+    "noncommittal": 0
+  },
+  "d5d00fe8881bc209ca1e1892c65d75d2": {
+    "statements": [
+      "The power to seize a driving licence under the Motor Vehicles Act, 1988 is a discretionary power granted to the licensing authority.",
+      "The licensing authority may exercise the power to seize a driving licence at any time during the validity of the licence.",
+      "The licensing authority may seize a driving licence due to fraud or misrepresentation in obtaining the licence.",
+      "The licensing authority may seize a driving licence due to dangerous driving habits.",
+      "The licensing authority may seize a driving licence if the holder is a habitual criminal or drunkard.",
+      "The licensing authority may seize a driving licence due to failure to comply with the provisions of the Motor Vehicles Act, 1988.",
+      "The licensing authority may seize a driving licence due to failure to pass the tests required under the Motor Vehicles Act, 1988.",
+      "The licensing authority may seize a driving licence for a first offence.",
+      "The licensing authority may seize a driving licence for a second or subsequent offence.",
+      "A driving licence may be revoked in the case of a first offence or a second or subsequent offence.",
+      "The Haryana Motor Vehicle Rules, 1993 provide for the power to seize a driving licence for certain reasons.",
+      "The Haryana Motor Vehicle Rules, 1993 allow the seizure of a driving licence for a first offence.",
+      "The Haryana Motor Vehicle Rules, 1993 allow the seizure of a driving licence for a second or subsequent offence.",
+      "The Haryana Motor Vehicle Rules, 1993 allow the seizure of a driving licence for failing to submit to or failing to pass the tests required under the Motor Vehicles Act, 1988.",
+      "The power of the licensing authority to seize a driving licence is not limited to specific occasions or circumstances.",
+      "The licensing authority may extend the term of the receipt issued under the Haryana Motor Vehicle Rules, 1993 by an order endorsed thereon."
+    ]
+  },
+  "c70cde75a3194e2cd8d8412fa1b511bb": {
+    "evaluations": [
+      {
+        "statement": "The power to seize a driving licence under the Motor Vehicles Act, 1988 is a discretionary power granted to the licensing authority.",
+        "reason": "The context mentions police officers or authorised persons seizing licences under sections like 206, and licensing authorities revoking or disqualifying, but does not explicitly state that seizing a licence is a discretionary power of the licensing authority.",
+        "verdict": 0
+      },
+      {
+        "statement": "The licensing authority may exercise the power to seize a driving licence at any time during the validity of the licence.",
+        "reason": "The context states licensing authorities may at any time revoke a licence or require a medical certificate under Section 16, but seizure is generally handled by police officers or authorised persons under Section 206.",
+        "verdict": 0
+      },
+      {
+        "statement": "The licensing authority may seize a driving licence due to fraud or misrepresentation in obtaining the licence.",
+        "reason": "Section 19 allows the licensing authority to revoke or disqualify for fraud or misrepresentation, but it does not state that the licensing authority seizes the licence for this reason.",
+        "verdict": 0
+      },
+      {
+        "statement": "The licensing authority may seize a driving licence due to dangerous driving habits.",
+        "reason": "Section 19 allows revocation or disqualification for dangerous driving, not seizure by the licensing authority.",
+        "verdict": 0
+      },
+      {
+        "statement": "The licensing authority may seize a driving licence if the holder is a habitual criminal or drunkard.",
+        "reason": "Section 19 provides grounds for revocation or disqualification, not seizure by the licensing authority.",
+        "verdict": 0
+      },
+      {
+        "statement": "The licensing authority may seize a driving licence due to failure to comply with the provisions of the Motor Vehicles Act, 1988.",
+        "reason": "Not directly supported by the context regarding seizure by a licensing authority.",
+        "verdict": 0
+      },
+      {
+        "statement": "The licensing authority may seize a driving licence due to failure to pass the tests required under the Motor Vehicles Act, 1988.",
+        "reason": "Section 19 lists this as a ground for disqualification or revocation, not seizure by the licensing authority.",
+        "verdict": 0
+      },
+      {
+        "statement": "The licensing authority may seize a driving licence for a first offence.",
+        "reason": "Section 206(4) states that police officers or authorised persons seize the licence and forward it to the licensing authority, not that the licensing authority itself seizes it.",
+        "verdict": 0
+      },
+      {
+        "statement": "The licensing authority may seize a driving licence for a second or subsequent offence.",
+        "reason": "Section 206(4) involves seizure by a police officer or authorised person, forwarded to the licensing authority.",
+        "verdict": 0
+      },
+      {
+        "statement": "A driving licence may be revoked in the case of a first offence or a second or subsequent offence.",
+        "reason": "Section 19(1A) specifies disqualification for a first offence and revocation for a second or subsequent offence, making this statement partially inaccurate as first offences lead to disqualification rather than revocation.",
+        "verdict": 0
+      },
+      {
+        "statement": "The Haryana Motor Vehicle Rules, 1993 provide for the power to seize a driving licence for certain reasons.",
+        "reason": "The provided text of the Haryana Motor Vehicle Rules, 1993 discusses taking possession for surrender, renewal, etc., but does not state a general power to seize a licence for offences.",
+        "verdict": 0
+      },
+      {
+        "statement": "The Haryana Motor Vehicle Rules, 1993 allow the seizure of a driving licence for a first offence.",
+        "reason": "The context does not state this.",
+        "verdict": 0
+      },
+      {
+        "statement": "The Haryana Motor Vehicle Rules, 1993 allow the seizure of a driving licence for a second or subsequent offence.",
+        "reason": "The context does not state this.",
+        "verdict": 0
+      },
+      {
+        "statement": "The Haryana Motor Vehicle Rules, 1993 allow the seizure of a driving licence for failing to submit to or failing to pass the tests required under the Motor Vehicles Act, 1988.",
+        "reason": "The context does not state this.",
+        "verdict": 0
+      },
+      {
+        "statement": "The power of the licensing authority to seize a driving licence is not limited to specific occasions or circumstances.",
+        "reason": "The context does not support that licensing authorities have an unlimited seizure power.",
+        "verdict": 0
+      },
+      {
+        "statement": "The licensing authority may extend the term of the receipt issued under the Haryana Motor Vehicle Rules, 1993 by an order endorsed thereon.",
+        "reason": "Section 13(2) of the Haryana Motor Vehicle Rules, 1993 explicitly states: 'The licensing authority, a police officer or any other person authorized by the Government may extend the term of the receipt issued under sub-rule (1) by an order endorsed thereon.'",
+        "verdict": 1
+      }
+    ]
+  },
+  "0e79116ed2ac7e16f3b75d8508891d8c": {
+    "generated_questions": [
+      "Under what circumstances can a licensing authority seize a driving licence according to the Motor Vehicles Act, 1988?",
+      "When can the discretionary power to seize a driving licence be exercised by the authorities?",
+      "What are the specific grounds for seizing a driving licence under the Motor Vehicles Act, 1988 and the Haryana Motor Vehicle Rules, 1993?"
+    ],
+    "noncommittal": 0
+  },
+  "f2b773544b3c412978dccc426732a8a2": {
+    "statements": []
+  },
+  "10affc7d810b831ed83a55648ec71ca6": {
+    "generated_questions": [
+      "Is it possible for the police to confiscate my driver's license immediately?",
+      "Under what circumstances can a driving license be seized right away?",
+      "Can law enforcement take away a driving license on the spot?"
+    ],
+    "noncommittal": 0
+  },
+  "6e0b299d660399c8c4c083365e087dee": {
+    "statements": [
+      "A police officer in uniform may seize a driving licence on the spot if the police officer has reason to believe the driver has committed an offence under sections 183, 184, 185, 189, 190, 194C, 194D, or 194E.",
+      "A police officer in uniform may seize a driving licence on the spot if the police officer suspects the driver may abscond or avoid a summons.",
+      "A police officer in uniform may seize a driving licence on the spot if the police officer believes the licence is a false document.",
+      "The power of a police officer to seize a driving licence is established under the Motor Vehicles Act, 1988, Section 206, Page 111.",
+      "Drivers must request a temporary acknowledgement from the police officer if the driving licence is seized.",
+      "A seizure under certain offence sections will be forwarded for disqualification or revocation proceedings under the Motor Vehicles (Amendment) Act, 2019, Section 88, Page 42.",
+      "Drivers should stay calm and not argue when a driving licence is seized.",
+      "Drivers must ensure the driver receives a receipt before parting ways with the police officer."
+    ]
+  },
+  "34751e2dd1c4840b73ef09069004c447": {
+    "evaluations": [
+      {
+        "statement": "A police officer in uniform may seize a driving licence on the spot if the police officer has reason to believe the driver has committed an offence under sections 183, 184, 185, 189, 190, 194C, 194D, or 194E.",
+        "reason": "The context states that a police officer or authorised person shall seize the driving licence for these offences, but does not specifically restrict it to a 'police officer in uniform' in that exact provision (Section 130 mentions 'in uniform' for production, but Section 206(4) mentions police officer or authorised person). Therefore, introducing 'in uniform' for this specific seizure context makes it partially reliant on external conflation, though police officers generally wear uniforms. Let's strictly check: Section 206(4) just says 'A police officer or other person authorised'. Thus, strict inference of 'in uniform' here is unsupported.",
+        "verdict": 0
+      },
+      {
+        "statement": "A police officer in uniform may seize a driving licence on the spot if the police officer suspects the driver may abscond or avoid a summons.",
+        "reason": "Similar to the above, Section 206(2) allows a police officer or other person authorised to seize if they have reason to believe the driver may abscond, but 'in uniform' is not specified in that sub-section.",
+        "verdict": 0
+      },
+      {
+        "statement": "A police officer in uniform may seize a driving licence on the spot if the police officer believes the licence is a false document.",
+        "reason": "Section 206(1) allows a police officer or authorised person to seize a false document/mark, but does not specify 'in uniform'.",
+        "verdict": 0
+      },
+      {
+        "statement": "The power of a police officer to seize a driving licence is established under the Motor Vehicles Act, 1988, Section 206, Page 111.",
+        "reason": "Directly supported by the text under [Motor Vehicles Act, 1988 \u2014 Section 206, Page 111].",
+        "verdict": 1
+      },
+      {
+        "statement": "Drivers must request a temporary acknowledgement from the police officer if the driving licence is seized.",
+        "reason": "The context states the person seizing the licence 'shall give' a temporary acknowledgement, not that the driver must request it.",
+        "verdict": 0
+      },
+      {
+        "statement": "A seizure under certain offence sections will be forwarded for disqualification or revocation proceedings under the Motor Vehicles (Amendment) Act, 2019, Section 88, Page 42.",
+        "reason": "Directly supported by the context under [Motor Vehicles (Amendment) Act, 2019 \u2014 Section 88, Page 42].",
+        "verdict": 1
+      },
+      {
+        "statement": "Drivers should stay calm and not argue when a driving licence is seized.",
+        "reason": "This is advice requiring outside knowledge and is not mentioned anywhere in the context.",
+        "verdict": 0
+      },
+      {
+        "statement": "Drivers must ensure the driver receives a receipt before parting ways with the police officer.",
+        "reason": "This behavioral instruction is not stated in the text.",
+        "verdict": 0
+      }
+    ]
+  },
+  "7a2f9c8e3108263e2331a6f2663281bf": {
+    "generated_questions": [
+      "Under what circumstances can a police officer seize my driving licence?",
+      "Can a uniformed police officer confiscate my driver's licence immediately on the spot?",
+      "What should I do if a police officer takes my driving licence?"
+    ],
+    "noncommittal": 0
+  },
+  "129e288acb957f5f8b9d1cc0a96914d2": {
+    "statements": [
+      "Carrying a PUC certificate is required by law.",
+      "The requirement of carrying a PUC certificate is stated in the Motor Vehicles Act, 1988, Section 4, Page 79.",
+      "Carrying a PUC certificate is a requirement for all vehicles."
+    ]
+  },
+  "a1093a253dbe6cc49cbfd1eaaeff63eb": {
+    "evaluations": [
+      {
+        "statement": "Carrying a PUC certificate is required by law.",
+        "reason": "The context mentions the requirement of a PUC certificate across multiple regulations and rules (e.g., Central Motor Vehicles Rules, Motor Vehicles (Driving) Regulations, and Motor Vehicles Act).",
+        "verdict": 1
+      },
+      {
+        "statement": "The requirement of carrying a PUC certificate is stated in the Motor Vehicles Act, 1988, Section 4, Page 79.",
+        "reason": "Section 4, Page 79 does not exist in the Motor Vehicles Act, 1988, according to the context; Section 130 is on page 79, and Section 4 is mentioned under the Central Motor Vehicles Rules, 1989.",
+        "verdict": 0
+      },
+      {
+        "statement": "Carrying a PUC certificate is a requirement for all vehicles.",
+        "reason": "The context specifies requirements for transport vehicles (e.g., under Central Motor Vehicles Rules and Motor Vehicles Act) and non-transport vehicles (Motor Vehicles (Driving) Regulations), but does not explicitly state that it is a requirement for 'all vehicles' universally without distinction.",
+        "verdict": 0
+      }
+    ]
+  },
+  "cb07c72b22aafa5e25ff0179888dd819": {
+    "generated_questions": [
+      "Is it mandatory for all vehicles under the Motor Vehicles Act, 1988?",
+      "Does Section 4 of the Motor Vehicles Act make this a requirement for every vehicle?",
+      "Is this requirement applicable to all motor vehicles according to the law?"
+    ],
+    "noncommittal": 0
+  },
+  "b3e3eedfc3658a442ecfaf43886343ef": {
+    "statements": [
+      "In India, the Motor Vehicles Act, 1988 requires all transport vehicles to carry a certificate of fitness.",
+      "A certificate of fitness is an official document issued by an authorised testing station.",
+      "The certificate of fitness certifies that the vehicle complies with all requirements of the Motor Vehicles Act and rules made thereunder.",
+      "The certificate of fitness is required to be produced when the vehicle is driven in public places.",
+      "In most states, a PUC certificate is required for the operation of a transport vehicle.",
+      "The PUC certificate is issued by the state transport department or the transport authority.",
+      "The PUC certificate is valid for a certain period.",
+      "The PUC certificate is required to be carried by the driver of the vehicle when the vehicle is being driven in public places.",
+      "The PUC certificate serves as proof that the vehicle is fit for safe and legal operation.",
+      "The PUC certificate is different from the certificate of fitness issued by the authorised testing station.",
+      "The certificate of fitness is issued to ensure that the vehicle complies with the requirements of the Motor Vehicles Act and the rules made thereunder.",
+      "A PUC certificate is required for the operation of a transport vehicle in India."
+    ]
+  },
+  "e4259547164b9a8da234eaf4e72ddf93": {
+    "evaluations": [
+      {
+        "statement": "In India, the Motor Vehicles Act, 1988 requires all transport vehicles to carry a certificate of fitness.",
+        "reason": "Section 56(1) of the Motor Vehicles Act, 1988 states that a transport vehicle shall not be deemed to be validly registered unless it carries a certificate of fitness.",
+        "verdict": 1
+      },
+      {
+        "statement": "A certificate of fitness is an official document issued by an authorised testing station.",
+        "reason": "Section 56(1) states it is issued by the prescribed authority or by an authorised testing station.",
+        "verdict": 1
+      },
+      {
+        "statement": "The certificate of fitness certifies that the vehicle complies with all requirements of the Motor Vehicles Act and rules made thereunder.",
+        "reason": "Section 56(1) mentions it is to the effect that the vehicle complies for the time being with all the requirements of this Act and the rules made thereunder.",
+        "verdict": 1
+      },
+      {
+        "statement": "The certificate of fitness is required to be produced when the vehicle is driven in public places.",
+        "reason": "Motor Vehicles Act, 1988 Section 158(1) requires the production of the certificate of fitness in the case of a transport vehicle when driving in any public place.",
+        "verdict": 1
+      },
+      {
+        "statement": "In most states, a PUC certificate is required for the operation of a transport vehicle.",
+        "reason": "The context mentions valid PUC certificates are required under Central Motor Vehicles Rules and Motor Vehicles Act, but does not state statistics about 'most states'.",
+        "verdict": 0
+      },
+      {
+        "statement": "The PUC certificate is issued by the state transport department or the transport authority.",
+        "reason": "The context mentions PUC certificates are required, but it does not state who issues them.",
+        "verdict": 0
+      },
+      {
+        "statement": "The PUC certificate is valid for a certain period.",
+        "reason": "The context mentions 'valid PUC certificate' but does not state the details about its validity period.",
+        "verdict": 0
+      },
+      {
+        "statement": "The PUC certificate is required to be carried by the driver of the vehicle when the vehicle is being driven in public places.",
+        "reason": "Motor Vehicles (Driving) Regulations, 2017 Section 38(1) states the driver shall always carry the pollution under control certificate.",
+        "verdict": 1
+      },
+      {
+        "statement": "The PUC certificate serves as proof that the vehicle is fit for safe and legal operation.",
+        "reason": "The context mentions PUC certificate as a required document, but does not explicitly state it serves as proof that the vehicle is fit for 'safe' operation.",
+        "verdict": 0
+      },
+      {
+        "statement": "The PUC certificate is different from the certificate of fitness issued by the authorised testing station.",
+        "reason": "The context lists them as separate distinct required certificates (PUC vs fitness certificate), but never explicitly states their differences.",
+        "verdict": 0
+      },
+      {
+        "statement": "The certificate of fitness is issued to ensure that the vehicle complies with the requirements of the Motor Vehicles Act and the rules made thereunder.",
+        "reason": "Section 56(1) indicates the certificate is to the effect that the vehicle complies for the time being with all the requirements of this Act and the rules made thereunder.",
+        "verdict": 1
+      },
+      {
+        "statement": "A PUC certificate is required for the operation of a transport vehicle in India.",
+        "reason": "Central Motor Vehicles Rules, 1989 Section 4(2)(f) states a transport vehicle driver shall have a valid PUC certificate under the law of the country concerned.",
+        "verdict": 1
+      }
+    ]
+  },
+  "8253c838fe8e1f3292459de58e1dbf9e": {
+    "generated_questions": [
+      "What are the document requirements for operating a transport vehicle in India?",
+      "How does a PUC certificate differ from a certificate of fitness for vehicles in India?",
+      "What is the purpose of a PUC certificate and a certificate of fitness under the Motor Vehicles Act, 1988?"
+    ],
+    "noncommittal": 0
+  },
+  "062314a64d887d15df829a375ec50d5a": {
+    "statements": [
+      "The Scottish Police do not require a PUC certificate for a police officer."
+    ]
+  },
+  "9091ebd21522c163a2725e2e9f316551": {
+    "evaluations": [
+      {
+        "statement": "The Scottish Police do not require a PUC certificate for a police officer.",
+        "reason": "The context does not contain any information about the Scottish Police or their requirements.",
+        "verdict": 0
+      }
+    ]
+  },
+  "e6656095488b4bf4505dce7344545ea9": {
+    "generated_questions": [
+      "Do police officers assigned to the Scottish Police Service need to have a PUC certificate?",
+      "Is a PUC certificate mandatory for officers working within the Scottish Police?",
+      "Are incoming officers required to carry a PUC certificate for the Scottish Police Service?"
+    ],
+    "noncommittal": 0
+  },
+  "0fdb255d123fbea5e479c76b8b147fa0": {
+    "statements": [
+      "Drivers of transport vehicles are required to carry a Pollution Under Control certificate.",
+      "Drivers of non-transport vehicles are required to carry a Pollution Under Control certificate.",
+      "Drivers must produce a Pollution Under Control certificate on demand by a police officer in uniform or another authorised officer.",
+      "The requirement to carry a Pollution Under Control certificate is stated under Section 38, Page 15 of the Motor Vehicles (Driving) Regulations, 2017."
+    ]
+  },
+  "aeb71b222e74b778f4f07a7f15fdee3d": {
+    "evaluations": [
+      {
+        "statement": "Drivers of transport vehicles are required to carry a Pollution Under Control certificate.",
+        "reason": "The context states in Motor Vehicles (Driving) Regulations, 2017 \u2014 Section 38 that the driver of a transport vehicle shall always carry with him a pollution under control certificate.",
+        "verdict": 1
+      },
+      {
+        "statement": "Drivers of non-transport vehicles are required to carry a Pollution Under Control certificate.",
+        "reason": "The context states in Motor Vehicles (Driving) Regulations, 2017 \u2014 Section 38(3) that the driver of a non-transport vehicle shall always carry with him the driving license and pollution under control certificate.",
+        "verdict": 1
+      },
+      {
+        "statement": "Drivers must produce a Pollution Under Control certificate on demand by a police officer in uniform or another authorised officer.",
+        "reason": "The context states in Motor Vehicles Act, 1988 \u2014 Section 158(1) and Motor Vehicles (Driving) Regulations, 2017 \u2014 Section 38(4) that the driver shall produce the pollution under control certificate on demand by a police officer in uniform or authorised officer.",
+        "verdict": 1
+      },
+      {
+        "statement": "The requirement to carry a Pollution Under Control certificate is stated under Section 38, Page 15 of the Motor Vehicles (Driving) Regulations, 2017.",
+        "reason": "The context explicitly includes '[Motor Vehicles (Driving) Regulations, 2017 \u2014 Section 38, Page 15]' which lists the pollution under control certificate under the documents the driver shall always carry.",
+        "verdict": 1
+      }
+    ]
+  },
+  "e3cafac09c633712d2e24faddf684034": {
+    "generated_questions": [
+      "Am I required to carry a Pollution Under Control certificate while driving?",
+      "What does Section 38, Page 15 of the Motor Vehicles (Driving) Regulations, 2017 state about PUC certificates?",
+      "Do drivers of non-transport vehicles need to produce a valid PUC certificate on demand by the police?"
+    ],
+    "noncommittal": 0
+  },
+  "f096c86b8095cf6a0298957512913b51": {
+    "statements": [
+      "The officer can ask for the insurance certificate under the Motor Vehicles Act, 1988, Section 158, Page 90.",
+      "The driver must produce the certificate of insurance when the officer asks for the certificate of insurance."
+    ]
+  },
+  "193e11e83777b59e39855445c8864b5b": {
+    "evaluations": [
+      {
+        "statement": "The officer can ask for the insurance certificate under the Motor Vehicles Act, 1988, Section 158, Page 90.",
+        "reason": "The context states under Motor Vehicles Act, 1988 \u2014 Section 158, Page 90 that any person driving a motor vehicle in any public place shall, on being so required by a police officer in uniform authorised in this behalf by the State Government, produce the certificate of insurance.",
+        "verdict": 1
+      },
+      {
+        "statement": "The driver must produce the certificate of insurance when the officer asks for the certificate of insurance.",
+        "reason": "The context specifies under Section 158 of the Motor Vehicles Act, 1988 that a person driving a motor vehicle shall, on being required by an authorized police officer, produce the certificate of insurance.",
+        "verdict": 1
+      }
+    ]
+  },
+  "72fac5955b4c96b0eff011ab2ce4c174": {
+    "generated_questions": [
+      "Am I required to show my certificate of insurance when requested under the Motor Vehicles Act?",
+      "Does Section 158 of the Motor Vehicles Act, 1988 require producing an insurance certificate upon request?",
+      "Is it mandatory to present the certificate of insurance if asked by authorities according to the law?"
+    ],
+    "noncommittal": 0
+  },
+  "06422ef4853689cd38f15681006b22d8": {
+    "statements": [
+      "The Motor Vehicles Act, 1988, the Motor Vehicles (Amendment) Act, 2019, and the Motor Vehicles (Central) Rules, 2007, require an insurance certificate for a vehicle driven on a public place.",
+      "The Motor Vehicles Act and Rules require the insurance certificate to be authenticated by the registered insurer.",
+      "A police officer can demand to see the license, registration certificate, and insurance certificate of the driver or owner of a vehicle if the police officer has reasonable suspicion that the vehicle is being driven in violation of the provisions of the Motor Vehicles Act.",
+      "A police officer may demand photocopies of the certificate or permit if the police officer is unable to obtain the certificate from the driver or owner.",
+      "A police officer may not be able to verify the authenticity of the insurance certificate without authentication from the registered insurer.",
+      "A police officer may not be able to demand the authenticated insurance certificate."
+    ]
+  },
+  "a7c9cecc7df0ae4095a0ccf7ba147987": {
+    "evaluations": [
+      {
+        "statement": "The Motor Vehicles Act, 1988, the Motor Vehicles (Amendment) Act, 2019, and the Motor Vehicles (Central) Rules, 2007, require an insurance certificate for a vehicle driven on a public place.",
+        "reason": "The context mentions the Motor Vehicles Act, 1988, the Motor Vehicles (Amendment) Act, 2019, and Central Motor Vehicles Rules, 1989, but does not mention the Motor Vehicles (Central) Rules, 2007.",
+        "verdict": 0
+      },
+      {
+        "statement": "The Motor Vehicles Act and Rules require the insurance certificate to be authenticated by the registered insurer.",
+        "reason": "Central Motor Vehicles Rules, 1989 \u2014 Section 143 states that every certificate of insurance or cover note shall be duly authenticated by such person as may be authorised by the insurer.",
+        "verdict": 1
+      },
+      {
+        "statement": "A police officer can demand to see the license, registration certificate, and insurance certificate of the driver or owner of a vehicle if the police officer has reasonable suspicion that the vehicle is being driven in violation of the provisions of the Motor Vehicles Act.",
+        "reason": "Section 158 of the Motor Vehicles Act, 1988 allows a police officer in uniform to demand these documents without the specific condition of having 'reasonable suspicion'.",
+        "verdict": 0
+      },
+      {
+        "statement": "A police officer may demand photocopies of the certificate or permit if the police officer is unable to obtain the certificate from the driver or owner.",
+        "reason": "According to Section 130(3) of the Motor Vehicles Act, if certificates are not in possession, the owner/driver shall submit photocopies, rather than the police officer demanding photocopies because they are unable to obtain them.",
+        "verdict": 0
+      },
+      {
+        "statement": "A police officer may not be able to verify the authenticity of the insurance certificate without authentication from the registered insurer.",
+        "reason": "The context does not contain any information stating whether a police officer may or may not be able to verify authenticity without authentication, making this external speculation.",
+        "verdict": 0
+      },
+      {
+        "statement": "A police officer may not be able to demand the authenticated insurance certificate.",
+        "reason": "The context does not state or support that a police officer may not be able to demand an authenticated insurance certificate; in fact, police officers are authorized to demand the certificate of insurance under Section 158.",
+        "verdict": 0
+      }
+    ]
+  },
+  "65ffc250777194febe840586f0f5a84c": {
+    "generated_questions": [
+      "What laws govern the requirement of a vehicle insurance certificate in a public place, and can a police officer demand an authenticated copy?",
+      "Under the Motor Vehicles Act, what documents can a police officer demand upon reasonable suspicion, and are there limitations regarding the insurance certificate?",
+      "How do the Motor Vehicles Act and Central Rules address the verification and authentication of vehicle insurance certificates by police officers?"
+    ],
+    "noncommittal": 0
+  },
+  "99bf61b39a224be5222305a5b977e808": {
+    "statements": [
+      "The officer can ask for an insurance certificate."
+    ]
+  },
+  "442223df7618872ad051c98efdf07f71": {
+    "evaluations": [
+      {
+        "statement": "The officer can ask for an insurance certificate.",
+        "reason": "The context explicitly mentions under Section 158 of the Motor Vehicles Act that a person driving a motor vehicle in a public place shall, on being required by a police officer, produce the certificate of insurance, and under Section 130 that certain officers can demand the certificate of insurance.",
+        "verdict": 1
+      }
+    ]
+  },
+  "d4506e5ec7829959ac9e50b65214454f": {
+    "generated_questions": [
+      "What is the progression of events and possible binary outcomes during the police interaction regarding the missing insurance certificate?",
+      "Can you list the sequence of statements and subsequent yes or no scenarios involving the police officer, the insurance certificate, and the monetary demand?",
+      "What are all the conditional dialogue steps and choices that can occur in this traffic stop narrative?"
+    ],
+    "noncommittal": 0
+  },
+  "fe358fd2dbfdcfc6c007ca1a883ee85f": {
+    "statements": [
+      "A police officer in uniform is legally authorised to demand a certificate of insurance when a driver is driving in a public place.",
+      "The legal authority for a police officer to demand a certificate of insurance is derived from the Motor Vehicles Act, 1988, Section 158, Page 90.",
+      "If a driver does not have the certificate of insurance at the moment of the demand, the driver is not immediately convicted.",
+      "A driver can avoid conviction by producing the required certificate of insurance within seven days at the police station specified by the police officer.",
+      "The provision allowing a driver to produce the certificate of insurance within seven days is established under the Motor Vehicles Act, 1988, Section 158, Page 90.",
+      "A driver should stay polite and show the police officer whatever proof of insurance the driver currently has."
+    ]
+  },
+  "ed30f7e844c72d5dae8c4c1b10711ebd": {
+    "evaluations": [
+      {
+        "statement": "A police officer in uniform is legally authorised to demand a certificate of insurance when a driver is driving in a public place.",
+        "reason": "Directly supported by Motor Vehicles Act, 1988 \u2014 Section 158, Page 90, which states that any person driving a motor vehicle in any public place shall, on being so required by a police officer in uniform authorised in this behalf, produce the certificate of insurance.",
+        "verdict": 1
+      },
+      {
+        "statement": "The legal authority for a police officer to demand a certificate of insurance is derived from the Motor Vehicles Act, 1988, Section 158, Page 90.",
+        "reason": "Directly supported by the context header '[Motor Vehicles Act, 1988 \u2014 Section 158, Page 90]' and the text within that section.",
+        "verdict": 1
+      },
+      {
+        "statement": "If a driver does not have the certificate of insurance at the moment of the demand, the driver is not immediately convicted.",
+        "reason": "Directly supported by Section 158(3) which states that no person shall be liable to conviction if they produce the certificate within seven days.",
+        "verdict": 1
+      },
+      {
+        "statement": "A driver can avoid conviction by producing the required certificate of insurance within seven days at the police station specified by the police officer.",
+        "reason": "Directly supported by Section 158(3) of the Motor Vehicles Act, 1988.",
+        "verdict": 1
+      },
+      {
+        "statement": "The provision allowing a driver to produce the certificate of insurance within seven days is established under the Motor Vehicles Act, 1988, Section 158, Page 90.",
+        "reason": "Directly supported by the context under Section 158, sub-section (3).",
+        "verdict": 1
+      },
+      {
+        "statement": "A driver should stay polite and show the police officer whatever proof of insurance the driver currently has.",
+        "reason": "The context mentions producing the certificate of insurance for examination, but the advice to 'stay polite' introduces external guidance/knowledge not found in the context.",
+        "verdict": 0
+      }
+    ]
+  },
+  "f34321bca33e2bf37b943d83ae3fd01d": {
+    "generated_questions": [
+      "Can a police officer legally ask for my insurance certificate while I am driving?",
+      "What happens if I am driving and cannot show my insurance certificate to the police immediately?",
+      "Under the Motor Vehicles Act, how many days do I have to produce my insurance certificate at a police station if I don't have it on me?"
+    ],
+    "noncommittal": 0
+  },
+  "ec00996001c46c905d238afd17ba7acf": {
+    "statements": [
+      "Section 194D, Page 106 of the Motor Vehicles Act, 1988 governs the penalty for driving a motorcycle without a helmet.",
+      "The Motor Vehicles Act, 1988, Section 194D, Page 106 penalizes any person who drives a motorcycle or causes or allows a motorcycle to be driven in contravention of section 129.",
+      "The fine for driving a motorcycle or causing or allows a motorcycle to be driven in contravention of section 129 is one thousand rupees."
+    ]
+  },
+  "46856c60658eda26aabeb1dbec210a82": {
+    "evaluations": [
+      {
+        "statement": "Section 194D, Page 106 of the Motor Vehicles Act, 1988 governs the penalty for driving a motorcycle without a helmet.",
+        "reason": "Section 194D penalizes driving a motorcycle in contravention of section 129 (which requires wearing protective headgear), meaning it governs the penalty for driving without a helmet.",
+        "verdict": 1
+      },
+      {
+        "statement": "The Motor Vehicles Act, 1988, Section 194D, Page 106 penalizes any person who drives a motorcycle or causes or allows a motorcycle to be driven in contravention of section 129.",
+        "reason": "This is a direct quote/paraphrase of the exact wording found in Section 194D of the Motor Vehicles Act, 1988.",
+        "verdict": 1
+      },
+      {
+        "statement": "The fine for driving a motorcycle or causing or allows a motorcycle to be driven in contravention of section 129 is one thousand rupees.",
+        "reason": "The text for Section 194D explicitly states the punishment is 'a fine of one thousand rupees' and disqualification from holding a licence for three months.",
+        "verdict": 1
+      }
+    ]
+  },
+  "80364a8b961129cd4e4a9dc364f4e473": {
+    "generated_questions": [
+      "What is the penalty under the Motor Vehicles Act for violating motorcycle safety rules like section 129?",
+      "How much is the fine for driving a motorcycle in contravention of section 129 of the Motor Vehicles Act, 1988?",
+      "Which section of the Motor Vehicles Act, 1988 prescribes a one thousand rupee fine for motorcycle rule violations?"
+    ],
+    "noncommittal": 0
+  },
+  "b414ce15b8ac2f5094379493359b16e5": {
+    "statements": [
+      "According to the Haryana Motor Vehicle Rules, 1993, every person driving or riding a motorcycle of any class or description shall wear a protective headgear approved by the Bureau of Indian Standards from time to time.",
+      "Section 129 of the Motor Vehicles Act, 1988 requires every person, above four years of age, driving or riding or being carried on a motorcycle of any class or description to wear protective headgear conforming to standards prescribed by the Central Government.",
+      "The explanation to Section 129 defines a protective headgear as a helmet that can reasonably be expected to afford protection from injury in an accident due to its shape, material, and construction, and is securely fastened to the wearer's head by straps or other fastenings.",
+      "The fine for not wearing a helmet is one thousand rupees.",
+      "The summary of the relevant laws notes that the actual fine for not wearing a helmet may be higher or lower depending on the specific circumstances of the case."
+    ]
+  },
+  "1b16e397860ef06e9cff2bc13491ed63": {
+    "evaluations": [
+      {
+        "statement": "According to the Haryana Motor Vehicle Rules, 1993, every person driving or riding a motorcycle of any class or description shall wear a protective headgear approved by the Bureau of Indian Standards from time to time.",
+        "reason": "Directly supported by the text from [Haryana Motor Vehicle Rules, 1993 \u2014 Section 185, Page 60].",
+        "verdict": 1
+      },
+      {
+        "statement": "Section 129 of the Motor Vehicles Act, 1988 requires every person, above four years of age, driving or riding or being carried on a motorcycle of any class or description to wear protective headgear conforming to standards prescribed by the Central Government.",
+        "reason": "Directly supported by the text of Section 129 in the Motor Vehicles Act, 1988.",
+        "verdict": 1
+      },
+      {
+        "statement": "The explanation to Section 129 defines a protective headgear as a helmet that can reasonably be expected to afford protection from injury in an accident due to its shape, material, and construction, and is securely fastened to the wearer's head by straps or other fastenings.",
+        "reason": "Directly supported by the Explanation under Section 129 of the Motor Vehicles Act, 1988.",
+        "verdict": 1
+      },
+      {
+        "statement": "The fine for not wearing a helmet is one thousand rupees.",
+        "reason": "Directly supported by Section 194D of the Motor Vehicles Act, 1988, which states the fine is one thousand rupees.",
+        "verdict": 1
+      },
+      {
+        "statement": "The summary of the relevant laws notes that the actual fine for not wearing a helmet may be higher or lower depending on the specific circumstances of the case.",
+        "reason": "This statement is not mentioned anywhere in the provided context and introduces external speculation.",
+        "verdict": 0
+      }
+    ]
+  },
+  "6f1471997de23991814ace1aeaffb755": {
+    "generated_questions": [
+      "What are the legal requirements for wearing a helmet while riding a motorcycle in India, and what is the associated fine?",
+      "Under the Motor Vehicles Act and Haryana Motor Vehicle Rules, what constitutes a protective headgear and what is the penalty for not wearing one?",
+      "How does the law define a valid helmet for motorcycle riders and what is the standard penalty for riding without one?"
+    ],
+    "noncommittal": 0
+  },
+  "6028ba6900f49bdea47c706a21625c72": {
+    "statements": [
+      "It is not considered an accident for a person to not wear a helmet when the person is riding a bicycle.",
+      "The fine for not wearing a helmet while riding a bicycle will be reduced to 25 or 10, whichever is greater."
+    ]
+  },
+  "234888697dbdf69f4492efa68501b677": {
+    "evaluations": [
+      {
+        "statement": "It is not considered an accident for a person to not wear a helmet when the person is riding a bicycle.",
+        "reason": "The context discusses motorcycles, not bicycles, and contains no information about bicycles or whether not wearing a helmet is considered an accident.",
+        "verdict": 0
+      },
+      {
+        "statement": "The fine for not wearing a helmet while riding a bicycle will be reduced to 25 or 10, whichever is greater.",
+        "reason": "The context mentions fines for motorcycles and safety belt violations, but contains no information about bicycles or such a fine reduction.",
+        "verdict": 0
+      }
+    ]
+  },
+  "e2c40dcacf5f324a3f3c166cf6fdd6bd": {
+    "generated_questions": [
+      "What is the penalty for not wearing a helmet while cycling and how does it relate to traffic signal violations?",
+      "How is the fine calculated for a cyclist riding without a helmet, and what constitutes a traffic accident in this context?",
+      "What are the legal consequences and fines associated with bicycle helmet violations and running red lights?"
+    ],
+    "noncommittal": 0
+  },
+  "b1021d5c84c7173a75abb7704b5d8b3a": {
+    "statements": [
+      "The fine for not wearing a helmet is one thousand rupees.",
+      "Not wearing a helmet results in disqualification for holding a licence for a period of three months.",
+      "The penalty for not wearing a helmet is specified in the Motor Vehicles Act, 1988, Section 194D, Page 106."
+    ]
+  },
+  "f4806c5b06ee740d60c6d5f681958c41": {
+    "evaluations": [
+      {
+        "statement": "The fine for not wearing a helmet is one thousand rupees.",
+        "reason": "Section 194D states that driving a motorcycle in contravention of section 129 (wearing protective headgear/helmet) shall be punishable with a fine of one thousand rupees.",
+        "verdict": 1
+      },
+      {
+        "statement": "Not wearing a helmet results in disqualification for holding a licence for a period of three months.",
+        "reason": "Section 194D states that a violation of section 129 regarding protective headgear includes disqualification for holding a licence for a period of three months.",
+        "verdict": 1
+      },
+      {
+        "statement": "The penalty for not wearing a helmet is specified in the Motor Vehicles Act, 1988, Section 194D, Page 106.",
+        "reason": "The context explicitly lists this information under '[Motor Vehicles Act, 1988 \u2014 Section 194D, Page 106]'.",
+        "verdict": 1
+      }
+    ]
+  },
+  "272d65ba60bc8283ae568866c01a2112": {
+    "generated_questions": [
+      "What is the penalty for not wearing a helmet according to the Motor Vehicles Act?",
+      "How much is the fine and license suspension for riding a two-wheeler without a helmet in India?",
+      "What happens if you are caught without a helmet and how should you handle the traffic officer?"
+    ],
+    "noncommittal": 0
+  },
+  "3c70b241af7682535c98fac2b1542f15": {
+    "statements": [
+      "The Motor Vehicles Act, 1988 dictates the fine for not wearing a seatbelt.",
+      "Driving a motor vehicle without wearing a safety belt is punishable with a fine of one thousand rupees under the Motor Vehicles Act, 1988.",
+      "Carrying passengers not wearing seat belts is punishable with a fine of one thousand rupees under the Motor Vehicles Act, 1988."
+    ]
+  },
+  "a655413d6a0b30bf8b5937acdc2d9a7b": {
+    "evaluations": [
+      {
+        "statement": "The Motor Vehicles Act, 1988 dictates the fine for not wearing a seatbelt.",
+        "reason": "Section 194B of the Motor Vehicles Act, 1988 explicitly states the fine for driving without wearing a safety belt or carrying passengers not wearing seat belts.",
+        "verdict": 1
+      },
+      {
+        "statement": "Driving a motor vehicle without wearing a safety belt is punishable with a fine of one thousand rupees under the Motor Vehicles Act, 1988.",
+        "reason": "This is directly stated in Section 194B(1) of the Motor Vehicles Act, 1988.",
+        "verdict": 1
+      },
+      {
+        "statement": "Carrying passengers not wearing seat belts is punishable with a fine of one thousand rupees under the Motor Vehicles Act, 1988.",
+        "reason": "This is directly stated in Section 194B(1) of the Motor Vehicles Act, 1988.",
+        "verdict": 1
+      }
+    ]
+  },
+  "d4ff7cd44c02607b721ef976657d5b3b": {
+    "generated_questions": [
+      "What is the penalty for driving a motor vehicle without a safety belt according to the Motor Vehicles Act, 1988?",
+      "How much is the fine under Section 194B of the Motor Vehicles Act for not wearing a seat belt?",
+      "What does the Motor Vehicles Act, 1988 state regarding the punishment for carrying passengers without seat belts?"
+    ],
+    "noncommittal": 0
+  },
+  "ee6b5db9cd00bb0e82814a8b5f87364a": {
+    "statements": [
+      "The Motor Vehicles Act, 1988, Section 194B, Page 106 governs seatbelt fines.",
+      "The fine for not wearing a seatbelt is one thousand rupees."
+    ]
+  },
+  "b026deff7a8245f71601c5fc02547007": {
+    "evaluations": [
+      {
+        "statement": "The Motor Vehicles Act, 1988, Section 194B, Page 106 governs seatbelt fines.",
+        "reason": "The context explicitly shows '[Motor Vehicles Act, 1988 \u2014 Section 194B, Page 106]' detailing fines for driving without wearing a safety belt or carrying passengers not wearing seat belts.",
+        "verdict": 1
+      },
+      {
+        "statement": "The fine for not wearing a seatbelt is one thousand rupees.",
+        "reason": "Section 194B(1) explicitly states that driving without wearing a safety belt or carrying passengers not wearing seat belts shall be punishable with a fine of one thousand rupees.",
+        "verdict": 1
+      }
+    ]
+  },
+  "8ce5585bf7f942ebff603ec589b8e73d": {
+    "generated_questions": [
+      "What is the penalty for failing to wear a seatbelt according to the Motor Vehicles Act?",
+      "How much is the fine for not wearing a seatbelt under Section 194B of the Motor Vehicles Act?",
+      "Can you tell me the monetary penalty specified for seatbelt violations in India?"
+    ],
+    "noncommittal": 0
+  },
+  "9fdad252cb417ea52c8184a4cf44440b": {
+    "statements": [
+      "The fine for not wearing a seatbelt is 10,000."
+    ]
+  },
+  "dec05b26b2e2d62def133ae6cfdec407": {
+    "evaluations": [
+      {
+        "statement": "The fine for not wearing a seatbelt is 10,000.",
+        "reason": "According to Section 194B of the Motor Vehicles Act, 1988, the fine for driving without wearing a safety belt or carrying passengers not wearing seat belts is one thousand rupees, not ten thousand.",
+        "verdict": 0
+      }
+    ]
+  },
+  "1c996626148e4513b3b94fd643909e7a": {
+    "generated_questions": [
+      "What is the penalty for failing to wear a seatbelt?",
+      "How much do you have to pay if caught without a seatbelt on?",
+      "What is the fine for not wearing a seatbelt?"
+    ],
+    "noncommittal": 0
+  },
+  "202e19cbb06a20fd6d810161ae75ba45": {
+    "statements": [
+      "The fine for not wearing a seatbelt is one thousand rupees.",
+      "The fine for not wearing a seatbelt is mandated by Section 194B of the Motor Vehicles Act, 1988.",
+      "The fine for carrying passengers who are not wearing seatbelts is one thousand rupees.",
+      "The fine for carrying passengers who are not wearing seatbelts is mandated by Section 194B of the Motor Vehicles Act, 1988."
+    ]
+  },
+  "4a8c5dc3a83fa1edcec7a8b036255a80": {
+    "evaluations": [
+      {
+        "statement": "The fine for not wearing a seatbelt is one thousand rupees.",
+        "reason": "The context states in Section 194B(1) that whoever drives a motor vehicle without wearing a safety belt shall be punishable with a fine of one thousand rupees.",
+        "verdict": 1
+      },
+      {
+        "statement": "The fine for not wearing a seatbelt is mandated by Section 194B of the Motor Vehicles Act, 1988.",
+        "reason": "The context specifies this rule under [Motor Vehicles Act, 1988 \u2014 Section 194B, Page 106].",
+        "verdict": 1
+      },
+      {
+        "statement": "The fine for carrying passengers who are not wearing seatbelts is one thousand rupees.",
+        "reason": "Section 194B(1) of the Motor Vehicles Act, 1988, states that carrying passengers not wearing seat belts shall be punishable with a fine of one thousand rupees.",
+        "verdict": 1
+      },
+      {
+        "statement": "The fine for carrying passengers who are not wearing seatbelts is mandated by Section 194B of the Motor Vehicles Act, 1988.",
+        "reason": "This is explicitly mentioned in Section 194B of the Motor Vehicles Act, 1988 provided in the context.",
+        "verdict": 1
+      }
+    ]
+  },
+  "8e4ae8ff636d4c9610a6197ea0d0d453": {
+    "generated_questions": [
+      "What is the penalty for failing to wear a seatbelt according to the Motor Vehicles Act?",
+      "How much is the fine under Section 194B of the Motor Vehicles Act for not wearing a seatbelt?",
+      "Does the seatbelt fine apply if my passengers are not wearing theirs?"
+    ],
+    "noncommittal": 0
+  },
+  "bdd33a0daf3600cb954a74ff49e92203": {
+    "statements": [
+      "The fine for overspeeding varies depending on the type of vehicle and the speed limit being exceeded.",
+      "According to Section 183 of the Motor Vehicles Act, 1988, the fine for overspeeding for a light motor vehicle is not less than \u20b91,000.",
+      "According to Section 183 of the Motor Vehicles Act, 1988, the fine for overspeeding for a light motor vehicle may extend to \u20b92,000."
+    ]
+  },
+  "dd80e51d02f0f1c491aa269430fe4676": {
+    "evaluations": [
+      {
+        "statement": "The fine for overspeeding varies depending on the type of vehicle and the speed limit being exceeded.",
+        "reason": "Section 183(1) specifies different fine amounts based on the type of motor vehicle (light motor vehicle vs. medium/heavy goods or passenger vehicle), which directly supports this statement.",
+        "verdict": 1
+      },
+      {
+        "statement": "According to Section 183 of the Motor Vehicles Act, 1988, the fine for overspeeding for a light motor vehicle is not less than \u20b91,000.",
+        "reason": "Section 183(1)(i) explicitly states that where the motor vehicle is a light motor vehicle, the fine shall not be less than one thousand rupees.",
+        "verdict": 1
+      },
+      {
+        "statement": "According to Section 183 of the Motor Vehicles Act, 1988, the fine for overspeeding for a light motor vehicle may extend to \u20b92,000.",
+        "reason": "Section 183(1)(i) explicitly states that where the motor vehicle is a light motor vehicle, the fine may extend to two thousand rupees.",
+        "verdict": 1
+      }
+    ]
+  },
+  "dc90322c26deecd81795a9b85cb23fb4": {
+    "generated_questions": [
+      "What is the penalty for driving a light motor vehicle above the speed limit?",
+      "How much is the fine for overspeeding under Section 183 of the Motor Vehicles Act, 1988?",
+      "Can you tell me the fine amount for speeding in a light motor vehicle?"
+    ],
+    "noncommittal": 0
+  },
+  "8e28b7d3dc70a3d6fc2c7855622e1f5c": {
+    "statements": [
+      "The fine for overspeeding in Haryana and India can vary depending on the specific circumstances of the situation.",
+      "The maximum fine for overspeeding in Haryana is Rs. 1,000.",
+      "The maximum fine for overspeeding in India is Rs. 2,000.",
+      "The actual fine amount may be less than the maximum fine amount depending on the specific circumstances of the case.",
+      "Consulting with a lawyer is recommended for personalized legal advice on specific legal matters."
+    ]
+  },
+  "eda916967dd8b343760b1c37ce2530c9": {
+    "evaluations": [
+      {
+        "statement": "The fine for overspeeding in Haryana and India can vary depending on the specific circumstances of the situation.",
+        "reason": "The context provides varying fines based on vehicle types (e.g., light motor vehicles vs. medium/heavy vehicles) under Section 183, but does not mention Haryana.",
+        "verdict": 0
+      },
+      {
+        "statement": "The maximum fine for overspeeding in Haryana is Rs. 1,000.",
+        "reason": "The context does not mention Haryana at all.",
+        "verdict": 0
+      },
+      {
+        "statement": "The maximum fine for overspeeding in India is Rs. 2,000.",
+        "reason": "According to Section 183(1)(ii), the fine for medium or heavy vehicles for overspeeding may extend to four thousand rupees, meaning Rs. 2,000 is not the maximum.",
+        "verdict": 0
+      },
+      {
+        "statement": "The actual fine amount may be less than the maximum fine amount depending on the specific circumstances of the case.",
+        "reason": "The context states fines 'may extend to' certain amounts, but does not explicitly discuss actual amounts being less due to specific circumstances of the case for overspeeding.",
+        "verdict": 0
+      },
+      {
+        "statement": "Consulting with a lawyer is recommended for personalized legal advice on specific legal matters.",
+        "reason": "There is no mention of lawyers or legal advice in the provided context.",
+        "verdict": 0
+      }
+    ]
+  },
+  "548a15402b304c17da5738b312506480": {
+    "generated_questions": [
+      "What is the maximum fine for overspeeding in Haryana and across India?",
+      "How much do drivers have to pay for speeding tickets in India and Haryana?",
+      "Can you tell me the penalty amounts for driving above the speed limit in Haryana?"
+    ],
+    "noncommittal": 0
+  },
+  "0f1578b6ecdb599063cb7dc45266d6d1": {
+    "statements": [
+      "The fine for overspeeding depends on the speed of the vehicle.",
+      "The speed of the vehicle is given in kilometers per hour.",
+      "The fine for overspeeding will be between 100 and 200 rupees per hour.",
+      "The fine for a vehicle entering the city will be 200 rupees.",
+      "If the speed of the vehicle is less than 45 kilometers per hour, the fine is 0.",
+      "If the speed of the vehicle is 45 kilometers per hour or more, the fine is 5% of the speed.",
+      "The fine for overspeeding is not cumulative.",
+      "If the speed of the vehicle is 45 kilometers per hour, 95 kilometers per hour, and 145 kilometers per hour, the fine is 400 rupees."
+    ]
+  },
+  "a3214183b4eee5f8337c44218e79f141": {
+    "evaluations": [
+      {
+        "statement": "The fine for overspeeding depends on the speed of the vehicle.",
+        "reason": "The context specifies fines based on whether the motor vehicle is a light motor vehicle, a medium/heavy goods or passenger vehicle, but does not state that the fine amount depends proportionally on the exact speed.",
+        "verdict": 0
+      },
+      {
+        "statement": "The speed of the vehicle is given in kilometers per hour.",
+        "reason": "The context explicitly mentions 'twenty-five kilometre per hour' in Section 16(5) of the Motor Vehicles (Driving) Regulations, 2017.",
+        "verdict": 1
+      },
+      {
+        "statement": "The fine for overspeeding will be between 100 and 200 rupees per hour.",
+        "reason": "There is no mention of a fine between 100 and 200 rupees per hour for overspeeding in the context.",
+        "verdict": 0
+      },
+      {
+        "statement": "The fine for a vehicle entering the city will be 200 rupees.",
+        "reason": "The context does not contain any rule or fine regarding a vehicle entering the city.",
+        "verdict": 0
+      },
+      {
+        "statement": "If the speed of the vehicle is less than 45 kilometers per hour, the fine is 0.",
+        "reason": "The context does not state any such rule regarding a speed threshold of 45 kilometers per hour and a fine of 0.",
+        "verdict": 0
+      },
+      {
+        "statement": "If the speed of the vehicle is 45 kilometers per hour or more, the fine is 5% of the speed.",
+        "reason": "There is no information in the context supporting a fine calculation based on a percentage of the speed.",
+        "verdict": 0
+      },
+      {
+        "statement": "The fine for overspeeding is not cumulative.",
+        "reason": "The context does not mention whether the fine for overspeeding is cumulative or not.",
+        "verdict": 0
+      },
+      {
+        "statement": "If the speed of the vehicle is 45 kilometers per hour, 95 kilometers per hour, and 145 kilometers per hour, the fine is 400 rupees.",
+        "reason": "The context contains no such specific fine rule or combination of speeds resulting in a 400 rupees fine.",
+        "verdict": 0
+      }
+    ]
+  },
+  "7436c3d5db9bba9e231eb0bc60e8e3b0": {
+    "generated_questions": [
+      "What is the fine for a vehicle entering the city?",
+      "How to calculate the fine?",
+      "How is the speeding fine determined in rupees?"
+    ],
+    "noncommittal": 0
+  },
+  "2013bed93916f8f9de6c82f89329c474": {
+    "statements": [
+      "For a light motor vehicle, the fine for overspeeding is not less than one thousand rupees.",
+      "For a light motor vehicle, the fine for overspeeding may extend to two thousand rupees.",
+      "For a medium goods vehicle, the fine for overspeeding is not less than two thousand rupees.",
+      "For a medium goods vehicle, the fine for overspeeding may extend to four thousand rupees.",
+      "For a medium passenger vehicle, the fine for overspeeding is not less than two thousand rupees.",
+      "For a medium passenger vehicle, the fine for overspeeding may extend to four thousand rupees.",
+      "For a heavy goods vehicle, the fine for overspeeding is not less than two thousand rupees.",
+      "For a heavy goods vehicle, the fine for overspeeding may extend to four thousand rupees.",
+      "For a heavy passenger vehicle, the fine for overspeeding is not less than two thousand rupees.",
+      "For a heavy passenger vehicle, the fine for overspeeding may extend to four thousand rupees.",
+      "For a second or any subsequent overspeeding offence, the driver's driving licence shall be impounded as per the provisions of sub-section (4) of section 206."
+    ]
+  },
+  "8dccff40b53359102ea531242a81a97e": {
+    "evaluations": [
+      {
+        "statement": "For a light motor vehicle, the fine for overspeeding is not less than one thousand rupees.",
+        "reason": "Section 183(1)(i) states that where such motor vehicle is a light motor vehicle with fine which shall not be less than one thousand rupees.",
+        "verdict": 1
+      },
+      {
+        "statement": "For a light motor vehicle, the fine for overspeeding may extend to two thousand rupees.",
+        "reason": "Section 183(1)(i) states that the fine may extend to two thousand rupees for a light motor vehicle.",
+        "verdict": 1
+      },
+      {
+        "statement": "For a medium goods vehicle, the fine for overspeeding is not less than two thousand rupees.",
+        "reason": "Section 183(1)(ii) states that for a medium goods vehicle, the fine shall not be less than two thousand rupees.",
+        "verdict": 1
+      },
+      {
+        "statement": "For a medium goods vehicle, the fine for overspeeding may extend to four thousand rupees.",
+        "reason": "Section 183(1)(ii) states that for a medium goods vehicle, the fine may extend to four thousand rupees.",
+        "verdict": 1
+      },
+      {
+        "statement": "For a medium passenger vehicle, the fine for overspeeding is not less than two thousand rupees.",
+        "reason": "Section 183(1)(ii) states that for a medium passenger vehicle, the fine shall not be less than two thousand rupees.",
+        "verdict": 1
+      },
+      {
+        "statement": "For a medium passenger vehicle, the fine for overspeeding may extend to four thousand rupees.",
+        "reason": "Section 183(1)(ii) states that for a medium passenger vehicle, the fine may extend to four thousand rupees.",
+        "verdict": 1
+      },
+      {
+        "statement": "For a heavy goods vehicle, the fine for overspeeding is not less than two thousand rupees.",
+        "reason": "Section 183(1)(ii) states that for a heavy goods vehicle, the fine shall not be less than two thousand rupees.",
+        "verdict": 1
+      },
+      {
+        "statement": "For a heavy goods vehicle, the fine for overspeeding may extend to four thousand rupees.",
+        "reason": "Section 183(1)(ii) states that for a heavy goods vehicle, the fine may extend to four thousand rupees.",
+        "verdict": 1
+      },
+      {
+        "statement": "For a heavy passenger vehicle, the fine for overspeeding is not less than two thousand rupees.",
+        "reason": "Section 183(1)(ii) states that for a heavy passenger vehicle, the fine shall not be less than two thousand rupees.",
+        "verdict": 1
+      },
+      {
+        "statement": "For a heavy passenger vehicle, the fine for overspeeding may extend to four thousand rupees.",
+        "reason": "Section 183(1)(ii) states that for a heavy passenger vehicle, the fine may extend to four thousand rupees.",
+        "verdict": 1
+      },
+      {
+        "statement": "For a second or any subsequent overspeeding offence, the driver's driving licence shall be impounded as per the provisions of the sub-section (4) of section 206.",
+        "reason": "Section 183(1)(iii) states that for the second or any subsequent offence under this sub-section the driving licence of such driver shall be impounded as per the provisions of the sub-section (4) of section 206.",
+        "verdict": 1
+      }
+    ]
+  },
+  "0e6485089a2580e67db95a92e9242939": {
+    "generated_questions": [
+      "What are the penalties for speeding in a light motor vehicle compared to a heavy vehicle under the Motor Vehicles Act?",
+      "What happens to a driver's license upon committing a second or subsequent traffic offense under Section 183 of the Motor Vehicles Act?",
+      "Can you detail the fines associated with different types of vehicles for speeding violations according to the Motor Vehicles Act, 1988?"
+    ],
+    "noncommittal": 0
+  },
+  "a75fea4e1c51aa5db977af7561cf00e9": {
+    "statements": [
+      "Specific information on the fine for using a mirror film with 20 percent black tint was not found."
+    ]
+  },
+  "b53afa24921fa9fc2cac8b92f8c0e8cf": {
+    "evaluations": [
+      {
+        "statement": "Specific information on the fine for using a mirror film with 20 percent black tint was not found.",
+        "reason": "The provided context contains no information regarding fines for mirror films with a 20 percent black tint.",
+        "verdict": 1
+      }
+    ]
+  },
+  "0060410787b5403a7768d5d52b0ed2dd": {
+    "generated_questions": [
+      "What is the penalty for applying a 20 percent black tint mirror film to my car windows?",
+      "How much is the fine if caught using a 20% tint mirror film?",
+      "Can you tell me the legal consequences and fine amount for a 20 percent black mirror window tint?"
+    ],
+    "noncommittal": 1
+  },
+  "1a478c3a8a45bdf1bb8654786ddc21fc": {
+    "statements": [
+      "The Motor Vehicles (Amendment) Rules, 1993 govern the regulations regarding mirror film tints.",
+      "The fine for using a mirror film with a 20 percent black tint is 2500 rupees."
+    ]
+  },
+  "795c8a1a332489ffa96baf60b9269544": {
+    "evaluations": [
+      {
+        "statement": "The Motor Vehicles (Amendment) Rules, 1993 govern the regulations regarding mirror film tints.",
+        "reason": "The provided context mentions the Central Motor Vehicles (Amendment) Rules, 1993 in relation to laminated safety glass for the front windscreen, but it does not contain any information about 'mirror film tints'.",
+        "verdict": 0
+      },
+      {
+        "statement": "The fine for using a mirror film with a 20 percent black tint is 2500 rupees.",
+        "reason": "The context mentions fines under Section 177 (up to five hundred rupees for a first offence and fifteen hundred for a subsequent one) and Section 177A, but contains no mention of mirror films, percentage tints, or a fine amount of 2500 rupees.",
+        "verdict": 0
+      }
+    ]
+  },
+  "9794cd48616288d41e06f53dfd360eee": {
+    "generated_questions": [
+      "What is the penalty for using a 20% black tint mirror film under the Motor Vehicles (Amendment) Rules, 1993?",
+      "How much is the fine for having a mirror film with 20% black tint according to the 1993 Motor Vehicles (Amendment) Rules?",
+      "Under the Motor Vehicles (Amendment) Rules, 1993, what is the monetary fine for a 20% black tint mirror film violation?"
+    ],
+    "noncommittal": 0
+  },
+  "7eedc3212d663982f49cda147b330a1c": {
+    "statements": []
+  },
+  "02e9e58a8e3fb50c2e87dad8ae080d32": {
+    "generated_questions": [
+      "What is a method to construct a low-power LED light source without relying on traditional incandescent technology?",
+      "How can I build a compact 5W LED fixture from scratch?",
+      "Can you explain the process of assembling a small LED lamp that draws five watts without using incandescent bulbs?"
+    ],
+    "noncommittal": 0
+  },
+  "727ff2d3cad659a222c0b640d19ccfe6": {
+    "statements": [
+      "The responder does not have an official Haryana or Indian source that confirms the exact fine amount for tint percentage violations.",
+      "The responder cannot answer the question about the fine amount reliably.",
+      "The responder advises the user to stay polite.",
+      "The responder advises the user to ask the officer which specific section the user is being charged under.",
+      "The responder advises the user to request that the officer write the specific section on the challan."
+    ]
+  },
+  "568bead3a88dcc86641aede365fa4d3b": {
+    "evaluations": [
+      {
+        "statement": "The responder does not have an official Haryana or Indian source that confirms the exact fine amount for tint percentage violations.",
+        "reason": "The context contains no information about the responder having or lacking an official Haryana source or tint percentage violation fines.",
+        "verdict": 0
+      },
+      {
+        "statement": "The responder cannot answer the question about the fine amount reliably.",
+        "reason": "The context does not mention the responder's ability or inability to answer questions about fine amounts reliably.",
+        "verdict": 0
+      },
+      {
+        "statement": "The responder advises the user to stay polite.",
+        "reason": "The context contains no advice regarding staying polite.",
+        "verdict": 0
+      },
+      {
+        "statement": "The responder advises the user to ask the officer which specific section the user is being charged under.",
+        "reason": "The provided text does not contain any advice to users on what to ask an officer.",
+        "verdict": 0
+      },
+      {
+        "statement": "The responder advises the user to request that the officer write the specific section on the challan.",
+        "reason": "There is no mention of advice regarding writing sections on challans in the provided context.",
+        "verdict": 0
+      }
+    ]
+  },
+  "d059f1efda04556977d0ac00f9e3f8a1": {
+    "generated_questions": [
+      "What is the exact fine amount for car window tint violations in Haryana?",
+      "How much do traffic police fine drivers for illegal tint percentages in India?",
+      "What is the penalty fee for exceeding the legal limit of window tint in Haryana?"
+    ],
+    "noncommittal": 1
+  },
+  "0872ee0f7b5d6a64ec7decf519170c92": {
+    "statements": [
+      "According to the Motor Vehicles Act, 1988, the penalty for drunk driving includes imprisonment for a term which may extend to six months.",
+      "According to the Motor Vehicles Act, 1988, the penalty for drunk driving includes a fine of ten thousand rupees.",
+      "According to the Motor Vehicles Act, 1988, the penalty for drunk driving can include both imprisonment and a fine.",
+      "A driver's licence may be disqualified for a period of three months for a first drunk driving offence.",
+      "A driver's licence may be disqualified for a period of six months or more for subsequent drunk driving offences.",
+      "Section 185 of the Motor Vehicles Act states that anyone driving a motor vehicle in a state of intoxication shall be punishable with imprisonment for a term which may extend to six months, or with a fine which may extend to ten thousand rupees, or with both."
+    ]
+  },
+  "23652e0a0c6668d1017f694511477070": {
+    "evaluations": [
+      {
+        "statement": "According to the Motor Vehicles Act, 1988, the penalty for drunk driving includes imprisonment for a term which may extend to six months.",
+        "reason": "Section 185 states that for the first offence, the punishment includes imprisonment for a term which may extend to six months.",
+        "verdict": 1
+      },
+      {
+        "statement": "According to the Motor Vehicles Act, 1988, the penalty for drunk driving includes a fine of ten thousand rupees.",
+        "reason": "Section 185 states that for the first offence, the punishment includes fine of ten thousand rupees.",
+        "verdict": 1
+      },
+      {
+        "statement": "According to the Motor Vehicles Act, 1988, the penalty for drunk driving can include both imprisonment and a fine.",
+        "reason": "Section 185 states the penalty for the first offence can be imprisonment for a term which may extend to six months, or with fine of ten thousand rupees, or with both.",
+        "verdict": 1
+      },
+      {
+        "statement": "A driver's licence may be disqualified for a period of three months for a first drunk driving offence.",
+        "reason": "Section 19(1A) mentions disqualification for a first offence for a period of three months where a licence has been forwarded under section 206(4), but Section 185 deals with drunk driving specifically. The text does not explicitly link Section 19(1A) solely to drunk driving for the 3-month period without assuming external context.",
+        "verdict": 0
+      },
+      {
+        "statement": "A driver's licence may be disqualified for a period of six months or more for subsequent drunk driving offences.",
+        "reason": "The context does not state a disqualification period of six months or more for subsequent drunk driving offences.",
+        "verdict": 0
+      },
+      {
+        "statement": "Section 185 of the Motor Vehicles Act states that anyone driving a motor vehicle in a state of intoxication shall be punishable with imprisonment for a term which may extend to six months, or with a fine which may extend to ten thousand rupees, or with both.",
+        "reason": "Section 185 actually states 'with fine of ten thousand rupees' rather than 'with a fine which may extend to ten thousand rupees' for the fine portion.",
+        "verdict": 0
+      }
+    ]
+  },
+  "7014a388b9ec3cdf8b8fcacb97dfc7b5": {
+    "generated_questions": [
+      "What is the penalty for drunk driving under the Motor Vehicles Act, 1988?",
+      "According to Section 185 of the Motor Vehicles Act, what are the legal consequences and fines for driving under the influence of intoxication?",
+      "How does Indian law punish a first-time versus a subsequent drunk driving offense regarding imprisonment, fines, and license disqualification?"
+    ],
+    "noncommittal": 0
+  },
+  "f8efc5107b8950d42008a30557c810a3": {
+    "statements": [
+      "In India, the penalty for drunk driving is a fine.",
+      "The specific penalty for drunk driving depends on the severity of the offense and the jurisdiction in which the offense was committed.",
+      "If a driver is convicted of drunk driving, the driver may face a fine of 2,500 to 5,000 rupees or imprisonment for up to one year.",
+      "The maximum penalty for drunk driving can be higher in some cases.",
+      "If a driver is convicted of drunk driving and causes harm to another person, the driver may face a fine of 10,000 to 50,000 rupees or imprisonment for up to three years.",
+      "If a driver is convicted of drunk driving and causes damage to property, the driver may face a fine of 20,000 to 1 lakh rupees or imprisonment for up to five years."
+    ]
+  },
+  "890e984b4bf9a01e013278c7dcc9fddb": {
+    "evaluations": [
+      {
+        "statement": "In India, the penalty for drunk driving is a fine.",
+        "reason": "The context mentions that driving under the influence of alcohol/drugs is punishable with imprisonment, or with a fine, or with both, not strictly just a fine.",
+        "verdict": 0
+      },
+      {
+        "statement": "The specific penalty for drunk driving depends on the severity of the offense and the jurisdiction in which the offense was committed.",
+        "reason": "The context mentions penalties for first or subsequent offenses under Section 185, but does not mention jurisdiction as a factor.",
+        "verdict": 0
+      },
+      {
+        "statement": "If a driver is convicted of drunk driving, the driver may face a fine of 2,500 to 5,000 rupees or imprisonment for up to one year.",
+        "reason": "These specific fine and imprisonment amounts for drunk driving are not stated in the provided text.",
+        "verdict": 0
+      },
+      {
+        "statement": "The maximum penalty for drunk driving can be higher in some cases.",
+        "reason": "The context details specific penalties for first and subsequent offenses under Section 185, but does not provide information about other higher penalties based on external cases.",
+        "verdict": 0
+      },
+      {
+        "statement": "If a driver is convicted of drunk driving and causes harm to another person, the driver may face a fine of 10,000 to 50,000 rupees or imprisonment for up to three years.",
+        "reason": "This information regarding causing harm during drunk driving is not present in the provided context.",
+        "verdict": 0
+      },
+      {
+        "statement": "If a driver is convicted of drunk driving and causes damage to property, the driver may face a fine of 20,000 to 1 lakh rupees or imprisonment for up to five years.",
+        "reason": "This statement is not mentioned in the text and relies on external knowledge.",
+        "verdict": 0
+      }
+    ]
+  },
+  "d46fb9db3aa29daf78f97e2aa4ae4410": {
+    "generated_questions": [
+      "What are the penalties for drunk driving in India?",
+      "How much is the fine for driving under the influence in India?",
+      "What happens if you cause property damage or harm while drunk driving in India?"
+    ],
+    "noncommittal": 0
+  },
+  "e2240db42059958a5987cbe886c2c697": {
+    "generated_questions": [
+      "How many Americans were killed in drunk driving crashes in 2017 and how is a drunk driver defined?",
+      "What are the statistics and definitions regarding drunk driving crashes and age groups in 2017?",
+      "Can you provide information on US drunk driving fatalities in 2017 along with the criteria for a drunk driver?"
+    ],
+    "noncommittal": 0
+  },
+  "61977e78a00c3a6977cf206a2e71c46e": {
+    "statements": [
+      "The penalty for a first offence of driving under the influence of alcohol or drugs is imprisonment for a term which may extend to six months, or a fine of ten thousand rupees, or both under the Motor Vehicles Act, 1988, Section 185, Page 102.",
+      "The penalty for a second or subsequent offence of driving under the influence of alcohol or drugs is imprisonment for a term which may extend to two years, or a fine of fifteen thousand rupees, or both under the Motor Vehicles Act, 1988, Section 185, Page 102."
+    ]
+  },
+  "f827acf6bbe819854f8378980262db5c": {
+    "evaluations": [
+      {
+        "statement": "The penalty for a first offence of driving under the influence of alcohol or drugs is imprisonment for a term which may extend to six months, or a fine of ten thousand rupees, or both under the Motor Vehicles Act, 1988, Section 185, Page 102.",
+        "reason": "The text under Section 185 explicitly states that whoever, while driving or attempting to drive a motor vehicle, meets the conditions of clause (a) or (b) shall be punishable for the first offence with imprisonment for a term which may extend to six months, or with fine of ten thousand rupees, or with both.",
+        "verdict": 1
+      },
+      {
+        "statement": "The penalty for a second or subsequent offence of driving under the influence of alcohol or drugs is imprisonment for a term which may extend to two years, or a fine of fifteen thousand rupees, or both under the Motor Vehicles Act, 1988, Section 185, Page 102.",
+        "reason": "The text under Section 185 explicitly states that for a second or subsequent offence, with imprisonment for a term which may extend to two years, or with fine of fifteen thousand rupees, or with both.",
+        "verdict": 1
+      }
+    ]
+  },
+  "e78f17af705eb7bcda88ad594818d574": {
+    "generated_questions": [
+      "What are the legal penalties for driving under the influence of alcohol or drugs according to Section 185 of the Motor Vehicles Act, 1988?",
+      "How is a second or subsequent offense of drunk driving punished under Indian traffic law?",
+      "What is the fine and imprisonment term for a first-time DUI offense under the Motor Vehicles Act?"
+    ],
+    "noncommittal": 0
+  },
+  "4d130eaad4452cd2183bb2b5af375da9": {
+    "statements": [
+      "A police officer can charge a person 1000 rupees for not wearing a helmet.",
+      "Section 194D of the Motor Vehicles Act 1988 authorizes a police officer to charge a person 1000 rupees for not wearing a helmet."
+    ]
+  },
+  "3efa779496314ab78736c720f884c2cd": {
+    "evaluations": [
+      {
+        "statement": "A police officer can charge a person 1000 rupees for not wearing a helmet.",
+        "reason": "Section 194D states that driving in contravention of section 129 (wearing protective headgear/helmet) is punishable with a fine of one thousand rupees, but the context does not explicitly state that a 'police officer can charge' this amount directly.",
+        "verdict": 0
+      },
+      {
+        "statement": "Section 194D of the Motor Vehicles Act 1988 authorizes a police officer to charge a person 1000 rupees for not wearing a helmet.",
+        "reason": "Section 194D prescribes a fine of one thousand rupees for contravention of section 129, but it does not contain language stating it 'authorizes a police officer to charge' this amount.",
+        "verdict": 0
+      }
+    ]
+  },
+  "5f4427c25311d02a107543d2ad9d79fc": {
+    "generated_questions": [
+      "Is wearing a helmet mandatory for riders and pillion passengers under the Motor Vehicles Act, 1988?",
+      "Does Section 194D of the Motor Vehicles Act, 1988 penalize individuals for not wearing protective headgear?",
+      "Is there a legal requirement for motorcycle riders to wear helmets according to page 106 of the Motor Vehicles Act, 1988?"
+    ],
+    "noncommittal": 0
+  },
+  "9b70b9f29e7e672fcafd887184f41079": {
+    "statements": [
+      "A police officer who is not a traffic police officer cannot charge a person 1000 rupees for not wearing a helmet.",
+      "The Motor Vehicles Act, 1988 applies to motorcycle and motor vehicle drivers stopped by traffic police officers.",
+      "A police officer from another department, such as the Haryana State Police, does not have the power to charge a person for not wearing a helmet.",
+      "The Motor Vehicles Act, 1988 requires motorcycle and motor vehicle drivers to wear protective headgear while driving in public places.",
+      "The standard for protective headgear is defined in the Motor Vehicles Act, 1988.",
+      "Certified helmets that meet the standards of protective headgear can be purchased at various retailers and online marketplaces."
+    ]
+  },
+  "e8f03d69a77fe892bb85d26323d29930": {
+    "evaluations": [
+      {
+        "statement": "A police officer who is not a traffic police officer cannot charge a person 1000 rupees for not wearing a helmet.",
+        "reason": "The context does not contain any information about whether non-traffic police officers have the authority to charge individuals.",
+        "verdict": 0
+      },
+      {
+        "statement": "The Motor Vehicles Act, 1988 applies to motorcycle and motor vehicle drivers stopped by traffic police officers.",
+        "reason": "The context does not mention traffic police officers or drivers being stopped by them in relation to the application of the Act.",
+        "verdict": 0
+      },
+      {
+        "statement": "A police officer from another department, such as the Haryana State Police, does not have the power to charge a person for not wearing a helmet.",
+        "reason": "The context does not mention the Haryana State Police or the powers of police officers from other departments.",
+        "verdict": 0
+      },
+      {
+        "statement": "The Motor Vehicles Act, 1988 requires motorcycle and motor vehicle drivers to wear protective headgear while driving in public places.",
+        "reason": "While motorcycles are explicitly required to wear protective headgear under Section 129, the general statement that all motor vehicle drivers must wear it is not fully supported for all motor vehicles.",
+        "verdict": 0
+      },
+      {
+        "statement": "The standard for protective headgear is defined in the Motor Vehicles Act, 1988.",
+        "reason": "The context states that headgear must conform to standards prescribed by the Central Government or rules made by them, rather than defining the specific technical standards within the text itself.",
+        "verdict": 0
+      },
+      {
+        "statement": "Certified helmets that meet the standards of protective headgear can be purchased at various retailers and online marketplaces.",
+        "reason": "The context contains no information regarding where helmets can be purchased.",
+        "verdict": 0
+      }
+    ]
+  },
+  "2a0fc7339fac45f6deef8ae981d451e0": {
+    "generated_questions": [
+      "Can a non-traffic police officer fine me 1000 rupees for not wearing a helmet?",
+      "Do local or state police officers outside of the traffic department have the authority to issue helmet fines?",
+      "Is a police officer from a department other than traffic allowed to penalize motorists for riding without a helmet?"
+    ],
+    "noncommittal": 0
+  },
+  "5bc3bb6c5272bce476ffd0be9dd4c474": {
+    "statements": [
+      "A police officer needs a reason to charge a person.",
+      "The more the charges, the more a police officer will be able to explain.",
+      "In the specified case, the charges will be for not having a helmet.",
+      "A person needs to have a reason to say that the charges are for not having a helmet."
+    ]
+  },
+  "1a4017d80a215f433611df9b66562f8b": {
+    "evaluations": [
+      {
+        "statement": "A police officer needs a reason to charge a person.",
+        "reason": "The context mentions that a police officer may seize documents or licences 'if he has reason to believe', but it does not broadly state that a police officer needs a reason to charge a person.",
+        "verdict": 0
+      },
+      {
+        "statement": "The more the charges, the more a police officer will be able to explain.",
+        "reason": "There is no information in the context about the relationship between the number of charges and how much a police officer can explain.",
+        "verdict": 0
+      },
+      {
+        "statement": "In the specified case, the charges will be for not having a helmet.",
+        "reason": "The context mentions offences related to not wearing protective headgear under Section 194D, but does not state that 'in the specified case' charges will be for not having a helmet.",
+        "verdict": 0
+      },
+      {
+        "statement": "A person needs to have a reason to say that the charges are for not having a helmet.",
+        "reason": "This statement is not mentioned or supported anywhere in the provided text.",
+        "verdict": 0
+      }
+    ]
+  },
+  "fc2fb6d130bff14ed76fc4ba02974398": {
+    "generated_questions": [
+      "What is the correct answer to the multiple-choice question regarding police charges and helmet laws?",
+      "Can you provide the full content of the test regarding police charges and speech acts?",
+      "What does the provided text indicate about the reasons for police charges and multiple-choice options?"
+    ],
+    "noncommittal": 0
+  },
+  "56d02b1569c3c56de5e1098f0b557795": {
+    "statements": [
+      "A police officer can charge a person one thousand rupees for not wearing a helmet.",
+      "Any police officer is empowered to enforce the helmet rule.",
+      "Under Section 129 of the Motor Vehicles Act of 1988, every person riding a motorcycle in a public place must wear protective headgear.",
+      "Contravening the helmet rule carries a fine of one thousand rupees under Section 194D of the Motor Vehicles Act of 1988.",
+      "Contravening the helmet rule carries a three-month license disqualification under Section 194D of the Motor Vehicles Act of 1988."
+    ]
+  }
+}

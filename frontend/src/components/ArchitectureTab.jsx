@@ -26,7 +26,7 @@ const NODES = [
   {
     id: 'retrieval', row: 3, icon: '🔎', label: 'Retrieval Service', port: 8002,
     summary: 'Hybrid retrieval: vector search + graph lookup, fused by one relevance score.',
-    detail: 'Normalizes known abbreviations (RC → registration certificate, etc.), embeds the question (via LLM Service), searches Chroma for similar chunks (via Data Service), matches known legal-concept entities against the question using the flat-JSON graph, scores graph-evidenced sections on the SAME cosine-similarity scale as vector hits (not a blind priority guess), and fuses everything into one ranked context list.\n\nEndpoints: POST /v1/retrieve · GET /v1/categories(/{slug}/sections)\nFile: services/retrieval_service/',
+    detail: 'Normalizes known abbreviations (RC → registration certificate, etc.), embeds the question (via LLM Service), searches Chroma for similar chunks (via Data Service), matches known legal-concept entities against the question with Cypher against Neo4j, scores graph-evidenced sections on the SAME cosine-similarity scale as vector hits (not a blind priority guess), and fuses everything into one ranked context list.\n\nEndpoints: POST /v1/retrieve · GET /v1/categories(/{slug}/sections)\nFile: services/retrieval_service/ (graph_store.py dispatches to neo4j_store.py, or graph_store_json.py as fallback)',
     calls: ['llm', 'data'],
     calledBy: ['orchestration'],
   },
@@ -61,6 +61,12 @@ const NODES = [
     summary: 'Embedded vector database, persisted to chroma_data/ on disk.',
     detail: 'Built offline by data_pipeline\'s Phase 6 — 1,675 chunk embeddings (768-dim, nomic-embed-text). Data Service is the only thing that ever queries it.',
     calledBy: ['data'],
+  },
+  {
+    id: 'neo4j', row: 5, icon: '🕸️', label: 'Neo4j (graph database)', port: 7687, external: true,
+    summary: 'The graph half of hybrid retrieval — entities, sections and the relationships between them.',
+    detail: 'Holds 1,331 entities (14 alias-bearing legal concepts + 1,317 sections) and 1,390 relationships, loaded offline by scripts/load_neo4j.py from what the pipeline emitted. Retrieval Service queries it in Cypher: alias matching, relationship lookup, and evidence ranking all run in the database rather than as Python loops over a dict.\n\nBecause sections are real nodes here rather than string ids inside a JSON blob, the corpus is genuinely traversable — GRAPH_EXPAND_HOPS=2 reaches evidence through CONNECTED entities, a hop the previous flat-JSON store structurally could not make.\n\nThe old JSON store is retained as a fallback: if Neo4j is unreachable, retrieval degrades to it rather than losing the graph path entirely (which would silently halve the context on entity-bearing questions). scripts/verify_neo4j.py asserts both backends return identical entities, relationships and ranked evidence.',
+    calledBy: ['retrieval'],
   },
 ]
 

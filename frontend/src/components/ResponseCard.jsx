@@ -8,9 +8,9 @@ const CONFIDENCE_LABEL = {
   none: 'No official source found',
 }
 
-// The LLM's answer follows the system prompt's fixed 4-part shape and uses
-// **bold** for its section headers — render those as real emphasis rather
-// than showing the literal asterisks.
+// The persona is conversational now (no fixed heading template), but models
+// still reach for **bold** to stress a provision or an amount — render those
+// as real emphasis rather than showing the literal asterisks.
 function renderAnswer(text) {
   const parts = text.split(/(\*\*[^*]+\*\*)/g)
   return parts.map((part, i) =>

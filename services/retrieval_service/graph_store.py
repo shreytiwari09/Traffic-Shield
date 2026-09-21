@@ -1,112 +1,91 @@
 """
-Loads the flat-JSON GraphRAG substitute (DATA/graph/entities.json +
-relationships.json) once at startup and answers alias-matching +
-relationship lookups in-process. This is the deliberate stand-in for a real
-graph database (Neo4j is reserved for future work) — small enough (1,160
-entities / 1,372 edges) that an in-memory dict is instant.
+The graph half of hybrid retrieval, behind one interface with two
+interchangeable backends.
+
+    settings.graph_backend = "neo4j"  -> neo4j_store      (Cypher, default)
+    settings.graph_backend = "json"   -> graph_store_json (in-process dicts)
+
+Nothing above this module knows which one is active: retrieval_service/routes.py
+calls the same four functions either way. That is deliberate — it is what let
+a real graph database replace the flat-JSON stand-in without touching the
+fusion, scoring, or ranking code that the app's retrieval quality depends on.
+
+FALLBACK
+If `graph_backend` is "neo4j" and the database cannot be reached (not started,
+wrong password, empty graph), this falls back to the JSON store rather than
+leaving retrieval with no graph path. The reason is quantitative: on
+entity-bearing questions the graph contributes roughly half the fused context,
+so failing closed would silently halve answer quality while every service
+still reported healthy. Falling back keeps answers correct and reports the
+degradation in /v1/health, where it can actually be noticed.
 """
 
-import json
-import re
-
+from services.retrieval_service import graph_store_json
 from services.shared.settings import settings
 
-_alias_to_entity: dict[str, str] = {}
-_entity_relationships: dict[str, list[dict]] = {}
-_loaded = False
+# Imported lazily-ish: neo4j_store imports the driver at module level, and a
+# json-only deployment should not need the package installed at all.
+_neo4j_store = None
+_active = graph_store_json
+_fell_back = False
+
+
+def _neo4j():
+    global _neo4j_store
+    if _neo4j_store is None:
+        from services.retrieval_service import neo4j_store
+        _neo4j_store = neo4j_store
+    return _neo4j_store
 
 
 def load() -> None:
-    global _loaded
+    global _active, _fell_back
+    _fell_back = False
 
-    if not settings.entities_path.exists() or not settings.relationships_path.exists():
-        _loaded = False
-        return
+    if settings.graph_backend == "neo4j":
+        driver_missing = False
+        try:
+            if _neo4j().load():
+                _active = _neo4j()
+                return
+        except ImportError:
+            # Driver not installed — handled like an unreachable database.
+            driver_missing = True
+        if not settings.neo4j_fallback_to_json and not driver_missing:
+            _active = _neo4j()  # stays unloaded; is_loaded() reports False
+            return
+        # With the driver absent there is no neo4j_store to point at, so the
+        # JSON store is the only thing left to load regardless of the fallback
+        # setting — the alternative is an ImportError escaping startup.
+        _fell_back = True
 
-    with open(settings.entities_path, encoding="utf-8") as f:
-        entities = json.load(f)
-    with open(settings.relationships_path, encoding="utf-8") as f:
-        relationships = json.load(f)
-
-    _alias_to_entity.clear()
-    for concept in entities.get("concepts", []):
-        name = concept["name"]
-        aliases = concept.get("aliases") or [name.lower()]
-        for alias in aliases:
-            _alias_to_entity[alias.lower()] = name
-
-    _entity_relationships.clear()
-    for rel in relationships.get("relationships", []):
-        for name in (rel["source_name"], rel["target_name"]):
-            _entity_relationships.setdefault(name, []).append(rel)
-
-    _loaded = True
+    graph_store_json.load()
+    _active = graph_store_json
 
 
 def is_loaded() -> bool:
-    return _loaded
+    return _active.is_loaded()
+
+
+def status() -> dict:
+    """What /v1/health reports. `fell_back` is the field that matters: it is
+    the difference between "running on Neo4j as configured" and "quietly
+    running on the JSON store because Neo4j is down"."""
+    detail = _active.status()
+    detail["configured_backend"] = settings.graph_backend
+    detail["fell_back"] = _fell_back
+    if settings.graph_backend == "neo4j" and _neo4j_store is not None:
+        detail["neo4j_error"] = _neo4j_store.status().get("error")
+    return detail
 
 
 def match_entities(question: str) -> list[str]:
-    """Alias/keyword match against the question text, using the same alias
-    table data_pipeline Phase 7 used to build entities.json — so retrieval
-    and graph-construction stay in sync."""
-    q = question.lower()
-    matched = set()
-    for alias, entity_name in _alias_to_entity.items():
-        if re.search(rf"\b{re.escape(alias)}\b", q):
-            matched.add(entity_name)
-    return sorted(matched)
+    return _active.match_entities(question)
 
 
 def relationships_for(entity_names: list[str]) -> list[dict]:
-    seen_ids: set[str] = set()
-    out: list[dict] = []
-    for name in entity_names:
-        for rel in _entity_relationships.get(name, []):
-            if rel["id"] in seen_ids:
-                continue
-            seen_ids.add(rel["id"])
-            out.append(rel)
-    return out
-
-
-# Mirrors data_pipeline/config.py's SOURCES priority tiers (1 = primary
-# legislation ... 4 = supporting/procedural law). Kept as a local, small
-# lookup rather than importing data_pipeline.config directly, matching the
-# same reasoning as settings.py's own DATA_DIR: retrieval_service stays a
-# self-contained reader, not coupled to the offline pipeline's module.
-_ACT_PRIORITY = {
-    "Motor Vehicles Act, 1988": 1,
-    "Motor Vehicles (Amendment) Act, 2019": 1,
-    "Central Motor Vehicles Rules, 1989": 2,
-    "Haryana Motor Vehicle Rules, 1993": 2,
-    "Motor Vehicles (Driving) Regulations, 2017": 3,
-    "Bharatiya Sakshya Adhiniyam, 2023": 4,
-}
+    return _active.relationships_for(entity_names)
 
 
 def evidence_record_ids(relationships: list[dict], per_relationship_limit: int = 5) -> list[str]:
-    """
-    Collects every evidenced section across the given relationships, then
-    ranks by the SOURCE ACT's real legal priority before any caller truncates
-    the list — NOT by whatever order relationships.json happens to store
-    them in. Without this, a heavily cross-referenced entity (e.g.
-    "Registration Certificate" — mentioned in 111 relationships, mostly
-    lower-priority CMVR/Haryana rules) can bury the one primary-Act section
-    that actually answers the question dozens of positions deep, purely
-    because of file order, and a small evidence cap (kept small on purpose,
-    for latency — see routes.py's _MAX_GRAPH_EVIDENCE) would silently drop it.
-    """
-    seen: set[str] = set()
-    ranked: list[tuple[int, str]] = []
-    for rel in relationships:
-        for evidence in rel.get("evidence", [])[:per_relationship_limit]:
-            section_id = evidence["section_id"]
-            if section_id in seen:
-                continue
-            seen.add(section_id)
-            priority = _ACT_PRIORITY.get(evidence.get("act", ""), 7)
-            ranked.append((priority, section_id))
-    ranked.sort(key=lambda pair: pair[0])  # stable — ties keep discovery order
-    return [section_id for _, section_id in ranked]
+    return _active.evidence_record_ids(relationships, per_relationship_limit)

@@ -66,11 +66,26 @@ async def _post_with_retry(url: str, json: dict) -> httpx.Response:
     raise last_exc  # only reached if every attempt hit a 5xx
 
 
-async def generate(question: str, system_message: str | None, model: str | None = None) -> str:
+async def generate(
+    question: str,
+    system_message: str | None,
+    model: str | None = None,
+    history: list[dict] | None = None,
+) -> str:
     model = model or settings.ollama_model
     messages = []
     if system_message:  # None or "" -> no system turn at all (raw model, Eval tab's no-retrieval cells)
         messages.append({"role": "system", "content": system_message})
+    # Prior turns go between the system message and the current question, which
+    # is the ordering /api/chat expects. The system message is always the
+    # freshly-rebuilt one carrying THIS turn's retrieved context — the stale
+    # system turns from earlier in the conversation are deliberately not
+    # replayed (see ChatMessage in schemas.py).
+    for turn in history or []:
+        role = turn.get("role")
+        content = turn.get("content")
+        if role in ("user", "assistant") and content:
+            messages.append({"role": role, "content": content})
     messages.append({"role": "user", "content": question})
 
     response = await _post_with_retry(

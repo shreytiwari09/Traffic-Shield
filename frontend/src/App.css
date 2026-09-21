@@ -739,3 +739,181 @@ button.ghost:hover { color: var(--text); border-color: var(--accent); }
   margin: 0.45rem 0 0;
 }
 .service-explain-what b, .service-explain-why b { color: var(--muted); font-weight: 600; }
+
+/* --- conversational chat (multi-turn Ask tab) ------------------------------
+   The thread scrolls, the composer stays put at the bottom. Sized off the
+   viewport minus the sticky header rather than a fixed height, so the input
+   stays reachable on a phone held at a roadside stop — which is the actual
+   situation this app is for. */
+.chat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  min-height: calc(100vh - 230px);
+}
+
+.chat-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.chat-bar-label { font-size: 0.78rem; color: var(--muted); }
+
+.chat-thread {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  flex: 1;
+}
+
+/* Empty state doubles as the openers, so a first-time user has something
+   concrete to click rather than a blank box and a legal topic to invent. */
+.chat-empty {
+  text-align: center;
+  padding: 2.2rem 1rem 1.4rem;
+}
+
+.chat-empty h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1.05rem;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+.chat-empty p {
+  margin: 0 auto 1.3rem;
+  max-width: 54ch;
+  font-size: 0.86rem;
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+.chat-openers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.chat-opener {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  border-radius: 999px;
+  padding: 0.5rem 0.95rem;
+  font-size: 0.82rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color 0.16s ease, color 0.16s ease, background 0.16s ease;
+}
+
+.chat-opener:hover {
+  border-color: var(--accent);
+  color: var(--text);
+  background: var(--accent-soft);
+}
+
+.msg-user { display: flex; justify-content: flex-end; }
+
+.msg-user-bubble {
+  background: var(--accent-soft);
+  border: 1px solid rgba(91, 155, 255, 0.32);
+  color: var(--text);
+  border-radius: var(--radius) var(--radius) 4px var(--radius);
+  padding: 0.65rem 0.95rem;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  max-width: min(82%, 60ch);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.msg-assistant { display: block; }
+
+/* The composer is the one element that must never scroll out of reach. */
+.chat-composer {
+  position: sticky;
+  bottom: 0;
+  background: linear-gradient(180deg, transparent 0%, var(--bg) 22%);
+  padding-top: 0.9rem;
+}
+
+.chat-disclaimer {
+  margin: 0.9rem 0 0;
+  font-size: 0.72rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+/* --- web fallback ----------------------------------------------------------
+   Styled as a bordered warning block, not as more answer text. Everything
+   above it in the card is verified statute; this is the open internet. The
+   visual break IS the safety feature — a reader skimming on a phone at a
+   roadside stop must not mistake one for the other. */
+.web-fallback {
+  margin-top: 1.1rem;
+  border: 1px solid rgba(236, 192, 74, 0.45);
+  border-left: 3px solid var(--warn);
+  background: var(--warn-soft);
+  border-radius: var(--radius-sm);
+  padding: 0.85rem 1rem;
+}
+
+.web-fallback-head {
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--warn);
+  margin-bottom: 0.5rem;
+}
+
+.web-fallback-note {
+  margin: 0 0 0.75rem;
+  font-size: 0.76rem;
+  line-height: 1.55;
+  color: var(--text-dim);
+}
+
+.web-fallback-note b { color: var(--warn); }
+
+.web-fallback-answer {
+  font-size: 0.9rem;
+  line-height: 1.62;
+  white-space: pre-wrap;
+  color: var(--text);
+}
+
+.web-sources { margin-top: 0.85rem; }
+
+.web-sources h4 {
+  margin: 0 0 0.4rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* Block-level rather than inline chips: these are external links leaving the
+   app entirely, which should not look like the citation chips right above
+   them that open the real statute text in place. */
+.web-source {
+  display: block;
+  font-size: 0.78rem;
+  color: var(--accent);
+  text-decoration: none;
+  padding: 0.2rem 0;
+  overflow-wrap: anywhere;
+}
+
+.web-source:hover { text-decoration: underline; }
+
+.web-fallback-queries {
+  margin: 0.7rem 0 0;
+  font-size: 0.7rem;
+  color: var(--muted);
+  font-family: var(--mono);
+}

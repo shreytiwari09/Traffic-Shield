@@ -52,16 +52,17 @@ async def generate(req: GenerateRequest):
     started = time.perf_counter()
     context_dicts = [c.model_dump() for c in req.context]
     system_message = build_system_message(context_dicts) if req.use_persona else None
+    history = [m.model_dump() for m in req.history]
 
     try:
         if req.provider == "gemini":
-            answer = await gemini_client.generate(req.question, system_message)
+            answer = await gemini_client.generate(req.question, system_message, history=history)
             model = settings.gemini_model
         elif req.provider in _OLLAMA_MODEL_OVERRIDES:
             model = _OLLAMA_MODEL_OVERRIDES[req.provider]
-            answer = await ollama_client.generate(req.question, system_message, model=model)
+            answer = await ollama_client.generate(req.question, system_message, model=model, history=history)
         else:
-            answer = await ollama_client.generate(req.question, system_message)
+            answer = await ollama_client.generate(req.question, system_message, history=history)
             model = settings.ollama_model
     except gemini_client.GeminiNotConfigured as exc:
         raise HTTPException(status_code=503, detail=str(exc)) from exc

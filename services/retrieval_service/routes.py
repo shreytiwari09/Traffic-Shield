@@ -50,7 +50,11 @@ async def _score_graph_candidate(record_id: str, query_embedding: list[float]) -
 
 @router.get("/v1/health")
 async def health():
-    return {"status": "ok", "graph_loaded": graph_store.is_loaded()}
+    return {
+        "status": "ok",
+        "graph_loaded": graph_store.is_loaded(),
+        "graph": graph_store.status(),
+    }
 
 
 @router.post("/v1/retrieve", response_model=RetrieveResponse)

@@ -1,0 +1,23 @@
+{
+  "started_at": "2026-09-09T03:19:15",
+  "host": {
+    "cpu_logical_cores": 16,
+    "cpu_physical_cores": 8,
+    "cpu_max_mhz": 2000.0,
+    "total_ram_mb": 15680.0,
+    "gpu": {
+      "available": false,
+      "vendor": null,
+      "reason": "nvidia-smi not found on PATH \u2014 no NVIDIA GPU telemetry available on this host."
+    }
+  },
+  "models": [
+    "llama3.1:8b",
+    "codellama:7b",
+    "starcoder2:3b",
+    "gemini-3.5-flash-lite"
+  ],
+  "n_questions": 30,
+  "top_k": 8,
+  "graph_backend": "neo4j"
+}

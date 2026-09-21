@@ -43,8 +43,52 @@ x-service-base: &service-base
     # CPU-only inference overruns the 120s default and surfaces as a 502 from
     # Orchestration; see .env for the measured numbers behind this.
     REQUEST_TIMEOUT_SECONDS: "900"
+    # Unlike Ollama, Neo4j IS containerised here (see the neo4j service below),
+    # so this is a Docker DNS name rather than a host address.
+    NEO4J_URI: bolt://neo4j:7687
+    NEO4J_USER: neo4j
+    NEO4J_PASSWORD: ${NEO4J_PASSWORD:-trafficshield}
+    GRAPH_BACKEND: ${GRAPH_BACKEND:-neo4j}
+    GRAPH_EXPAND_HOPS: ${GRAPH_EXPAND_HOPS:-1}
 
 services:
+
+  # --- Neo4j (graph database) -----------------------------------------------
+  # Containerised, unlike Ollama: the graph is ~1.3k nodes and the official
+  # image is small, so there is no multi-GB model download or CPU inference
+  # penalty to avoid here — the reasons Ollama stays on the host do not apply.
+  #
+  # The graph itself is NOT baked into the image, the same way chroma_data/ is
+  # produced by the offline pipeline rather than shipped. Load it FROM THE HOST
+  # once after first bring-up — bolt is published on 7687 for exactly this, and
+  # scripts/ is in .dockerignore precisely because it is host-side tooling:
+  #     python -m scripts.load_neo4j
+  #     python -m scripts.verify_neo4j
+  neo4j:
+    image: neo4j:5.26-community
+    container_name: ts_neo4j
+    restart: unless-stopped
+    networks: [trafficshield]
+    ports:
+      - "7474:7474"   # HTTP browser UI
+      - "7687:7687"   # Bolt (what the driver uses)
+    environment:
+      NEO4J_AUTH: neo4j/${NEO4J_PASSWORD:-trafficshield}
+      # Same reasoning as conf/neo4j.conf locally: a tiny graph sharing a
+      # 15 GB host with Ollama and five services does not need the defaults.
+      NEO4J_server_memory_heap_max__size: 1g
+      NEO4J_server_memory_pagecache_size: 512m
+    volumes:
+      - neo4j_data:/data
+    healthcheck:
+      # cypher-shell ships in the image, so unlike the Python services this
+      # one can check the database actually answers queries, not just that a
+      # port is open.
+      test: ["CMD-SHELL", "cypher-shell -u neo4j -p ${NEO4J_PASSWORD:-trafficshield} 'RETURN 1' || exit 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 15
+      start_period: 40s
 
   # --- Data / Knowledge Service --------------------------------------------
   # Owns the Chroma vector store and dataset.jsonl. Read-only at request time.
@@ -123,6 +167,7 @@ services:
     depends_on:
       data_service: {condition: service_healthy}
       llm_service: {condition: service_healthy}
+      neo4j: {condition: service_healthy}
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request;urllib.request.urlopen('http://localhost:8002/v1/health',timeout=5)"]
       interval: 10s
@@ -188,3 +233,11 @@ services:
 networks:
   trafficshield:
     driver: bridge
+
+volumes:
+  # Named volume rather than a bind mount: Neo4j's store is a live database
+  # with its own file locking, not a directory of artefacts to inspect, and
+  # bind-mounting it onto a Windows/OneDrive path (which is where this repo
+  # lives) is a known source of corruption. Rebuild it any time with
+  # scripts/load_neo4j.py — DATA/graph/ is the real source of truth.
+  neo4j_data:

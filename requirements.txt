@@ -23,5 +23,10 @@ pymupdf==1.24.11
 # Gemini provider (LLM Service)
 google-genai==1.2.0
 
+# Graph database driver (Retrieval Service's graph backend + scripts/load_neo4j.py).
+# The driver only — the Neo4j SERVER is separate infrastructure, pointed at via
+# NEO4J_URI, the same way Ollama is. See README 'Graph database (Neo4j)'.
+neo4j==6.3.0
+
 # Week 4 evaluation harness (evaluation/run_eval.py) — CPU/RAM sampling
 psutil==7.2.2

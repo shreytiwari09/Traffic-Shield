@@ -19,7 +19,13 @@ async def retrieve(question: str, top_k: int, mode: str = "hybrid") -> dict:
         return response.json()
 
 
-async def generate(question: str, context: list[dict], provider: str, use_persona: bool = True) -> dict:
+async def generate(
+    question: str,
+    context: list[dict],
+    provider: str,
+    use_persona: bool = True,
+    history: list[dict] | None = None,
+) -> dict:
     async with httpx.AsyncClient(timeout=_TIMEOUT) as client:
         response = await client.post(
             f"{settings.llm_service_url}/v1/generate",
@@ -28,6 +34,7 @@ async def generate(question: str, context: list[dict], provider: str, use_person
                 "context": context,
                 "provider": provider,
                 "use_persona": use_persona,
+                "history": history or [],
             },
         )
         response.raise_for_status()

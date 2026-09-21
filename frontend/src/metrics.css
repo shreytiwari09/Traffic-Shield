@@ -1,0 +1,309 @@
+/* RAG Evaluation dashboard styles.
+   Kept in its own file rather than appended to App.css: this is one
+   self-contained surface, and App.css is already 848 lines shared by four
+   tabs. Uses the same design tokens as everything else (index.css :root)
+   rather than a utility framework — two styling systems in one bundle would
+   be worse than either. Charts are hand-rolled SVG, matching the approach
+   PipelineTrace already takes. */
+
+.metrics { display: flex; flex-direction: column; gap: 1.1rem; }
+
+.metrics-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.metrics-head h2 {
+  margin: 0 0 0.25rem;
+  font-size: 1.15rem;
+  font-weight: 650;
+  letter-spacing: -0.015em;
+}
+
+.metrics-sub {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--muted);
+  max-width: 78ch;
+  line-height: 1.55;
+}
+.metrics-sub code { font-family: var(--mono); font-size: 0.74rem; color: var(--text-dim); }
+
+.metrics-stamp {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  color: var(--muted);
+  text-align: right;
+  line-height: 1.5;
+}
+
+/* --- KPI row --- */
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 0.85rem;
+}
+
+.kpi {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.9rem 1rem 0.8rem;
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  overflow: hidden;
+}
+
+/* A hairline in the metric's own colour — enough signal to scan the row
+   without the heavy borders the rest of the design avoids. */
+.kpi::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 2px;
+  background: var(--border-strong);
+}
+.kpi-high::before { background: var(--accent-2); }
+.kpi-medium::before { background: var(--warn); }
+.kpi-low::before { background: var(--danger); }
+
+.kpi-head { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
+
+.kpi-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.kpi-info {
+  width: 15px;
+  height: 15px;
+  flex: none;
+  border-radius: 50%;
+  border: 1px solid var(--border-strong);
+  color: var(--muted);
+  font-size: 0.62rem;
+  line-height: 13px;
+  text-align: center;
+  cursor: help;
+}
+
+.kpi-value {
+  font-size: 1.65rem;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+  margin-top: 0.35rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.kpi-na { font-size: 0.82rem; font-weight: 400; color: var(--muted); font-style: normal; }
+.spark { width: 100%; height: 26px; margin-top: 0.4rem; display: block; }
+.kpi-foot { font-size: 0.68rem; color: var(--muted); margin-top: 0.35rem; }
+
+/* --- hardware honesty banner --- */
+.hw-note {
+  border: 1px solid rgba(236, 192, 74, 0.4);
+  border-left: 3px solid var(--warn);
+  background: var(--warn-soft);
+  border-radius: var(--radius-sm);
+  padding: 0.7rem 0.9rem;
+  font-size: 0.78rem;
+  line-height: 1.6;
+  color: var(--text-dim);
+}
+.hw-note b { color: var(--warn); }
+.hw-note code { font-family: var(--mono); font-size: 0.72rem; }
+.hw-spec { color: var(--muted); }
+
+.metrics-section { padding: 1.15rem 1.3rem 1.3rem; }
+.metrics-section h3 { margin: 0 0 0.9rem; font-size: 0.95rem; font-weight: 620; }
+
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.3rem;
+}
+.section-head h3 { margin: 0; }
+
+.model-filter {
+  background: var(--bg-2);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.35rem 0.6rem;
+  font-size: 0.78rem;
+  font-family: inherit;
+}
+
+/* --- charts --- */
+.chart-wrap { margin-bottom: 1.1rem; }
+.chart { width: 100%; height: auto; overflow: visible; }
+.chart-axis { fill: var(--muted); font-size: 9px; font-family: var(--mono); }
+.chart-label { fill: var(--text-dim); font-size: 10px; }
+.chart-na { fill: var(--muted); font-size: 9px; font-style: italic; }
+
+.chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+  margin-top: 0.5rem;
+  font-size: 0.74rem;
+  color: var(--text-dim);
+}
+.legend-item { display: flex; align-items: center; gap: 0.35rem; }
+.legend-swatch { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+
+/* --- tables --- */
+.table-scroll { overflow-x: auto; }
+
+.metrics-table { width: 100%; border-collapse: collapse; font-size: 0.79rem; }
+.metrics-table th {
+  text-align: left;
+  font-size: 0.67rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 0.45rem 0.6rem;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+.metrics-table td {
+  padding: 0.5rem 0.6rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+.metrics-table .mono { font-family: var(--mono); font-size: 0.74rem; }
+.metrics-table .na { color: var(--muted); font-style: normal; font-size: 0.72rem; }
+
+.pill {
+  display: inline-block;
+  padding: 0.12rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.71rem;
+  font-weight: 600;
+  border: 1px solid var(--border-strong);
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.pill-high { color: var(--accent-2); border-color: var(--accent-2); background: var(--accent-2-soft); }
+.pill-medium { color: var(--warn); border-color: var(--warn); background: var(--warn-soft); }
+.pill-low { color: var(--danger); border-color: var(--danger); background: var(--danger-soft); }
+.pill-na { opacity: 0.65; }
+
+/* --- trace inspector --- */
+.trace-table tbody tr.trace-row { cursor: pointer; transition: background 0.12s ease; }
+.trace-table tbody tr.trace-row:hover { background: var(--panel-2); }
+.trace-row.is-open { background: var(--panel-2); }
+.trace-caret { color: var(--muted); width: 20px; }
+.trace-q { max-width: 380px; }
+.trace-qid {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  color: var(--accent);
+  margin-right: 0.45rem;
+}
+.trace-model {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+
+.trace-detail-row > td { padding: 0; background: var(--bg-2); }
+
+.trace-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1rem 1.1rem 1.2rem;
+}
+
+/* Nested-span look: a left rail makes the four stages read as one ordered
+   pipeline rather than four unrelated panels. */
+.span-step { border-left: 2px solid var(--border-strong); padding-left: 0.85rem; }
+.span-head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.4rem;
+}
+.span-head b { font-size: 0.78rem; }
+.span-meta { font-size: 0.7rem; color: var(--muted); font-family: var(--mono); }
+.span-body { font-size: 0.8rem; line-height: 1.6; color: var(--text-dim); }
+.answer-body { white-space: pre-wrap; }
+.answer-body .err { color: var(--danger); }
+
+.chunk {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.5rem 0.65rem;
+  margin-bottom: 0.4rem;
+}
+/* The chunk ground truth says should have been retrieved — makes a ranking
+   failure visible at a glance instead of requiring arithmetic. */
+.chunk-gold { border-color: var(--accent-2); background: var(--accent-2-soft); }
+.chunk-head {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+  font-size: 0.72rem;
+  color: var(--text);
+  margin-bottom: 0.3rem;
+}
+.chunk-rank { font-family: var(--mono); color: var(--muted); }
+.chunk-src {
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.05rem 0.35rem;
+  border-radius: 3px;
+  border: 1px solid var(--border-strong);
+  color: var(--muted);
+}
+.src-graph { color: var(--violet); border-color: var(--violet); }
+.src-vector { color: var(--accent); border-color: var(--accent); }
+.chunk-gold-tag { font-size: 0.62rem; color: var(--accent-2); font-weight: 600; }
+.chunk-text { font-size: 0.72rem; line-height: 1.55; color: var(--muted); }
+
+.verdict { display: flex; gap: 0.55rem; margin-bottom: 0.5rem; align-items: flex-start; }
+.verdict-mark { font-weight: 700; flex: none; }
+.verdict.ok .verdict-mark { color: var(--accent-2); }
+.verdict.bad .verdict-mark { color: var(--danger); }
+.verdict-statement { font-size: 0.77rem; color: var(--text); }
+.verdict-reason { font-size: 0.72rem; color: var(--muted); margin-top: 0.12rem; }
+
+.reverse-q { margin-top: 0.6rem; font-size: 0.74rem; color: var(--text-dim); }
+.reverse-q ul { margin: 0.3rem 0 0; padding-left: 1.1rem; }
+.reverse-q li { margin-bottom: 0.15rem; color: var(--muted); }
+
+.muted-note { font-size: 0.74rem; color: var(--muted); line-height: 1.6; }
+.muted-note code {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  background: var(--panel-2);
+  padding: 0.05rem 0.3rem;
+  border-radius: 3px;
+  margin: 0 0.15rem;
+}
+
+.run-cmd {
+  font-family: var(--mono);
+  font-size: 0.76rem;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.7rem 0.85rem;
+  color: var(--text-dim);
+  overflow-x: auto;
+}

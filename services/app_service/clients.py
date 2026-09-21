@@ -9,11 +9,34 @@ from services.shared.settings import settings
 _TIMEOUT = settings.request_timeout_seconds
 
 
-async def ask(question: str, provider: str) -> dict:
+async def ask(question: str, provider: str, conversation_id: str | None = None) -> dict:
     async with httpx.AsyncClient(timeout=_TIMEOUT) as client:
         response = await client.post(
             f"{settings.orchestration_service_url}/v1/ask",
-            json={"question": question, "provider": provider},
+            json={
+                "question": question,
+                "provider": provider,
+                "conversation_id": conversation_id,
+            },
+        )
+        response.raise_for_status()
+        return response.json()
+
+
+async def restore_conversation(conversation_id: str, messages: list[dict]) -> dict:
+    async with httpx.AsyncClient(timeout=_TIMEOUT) as client:
+        response = await client.post(
+            f"{settings.orchestration_service_url}/v1/conversations/{conversation_id}/restore",
+            json={"messages": messages},
+        )
+        response.raise_for_status()
+        return response.json()
+
+
+async def reset_conversation(conversation_id: str) -> dict:
+    async with httpx.AsyncClient(timeout=_TIMEOUT) as client:
+        response = await client.delete(
+            f"{settings.orchestration_service_url}/v1/conversations/{conversation_id}"
         )
         response.raise_for_status()
         return response.json()
