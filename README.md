@@ -9,7 +9,7 @@ Built as a 5-service microservice architecture with a React frontend, on top of 
 that turns 6 official government PDFs into a searchable, hybrid (vector + graph) knowledge base.
 
 **Live locally at:** `http://localhost:5173/` (React app) once running — see [Setup](#one-time-setup).
-**Repo:** https://github.com/Cykikz/Traffic-shield
+**Repo:** https://github.com/shreytiwari09/Traffic-Shield
 
 ---
 
