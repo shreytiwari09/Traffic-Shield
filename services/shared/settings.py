@@ -111,6 +111,30 @@ class Settings(BaseSettings):
     # judge calls; free-tier rate limits bite long before that without a gap.
     judge_min_interval_seconds: float = 4.0
 
+    # --- LLMOps: prompt registry + canary routing (services/shared/registry.py) --
+    # Stable prompt every request gets unless it lands in the canary bucket.
+    stable_prompt_version: str = "legal-persona-v3"
+    # Candidate prompt and the share of Ask traffic (0-100) routed to it. 0 =
+    # canary off (the default, so nothing changes unless deliberately enabled).
+    canary_prompt_version: str = "legal-persona-v4-strict-amounts"
+    canary_percent: int = 0
+
+    # --- LLMOps: token cost accounting ------------------------------------------
+    # USD per 1M tokens. Local Ollama models cost 0 in API terms. Gemini prices
+    # are ESTIMATES for a flash-lite-class model — set them to your plan's real
+    # pricing in .env; the cost panel is only as right as these two numbers.
+    gemini_input_usd_per_1m: float = 0.10
+    gemini_output_usd_per_1m: float = 0.40
+
+    # --- LLMOps: tracing ----------------------------------------------------------
+    # OTLP/gRPC endpoint of the trace backend (Arize Phoenix, see
+    # docker-compose.monitoring.yml), e.g. http://localhost:4317. Empty = tracing
+    # disabled (spans are no-ops) — what tests and CI run with.
+    otel_exporter_otlp_endpoint: str = ""
+
+    # --- LLMOps: user feedback -----------------------------------------------------
+    feedback_path: Path = PROJECT_ROOT / "feedback" / "feedback.jsonl"
+
     # --- retrieval tuning ------------------------------------------------------
     default_top_k: int = 8  # was 5 — repeatedly found the correct section scoring just under a 5-slot cutoff
     request_timeout_seconds: float = 120.0

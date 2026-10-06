@@ -23,6 +23,7 @@ import asyncio
 
 import httpx
 
+from services.llm_service.usage import LLMResult
 from services.shared.settings import settings
 
 _TIMEOUT = settings.ollama_timeout_seconds
@@ -72,6 +73,15 @@ async def generate(
     model: str | None = None,
     history: list[dict] | None = None,
 ) -> str:
+    return (await generate_with_usage(question, system_message, model=model, history=history)).text
+
+
+async def generate_with_usage(
+    question: str,
+    system_message: str | None,
+    model: str | None = None,
+    history: list[dict] | None = None,
+) -> LLMResult:
     model = model or settings.ollama_model
     messages = []
     if system_message:  # None or "" -> no system turn at all (raw model, Eval tab's no-retrieval cells)
@@ -99,7 +109,14 @@ async def generate(
             "keep_alive": settings.ollama_keep_alive,
         },
     )
-    return response.json().get("message", {}).get("content", "")
+    body = response.json()
+    # Ollama reports exact token counts for the call: prompt_eval_count is the
+    # prompt (system + history + question), eval_count the generated answer.
+    return LLMResult(
+        text=body.get("message", {}).get("content", ""),
+        prompt_tokens=body.get("prompt_eval_count"),
+        completion_tokens=body.get("eval_count"),
+    )
 
 
 async def embed(text: str, model: str | None = None) -> list[float]:

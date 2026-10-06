@@ -11,7 +11,6 @@ Phases 1–5 and 7 need nothing but the PDFs. Phase 6 needs a running Ollama;
 """
 
 import argparse
-import json
 import logging
 import sys
 import time

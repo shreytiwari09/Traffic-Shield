@@ -1,0 +1,4 @@
+# Dev / CI-only tooling — not installed into the service image.
+# Install with: pip install -r requirements.txt -r requirements-dev.txt
+pytest==8.3.3
+ruff==0.6.9

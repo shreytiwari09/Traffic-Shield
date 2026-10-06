@@ -96,3 +96,20 @@ export async function fetchCategorySections(slug) {
   if (!res.ok) throw new Error('Failed to load this category')
   return res.json()
 }
+
+// LLMOps feedback loop: a citizen's thumbs-up/down on one answer, tied to that
+// answer's request_id (the same id as its trace in Phoenix). Stored server-side
+// with the PII-redacted question; thumbs-down answers later become candidate
+// eval questions (evaluation/feedback_to_eval.py).
+export async function sendFeedback(payload) {
+  const res = await fetch('/api/feedback', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  })
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}))
+    throw new Error(data.detail || 'Could not send feedback')
+  }
+  return res.json()
+}

@@ -10,9 +10,13 @@ Run: uvicorn services.orchestration_service.main:app --port 8001
 from fastapi import FastAPI
 
 from services.orchestration_service.routes import router
+from services.shared.observability import setup_metrics
+from services.shared.tracing import setup_tracing
 
 app = FastAPI(
     title="Orchestration Service",
     description="Sequences one user request across Retrieval Service and LLM Service.",
 )
 app.include_router(router)
+setup_metrics(app, "orchestration_service")
+setup_tracing(app, "orchestration_service")

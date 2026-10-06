@@ -11,6 +11,8 @@ from fastapi import FastAPI
 
 from services.retrieval_service import graph_store
 from services.retrieval_service.routes import router
+from services.shared.observability import setup_metrics
+from services.shared.tracing import setup_tracing
 
 app = FastAPI(
     title="Retrieval Service",
@@ -35,3 +37,5 @@ async def shutdown() -> None:
 
 
 app.include_router(router)
+setup_metrics(app, "retrieval_service")
+setup_tracing(app, "retrieval_service")

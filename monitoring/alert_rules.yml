@@ -1,0 +1,116 @@
+# Alerting rules — visible at http://localhost:9090/alerts.
+# The AI-specific ones are the point: every one of them can fire while all
+# five services are "healthy" and returning HTTP 200.
+groups:
+  - name: trafficshield-service
+    rules:
+      - alert: ServiceDown
+        expr: up{job="trafficshield"} == 0
+        for: 30s
+        labels: {severity: critical}
+        annotations:
+          summary: "{{ $labels.instance }} is not responding to /metrics scrapes"
+
+      - alert: High5xxRate
+        expr: |
+          sum by (service) (rate(ts_http_requests_total{status=~"5.."}[5m]))
+            / sum by (service) (rate(ts_http_requests_total[5m])) > 0.1
+        for: 1m
+        labels: {severity: warning}
+        annotations:
+          summary: "{{ $labels.service }}: more than 10% of requests failing with 5xx"
+
+  - name: trafficshield-ai-quality
+    rules:
+      - alert: HallucinationRateHigh
+        # Share of section/rupee claims in answers NOT found in retrieved law.
+        # Offline baseline for llama3.1:8b is 0.225 (evaluation/quality_baseline.json).
+        expr: |
+          sum(increase(ts_grounding_claims_total{result="unverified"}[30m]))
+            / clamp_min(sum(increase(ts_grounding_claims_total[30m])), 1) > 0.35
+        for: 1m
+        labels: {severity: warning}
+        annotations:
+          summary: "Over 35% of legal claims in recent answers are unverified against retrieved sources"
+
+      - alert: LowConfidenceAnswersSpike
+        expr: |
+          sum(increase(ts_answer_confidence_total{level=~"low|none"}[30m]))
+            / clamp_min(sum(increase(ts_answer_confidence_total[30m])), 1) > 0.5
+        for: 1m
+        labels: {severity: warning}
+        annotations:
+          summary: "Most recent answers had weak retrieval evidence — possible query drift or index problem"
+
+      - alert: GuardrailAttackSpike
+        expr: sum(increase(ts_guardrail_decisions_total{outcome="blocked"}[5m])) > 5
+        labels: {severity: info}
+        annotations:
+          summary: "More than 5 blocked jailbreak/illegal-conduct attempts in 5 minutes"
+
+      - alert: LLMLatencyHigh
+        # CPU-only llama3.1:8b normally answers in ~175 s; > 6 min p95 means trouble.
+        expr: |
+          histogram_quantile(0.95, sum by (le) (rate(ts_llm_generation_seconds_bucket{status="ok"}[15m]))) > 360
+        for: 2m
+        labels: {severity: warning}
+        annotations:
+          summary: "LLM p95 generation latency above 6 minutes"
+
+      - alert: GraphBackendFellBack
+        expr: max(ts_graph_backend_fell_back) == 1
+        for: 30s
+        labels: {severity: warning}
+        annotations:
+          summary: "Retrieval is running on the JSON graph fallback — Neo4j unreachable"
+
+  - name: trafficshield-llmops
+    rules:
+      - alert: NegativeFeedbackRateHigh
+        expr: |
+          sum(increase(ts_user_feedback_total{rating="down"}[1h]))
+            / clamp_min(sum(increase(ts_user_feedback_total[1h])), 1) > 0.4
+          and sum(increase(ts_user_feedback_total[1h])) >= 5
+        labels: {severity: warning}
+        annotations:
+          summary: "Over 40% thumbs-down in the last hour — run evaluation/feedback_to_eval.py"
+
+      - alert: CanaryPromptHallucinatesMore
+        # Stop the canary if the candidate prompt's hallucination rate is
+        # 10+ points worse than stable's. Needs >= 20 claims in BOTH arms and
+        # 10 min of persistence: a first version fired on 1 unverified claim of
+        # 10 (vs 0 of 3 for stable) — noise, not a signal.
+        expr: |
+          (
+            sum(increase(ts_grounding_claims_total{result="unverified", prompt_version="legal-persona-v4-strict-amounts"}[1h]))
+              / clamp_min(sum(increase(ts_grounding_claims_total{prompt_version="legal-persona-v4-strict-amounts"}[1h])), 1)
+          ) - (
+            sum(increase(ts_grounding_claims_total{result="unverified", prompt_version="legal-persona-v3"}[1h]))
+              / clamp_min(sum(increase(ts_grounding_claims_total{prompt_version="legal-persona-v3"}[1h])), 1)
+          ) > 0.10
+          and sum(increase(ts_grounding_claims_total{prompt_version="legal-persona-v4-strict-amounts"}[1h])) >= 20
+          and sum(increase(ts_grounding_claims_total{prompt_version="legal-persona-v3"}[1h])) >= 20
+        for: 10m
+        labels: {severity: warning}
+        annotations:
+          summary: "Canary prompt is hallucinating noticeably more than stable — set CANARY_PERCENT=0"
+
+      - alert: LLMCostSpike
+        expr: sum(increase(ts_llm_cost_usd_total[1h])) > 1
+        labels: {severity: warning}
+        annotations:
+          summary: "LLM API spend above $1 in the last hour"
+
+      - alert: ScheduledEvalRegression
+        expr: |
+          max(ts_eval_score{metric="hallucination_rate"}) > 0.35
+          or max(ts_eval_score{metric="mrr"}) < 0.35
+        labels: {severity: warning}
+        annotations:
+          summary: "Latest scheduled eval regressed (hallucination > 35% or MRR < 0.35)"
+
+      - alert: ScheduledEvalStale
+        expr: time() - max(ts_eval_last_run_timestamp_seconds) > 2 * 86400
+        labels: {severity: info}
+        annotations:
+          summary: "No scheduled evaluation has run for over 2 days"

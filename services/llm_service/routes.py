@@ -3,8 +3,13 @@ import time
 import httpx
 from fastapi import APIRouter, HTTPException
 
+from opentelemetry.trace import Status, StatusCode
+
 from services.llm_service import gemini_client, ollama_client
-from services.shared.prompts import build_system_message
+from services.llm_service.usage import estimate_cost_usd
+from services.shared.observability import LLM_GENERATION_SECONDS, record_usage
+from services.shared.prompts import PROMPT_REGISTRY, STABLE_PROMPT_VERSION, build_system_message, prompt_fingerprint
+from services.shared.tracing import clip, tracer
 from services.shared.schemas import EmbedRequest, EmbedResponse, GenerateRequest, GenerateResponse
 from services.shared.settings import settings
 
@@ -33,6 +38,7 @@ async def health():
         "gemini_model": settings.gemini_model,
         "ollama_reachable": ollama_reachable,
         "gemini_configured": bool(settings.gemini_api_key),
+        "prompt_versions": {name: prompt_fingerprint(name) for name in PROMPT_REGISTRY},
     }
 
 
@@ -51,29 +57,60 @@ async def embed(req: EmbedRequest):
 async def generate(req: GenerateRequest):
     started = time.perf_counter()
     context_dicts = [c.model_dump() for c in req.context]
-    system_message = build_system_message(context_dicts) if req.use_persona else None
-    history = [m.model_dump() for m in req.history]
-
+    prompt_version = (req.prompt_version or STABLE_PROMPT_VERSION) if req.use_persona else None
     try:
-        if req.provider == "gemini":
-            answer = await gemini_client.generate(req.question, system_message, history=history)
-            model = settings.gemini_model
-        elif req.provider in _OLLAMA_MODEL_OVERRIDES:
-            model = _OLLAMA_MODEL_OVERRIDES[req.provider]
-            answer = await ollama_client.generate(req.question, system_message, model=model, history=history)
-        else:
-            answer = await ollama_client.generate(req.question, system_message, history=history)
-            model = settings.ollama_model
-    except gemini_client.GeminiNotConfigured as exc:
-        raise HTTPException(status_code=503, detail=str(exc)) from exc
-    except Exception as exc:
-        raise HTTPException(status_code=502, detail=f"{req.provider} generation failed: {exc}") from exc
+        system_message = build_system_message(context_dicts, prompt_version) if prompt_version else None
+    except ValueError as exc:  # unknown prompt version
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    history = [m.model_dump() for m in req.history]
+    model = settings.gemini_model if req.provider == "gemini" else _OLLAMA_MODEL_OVERRIDES.get(req.provider, settings.ollama_model)
 
-    latency_ms = (time.perf_counter() - started) * 1000
+    with tracer().start_as_current_span("llm.generate") as span:
+        span.set_attribute("openinference.span.kind", "LLM")
+        span.set_attribute("llm.provider", req.provider)
+        span.set_attribute("llm.model_name", model)
+        span.set_attribute("llm.prompt_template.version", prompt_version or "none")
+        span.set_attribute("input.value", clip(req.question))
+        span.set_attribute("llm.context_chunks", len(req.context))
+        span.set_attribute("llm.history_turns", len(history))
+        try:
+            if req.provider == "gemini":
+                result = await gemini_client.generate_with_usage(req.question, system_message, history=history)
+            else:
+                result = await ollama_client.generate_with_usage(req.question, system_message, model=model,
+                                                                 history=history)
+        except gemini_client.GeminiNotConfigured as exc:
+            LLM_GENERATION_SECONDS.labels(req.provider, model, "not_configured").observe(time.perf_counter() - started)
+            span.set_status(Status(StatusCode.ERROR, str(exc)))
+            raise HTTPException(status_code=503, detail=str(exc)) from exc
+        except Exception as exc:
+            LLM_GENERATION_SECONDS.labels(req.provider, model, "error").observe(time.perf_counter() - started)
+            span.record_exception(exc)
+            span.set_status(Status(StatusCode.ERROR, str(exc)))
+            raise HTTPException(status_code=502, detail=f"{req.provider} generation failed: {exc}") from exc
+
+        latency_ms = (time.perf_counter() - started) * 1000
+        cost_usd = estimate_cost_usd(req.provider, result.prompt_tokens, result.completion_tokens)
+        LLM_GENERATION_SECONDS.labels(req.provider, model, "ok").observe(latency_ms / 1000)
+        record_usage(req.provider, model, result.prompt_tokens, result.completion_tokens, cost_usd)
+
+        span.set_attribute("output.value", clip(result.text))
+        if result.prompt_tokens is not None:
+            span.set_attribute("llm.token_count.prompt", result.prompt_tokens)
+        if result.completion_tokens is not None:
+            span.set_attribute("llm.token_count.completion", result.completion_tokens)
+        if result.prompt_tokens is not None and result.completion_tokens is not None:
+            span.set_attribute("llm.token_count.total", result.prompt_tokens + result.completion_tokens)
+        span.set_attribute("llm.cost_usd", cost_usd)
+
     return GenerateResponse(
-        answer=answer,
+        answer=result.text,
         provider=req.provider,
         model=model,
         used_context=bool(req.context),
         latency_ms=round(latency_ms, 1),
+        prompt_version=prompt_version,
+        prompt_tokens=result.prompt_tokens,
+        completion_tokens=result.completion_tokens,
+        cost_usd=cost_usd,
     )

@@ -10,6 +10,8 @@ from fastapi import FastAPI
 
 from services.data_service import dataset_store
 from services.data_service.routes import router
+from services.shared.observability import setup_metrics
+from services.shared.tracing import setup_tracing
 
 app = FastAPI(
     title="Data Service",
@@ -23,3 +25,5 @@ async def startup() -> None:
 
 
 app.include_router(router)
+setup_metrics(app, "data_service")
+setup_tracing(app, "data_service")

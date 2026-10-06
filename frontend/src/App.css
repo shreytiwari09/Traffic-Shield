@@ -917,3 +917,28 @@ button.ghost:hover { color: var(--text); border-color: var(--accent); }
   color: var(--muted);
   font-family: var(--mono);
 }
+
+/* LLMOps feedback bar under each answer (ResponseCard.jsx) */
+.feedback-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.9rem;
+  padding-top: 0.7rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.8rem;
+}
+.feedback-bar .muted, p.feedback-bar.muted { color: var(--muted); }
+.feedback-comment {
+  flex: 1 1 14rem;
+  min-width: 0;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: inherit;
+  font: inherit;
+  padding: 0.35rem 0.6rem;
+}
+.feedback-error { color: var(--danger); }
+.feedback-meta { margin-left: auto; color: var(--muted); font-size: 0.7rem; }

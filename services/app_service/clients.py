@@ -66,3 +66,24 @@ async def category_sections(slug: str) -> dict:
         response = await client.get(f"{settings.orchestration_service_url}/v1/categories/{slug}/sections")
         response.raise_for_status()
         return response.json()
+
+
+async def submit_feedback(payload: dict) -> dict:
+    async with httpx.AsyncClient(timeout=_TIMEOUT) as client:
+        response = await client.post(f"{settings.orchestration_service_url}/v1/feedback", json=payload)
+        response.raise_for_status()
+        return response.json()
+
+
+async def feedback_summary() -> dict:
+    async with httpx.AsyncClient(timeout=_TIMEOUT) as client:
+        response = await client.get(f"{settings.orchestration_service_url}/v1/feedback/summary")
+        response.raise_for_status()
+        return response.json()
+
+
+async def model_registry() -> dict:
+    async with httpx.AsyncClient(timeout=_TIMEOUT) as client:
+        response = await client.get(f"{settings.orchestration_service_url}/v1/registry")
+        response.raise_for_status()
+        return response.json()

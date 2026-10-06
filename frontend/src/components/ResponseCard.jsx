@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import LegalEvidenceView from './LegalEvidenceView'
+import { sendFeedback } from '../api'
 
 const CONFIDENCE_LABEL = {
   high: 'High confidence — retrieved from official source',
@@ -29,6 +30,65 @@ function groundingBadge(grounding) {
     <span className={`badge ${clean ? 'confidence-high' : 'confidence-low'}`}>
       {clean ? '✓' : '⚠'} Grounding: {grounding.verified_claims}/{grounding.total_claims} claims verified
     </span>
+  )
+}
+
+// LLMOps feedback loop. Shown only for answers that went through the model
+// (a guardrail refusal has no model answer to rate).
+function FeedbackBar({ result }) {
+  const [state, setState] = useState('idle') // idle | sending | sent | error
+  const [rating, setRating] = useState(null)
+  const [comment, setComment] = useState('')
+
+  async function submit(nextRating, withComment = '') {
+    setRating(nextRating)
+    setState('sending')
+    try {
+      await sendFeedback({
+        request_id: result.request_id,
+        rating: nextRating,
+        comment: withComment || null,
+        question: result.question || result.retrieval_query || '',
+        answer: result.answer,
+        provider: result.provider,
+        model: result.model,
+        prompt_version: result.prompt_version,
+        conversation_id: result.conversation_id,
+        cited_sections: (result.citations || []).map((c) => c.section).filter(Boolean),
+        grounding_unverified: result.grounding?.unverified_claims ?? null,
+      })
+      setState('sent')
+    } catch (err) {
+      console.error('feedback failed', err)
+      setState('error')
+    }
+  }
+
+  if (state === 'sent') {
+    return <p className="feedback-bar muted">Thanks — feedback recorded{rating === 'down' ? ' and queued for review' : ''}.</p>
+  }
+
+  return (
+    <div className="feedback-bar">
+      <span className="muted">Was this answer useful?</span>
+      <button className="ghost" aria-label="Helpful" disabled={state === 'sending'} onClick={() => submit('up')}>👍</button>
+      <button className="ghost" aria-label="Not helpful" disabled={state === 'sending'} onClick={() => setRating('down')}>👎</button>
+      {rating === 'down' && (
+        <>
+          <input
+            className="feedback-comment"
+            placeholder="What was wrong? (optional)"
+            value={comment}
+            maxLength={1000}
+            onChange={(e) => setComment(e.target.value)}
+            onKeyDown={(e) => { if (e.key === 'Enter') submit('down', comment) }}
+          />
+          <button className="ghost" disabled={state === 'sending'} onClick={() => submit('down', comment)}>Send</button>
+        </>
+      )}
+      {state === 'error' && <span className="feedback-error">Could not send — try again.</span>}
+      {result.prompt_version && <span className="feedback-meta">prompt {result.prompt_version}</span>}
+    </div>
   )
 }
 
@@ -86,6 +146,8 @@ export default function ResponseCard({ result }) {
       )}
 
       {showEvidence && <LegalEvidenceView context={context} />}
+
+      {result.request_id && model !== 'guardrail-regex' && <FeedbackBar result={result} />}
     </div>
   )
 }

@@ -4,6 +4,8 @@ import time
 from fastapi import APIRouter, HTTPException
 
 from services.retrieval_service import categories, clients, core_sections, fusion, glossary, graph_store
+from services.shared.observability import GRAPH_BACKEND_FALLBACK, RETRIEVAL_STAGE_SECONDS, RETRIEVAL_TOP_SCORE
+from services.shared.tracing import clip, tracer
 from services.shared.schemas import (
     CategorySectionsResponse,
     GraphRelationship,
@@ -50,15 +52,18 @@ async def _score_graph_candidate(record_id: str, query_embedding: list[float]) -
 
 @router.get("/v1/health")
 async def health():
+    graph_status = graph_store.status()
+    GRAPH_BACKEND_FALLBACK.set(1 if graph_status.get("fell_back") else 0)
     return {
         "status": "ok",
         "graph_loaded": graph_store.is_loaded(),
-        "graph": graph_store.status(),
+        "graph": graph_status,
     }
 
 
 @router.post("/v1/retrieve", response_model=RetrieveResponse)
 async def retrieve(req: RetrieveRequest):
+    started_ns = time.time_ns()  # backdates the RETRIEVER span to cover the whole retrieval
     # Normalize known abbreviations ("RC", "DL", ...) before EITHER retrieval
     # path — fixes vector search and graph alias-matching with one glossary,
     # since the corpus itself never spells out these abbreviations either.
@@ -116,6 +121,32 @@ async def retrieve(req: RetrieveRequest):
                 "score": None,
                 "source": "default_penalty_fallback",
             })
+
+    RETRIEVAL_STAGE_SECONDS.labels("embed").observe(embed_ms / 1000)
+    RETRIEVAL_STAGE_SECONDS.labels("vector_search").observe(vector_search_ms / 1000)
+    RETRIEVAL_STAGE_SECONDS.labels("graph").observe(graph_ms / 1000)
+    scores = [c["score"] for c in context if c.get("score") is not None]
+    if scores:
+        RETRIEVAL_TOP_SCORE.observe(max(scores))
+
+    # One RETRIEVER span carrying what was actually handed to the LLM, so a bad
+    # answer's trace shows whether the right section was even retrieved.
+    with tracer().start_as_current_span("retrieval.hybrid", start_time=started_ns) as span:
+        span.set_attribute("openinference.span.kind", "RETRIEVER")
+        span.set_attribute("input.value", clip(req.question))
+        span.set_attribute("retrieval.expanded_query", clip(expanded_question))
+        span.set_attribute("retrieval.mode", req.mode)
+        span.set_attribute("retrieval.matched_entities", ", ".join(matched_entities))
+        span.set_attribute("retrieval.timing.embed_ms", round(embed_ms, 1))
+        span.set_attribute("retrieval.timing.vector_search_ms", round(vector_search_ms, 1))
+        span.set_attribute("retrieval.timing.graph_ms", round(graph_ms, 1))
+        for i, c in enumerate(context):
+            prefix = f"retrieval.documents.{i}.document"
+            span.set_attribute(f"{prefix}.id", f"{c.get('act')} s.{c.get('section')} p.{c.get('page')}")
+            span.set_attribute(f"{prefix}.content", clip(c.get("text")))
+            if c.get("score") is not None:
+                span.set_attribute(f"{prefix}.score", float(c["score"]))
+            span.set_attribute(f"{prefix}.metadata", c.get("source") or "")
 
     return RetrieveResponse(
         context=context,
