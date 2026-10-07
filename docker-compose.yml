@@ -50,6 +50,10 @@ x-service-base: &service-base
     NEO4J_PASSWORD: ${NEO4J_PASSWORD:-trafficshield}
     GRAPH_BACKEND: ${GRAPH_BACKEND:-neo4j}
     GRAPH_EXPAND_HOPS: ${GRAPH_EXPAND_HOPS:-1}
+    # LLMOps: every service exports OpenTelemetry traces to Phoenix, and the
+    # prompt canary split is a deploy-time setting (0 = canary off).
+    OTEL_EXPORTER_OTLP_ENDPOINT: http://phoenix:4317
+    CANARY_PERCENT: ${CANARY_PERCENT:-0}
 
 services:
 
@@ -184,6 +188,10 @@ services:
       python -m uvicorn services.orchestration_service.main:app
       --host 0.0.0.0 --port 8001
     ports: ["8001:8001"]
+    volumes:
+      # Citizen 👍/👎 (feedback/feedback.jsonl) must outlive the container —
+      # it is the input to evaluation/feedback_to_eval.py.
+      - ./feedback:/app/feedback
     depends_on:
       retrieval_service: {condition: service_healthy}
       llm_service: {condition: service_healthy}
@@ -204,6 +212,10 @@ services:
       python -m uvicorn services.app_service.main:app
       --host 0.0.0.0 --port 8000
     ports: ["8000:8000"]
+    volumes:
+      # Read-only: the RAG Evaluation tab's metrics_report.json and the latest
+      # scheduled-eval scores (eval_history.jsonl -> ts_eval_score on /metrics).
+      - ./evaluation:/app/evaluation:ro
     depends_on:
       orchestration_service: {condition: service_healthy}
     healthcheck:
@@ -230,6 +242,58 @@ services:
     depends_on:
       app_service: {condition: service_healthy}
 
+  # --- Monitoring: Prometheus + Grafana -------------------------------------
+  # Every Python service exposes /metrics (services/shared/observability.py):
+  # HTTP golden signals plus AI-specific signals — guardrail decisions,
+  # hallucination/grounding claims, answer confidence, LLM latency per model,
+  # retrieval stage timings and a retrieval-similarity drift signal.
+  # Prometheus scrapes them every 5s and evaluates monitoring/alert_rules.yml;
+  # Grafana auto-provisions the datasource and the "Traffic Shield — AI Ops"
+  # dashboard, so there is nothing to click through on first start.
+  # LLM tracing UI: one trace per citizen question across all five services
+  # (guardrail -> retrieval chunks + scores -> prompt version -> LLM tokens ->
+  # answer). Receives OTLP/gRPC on 4317; UI on http://localhost:6006.
+  phoenix:
+    image: arizephoenix/phoenix:version-8.32.1
+    container_name: ts_phoenix
+    restart: unless-stopped
+    networks: [trafficshield]
+    ports:
+      - "6006:6006"
+      - "4317:4317"
+    volumes:
+      - phoenix_data:/mnt/data
+    environment:
+      PHOENIX_WORKING_DIR: /mnt/data
+
+  prometheus:
+    image: prom/prometheus:v2.54.1
+    container_name: ts_prometheus
+    restart: unless-stopped
+    networks: [trafficshield]
+    ports: ["9090:9090"]
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./monitoring/alert_rules.yml:/etc/prometheus/alert_rules.yml:ro
+
+  grafana:
+    image: grafana/grafana:11.2.0
+    container_name: ts_grafana
+    restart: unless-stopped
+    networks: [trafficshield]
+    ports: ["3000:3000"]
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:-admin}
+      # Read-only anonymous viewing so the dashboard opens straight away in a demo.
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+      GF_AUTH_ANONYMOUS_ORG_ROLE: Viewer
+      GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH: /var/lib/grafana/dashboards/trafficshield.json
+    volumes:
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards:ro
+    depends_on: [prometheus]
+
 networks:
   trafficshield:
     driver: bridge
@@ -241,3 +305,5 @@ volumes:
   # lives) is a known source of corruption. Rebuild it any time with
   # scripts/load_neo4j.py — DATA/graph/ is the real source of truth.
   neo4j_data:
+  # Phoenix's trace store (SQLite) — survives container restarts.
+  phoenix_data:

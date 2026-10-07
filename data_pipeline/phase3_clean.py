@@ -16,7 +16,6 @@ from pathlib import Path
 
 from data_pipeline.config import CLEANED_DIR, PARSED_MD_DIR
 from data_pipeline.text_utils import (
-    PAGE_MARKER_RE,
     page_marker,
     read_front_matter,
     split_by_page,

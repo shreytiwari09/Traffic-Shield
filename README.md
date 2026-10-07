@@ -357,6 +357,37 @@ committed report carried `gpu_mem_used_mb: 5350.7` recorded on entirely differen
 measured from the real token stream, and tokens/sec states its own basis (`decode_window` vs
 `total_elapsed`) because a provider that returns an answer in two chunks has no meaningful decode window.
 
+## AIDevOps: CI, AI quality gate and monitoring
+
+Full write-up (what, why, how, demo script): [docs/AIDEVOPS_MIDTERM_NOTES.md](docs/AIDEVOPS_MIDTERM_NOTES.md).
+
+```bash
+pip install -r requirements.txt -r requirements-dev.txt
+ruff check services evaluation scripts data_pipeline tests   # lint
+pytest -v                                                     # 68 unit + API tests, no Ollama/Neo4j needed
+python -m evaluation.quality_gate                             # AI quality gate vs evaluation/quality_baseline.json
+```
+
+- **CI** — [.github/workflows/ci.yml](.github/workflows/ci.yml): lint → tests → AI quality gate → Docker
+  build + image smoke test, on every push/PR.
+- **AI quality gate** — fails the build if retrieval precision/recall/MRR, hallucination rate or the
+  guardrail red-team results ([evaluation/guardrail_redteam.json](evaluation/guardrail_redteam.json))
+  regress past the committed baseline.
+- **Monitoring** — every service exposes Prometheus `/metrics`, including AI-specific signals (guardrail
+  decisions, hallucination claims, answer confidence, LLM latency per model, retrieval drift). Prometheus
+  (`:9090`) + Grafana (`:3000`, dashboard "Traffic Shield — AI Ops") start with `docker compose up`, or
+  with `docker compose -f docker-compose.monitoring.yml up -d` when the services run from `.venv`.
+
+**LLMOps layer** (details in Part 2 of the notes):
+- **Prompt versioning + registry:** `GET /api/registry`.
+- **Prompt canary rollout:** `CANARY_PERCENT` in `.env`.
+- **LLM tracing** with OpenTelemetry → Arize Phoenix at http://localhost:6006. Enable with
+  `OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4317`.
+- **Token/cost tracking** on every answer.
+- **Citizen 👍/👎 feedback:** `python -m evaluation.feedback_to_eval` turns 👎 into candidate eval questions.
+- **Scheduled online evaluation:** `python -m evaluation.scheduled_eval`, nightly via
+  `scripts/register_nightly_eval.ps1`.
+
 ## Known limitations (documented, not silently hidden)
 
 - 51 image-only pages in the MV Act's First Schedule (road-sign plates) have no extractable text —

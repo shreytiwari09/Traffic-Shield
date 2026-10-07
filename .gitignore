@@ -22,3 +22,10 @@ Thumbs.db
 # from running services locally, not a deliverable)
 evaluation/_svc_*.log
 evaluation/_ollama.log
+
+# LLMOps runtime data — citizen feedback (user data, never committed) and the
+# per-question detail of scheduled eval runs (eval_history.jsonl IS committed:
+# it is the quality trend over time).
+feedback/
+evaluation/scheduled_runs/
+evaluation/feedback_candidates.json

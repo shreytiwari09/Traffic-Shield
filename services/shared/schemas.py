@@ -101,6 +101,9 @@ class GenerateRequest(BaseModel):
     # contrast on purpose (raw model vs. this app's actual pipeline), not the
     # same persona artificially starved of context.
     use_persona: bool = True
+    # Registered prompt version to build the system message from (see
+    # PROMPT_REGISTRY in prompts.py). None = the stable version.
+    prompt_version: str | None = None
 
 
 class GenerateResponse(BaseModel):
@@ -109,6 +112,12 @@ class GenerateResponse(BaseModel):
     model: str
     used_context: bool
     latency_ms: float
+    # LLMOps: which prompt produced this answer, and what it cost. None for the
+    # prompt when use_persona=False (no system prompt at all).
+    prompt_version: str | None = None
+    prompt_tokens: int | None = None
+    completion_tokens: int | None = None
+    cost_usd: float = 0.0
 
 
 # ---------------------------------------------------------------------------
@@ -242,6 +251,40 @@ class AskResponse(BaseModel):
     # turn. Lets the UI show that the answer really was context-aware.
     history_turns: int = 0
     guardrails: GuardrailReport | None = None
+    # --- LLMOps ---
+    # Unique per request; the same id is on the trace (Phoenix) and on any
+    # feedback the citizen gives, so a thumbs-down can be opened as a trace.
+    request_id: str | None = None
+    # The question as actually processed — after PII redaction. Feedback stores
+    # this, never the raw input, so no Aadhaar/phone number lands on disk.
+    question: str | None = None
+    prompt_version: str | None = None
+    prompt_arm: Literal["stable", "canary"] | None = None
+    usage: "LLMUsage | None" = None
+
+
+class LLMUsage(BaseModel):
+    prompt_tokens: int | None = None
+    completion_tokens: int | None = None
+    cost_usd: float = 0.0
+    latency_ms: float | None = None
+
+
+class FeedbackRequest(BaseModel):
+    request_id: str
+    rating: Literal["up", "down"]
+    comment: str | None = Field(default=None, max_length=1000)
+    question: str = Field(max_length=4000)
+    answer: str = Field(max_length=20000)
+    provider: str | None = None
+    model: str | None = None
+    prompt_version: str | None = None
+    conversation_id: str | None = None
+    cited_sections: list[str] = Field(default_factory=list)
+    grounding_unverified: int | None = None
+
+
+AskResponse.model_rebuild()
 
 
 

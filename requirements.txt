@@ -30,3 +30,16 @@ neo4j==6.3.0
 
 # Week 4 evaluation harness (evaluation/run_eval.py) — CPU/RAM sampling
 psutil==7.2.2
+
+# Observability — every service exposes Prometheus metrics on /metrics
+# (services/shared/observability.py; scraped by the prometheus container in
+# docker-compose.yml).
+prometheus-client==0.21.0
+
+# LLM tracing (services/shared/tracing.py) -> Arize Phoenix over OTLP/gRPC.
+# The api/sdk/grpc-exporter/fastapi pins match what chromadb 0.5.23 already
+# pulls in; httpx instrumentation is what stitches the five services into one trace.
+opentelemetry-sdk==1.44.0
+opentelemetry-exporter-otlp-proto-grpc==1.44.0
+opentelemetry-instrumentation-fastapi==0.65b0
+opentelemetry-instrumentation-httpx==0.65b0

@@ -39,7 +39,6 @@ import functools
 import shutil
 import subprocess
 import threading
-import time
 
 import psutil
 

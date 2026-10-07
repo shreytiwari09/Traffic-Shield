@@ -13,6 +13,7 @@ import asyncio
 from google import genai
 from google.genai import types
 
+from services.llm_service.usage import LLMResult
 from services.shared.settings import settings
 
 
@@ -55,16 +56,30 @@ async def generate(
     model: str | None = None,
     history: list[dict] | None = None,
 ) -> str:
+    return (await generate_with_usage(question, system_message, model=model, history=history)).text
+
+
+async def generate_with_usage(
+    question: str,
+    system_message: str | None,
+    model: str | None = None,
+    history: list[dict] | None = None,
+) -> LLMResult:
     model = model or settings.gemini_model
     client = _client()
     contents = _contents(question, history)
 
-    def _call() -> str:
+    def _call() -> LLMResult:
         # None/"" -> no system_instruction at all: the raw model's own
         # behavior, used only by the Eval tab's no-retrieval cells.
         config = types.GenerateContentConfig(system_instruction=system_message) if system_message else None
         response = client.models.generate_content(model=model, contents=contents, config=config)
-        return response.text or ""
+        usage = getattr(response, "usage_metadata", None)
+        return LLMResult(
+            text=response.text or "",
+            prompt_tokens=getattr(usage, "prompt_token_count", None),
+            completion_tokens=getattr(usage, "candidates_token_count", None),
+        )
 
     # The SDK is synchronous; run it off the event loop so one slow Gemini
     # call doesn't block the other services' requests to this process.

@@ -1,13 +1,17 @@
 import json
 import time
+import uuid
 
 import httpx
 from fastapi import APIRouter, HTTPException
+from opentelemetry import trace
 from fastapi.responses import StreamingResponse
 
-from services.orchestration_service import clients, conversation, regex_guardrails
+from services.orchestration_service import clients, conversation, feedback, regex_guardrails
 from services.orchestration_service.grounding import check_grounding
 from services.shared.confidence import compute_confidence
+from services.shared import registry
+from services.shared.observability import PROMPT_ROUTING, USER_FEEDBACK, record_answer, record_guardrail
 from services.shared.schemas import (
     AskRequest,
     AskResponse,
@@ -15,10 +19,13 @@ from services.shared.schemas import (
     EvalCell,
     EvalRequest,
     EvalResponse,
+    FeedbackRequest,
     GroundingCheck,
+    LLMUsage,
     RestoreConversationRequest,
 )
 from services.shared.settings import settings
+from services.shared.tracing import clip, tracer
 
 router = APIRouter()
 
@@ -41,6 +48,56 @@ def _error_detail(exc: Exception) -> str:
     return str(exc)
 
 
+def _route_prompt(request_id: str, conversation_id: str | None) -> tuple[str, str]:
+    """Canary assignment, keyed on the conversation so one chat never switches
+    prompt version mid-way; one-off questions are keyed on their request id."""
+    version, arm = registry.choose_prompt_version(conversation_id or request_id)
+    PROMPT_ROUTING.labels(prompt_version=version, arm=arm).inc()
+    return version, arm
+
+
+def _usage(result: dict) -> LLMUsage:
+    return LLMUsage(
+        prompt_tokens=result.get("prompt_tokens"),
+        completion_tokens=result.get("completion_tokens"),
+        cost_usd=result.get("cost_usd") or 0.0,
+        latency_ms=result.get("latency_ms"),
+    )
+
+
+class _MirroredSpan:
+    """Writes every attribute to our CHAIN span AND to the HTTP server span
+    above it. Phoenix's trace list shows ROOT spans, which are the generic
+    "POST /v1/ask" spans from FastAPI auto-instrumentation — without the
+    mirror that list showed every question with empty input/output."""
+
+    def __init__(self, span, root):
+        self._span, self._root = span, root
+
+    def set_attribute(self, key, value) -> None:
+        self._span.set_attribute(key, value)
+        self._root.set_attribute(key, value)
+
+
+def _annotate_chain(span, request_id: str, question: str) -> None:
+    span.set_attribute("openinference.span.kind", "CHAIN")
+    span.set_attribute("request_id", request_id)
+    span.set_attribute("input.value", clip(question))
+
+
+def _annotate_routing(span, prompt_version: str, arm: str) -> None:
+    span.set_attribute("llm.prompt_template.version", prompt_version)
+    span.set_attribute("prompt.arm", arm)
+
+
+def _annotate_outcome(span, answer: str, confidence: str, grounding: dict, model: str) -> None:
+    span.set_attribute("output.value", clip(answer))
+    span.set_attribute("answer.confidence", confidence)
+    span.set_attribute("answer.model", model)
+    span.set_attribute("grounding.verified_claims", grounding["verified_claims"])
+    span.set_attribute("grounding.unverified_claims", grounding["unverified_claims"])
+
+
 def _sse(event: dict) -> str:
     return f"data: {json.dumps(event)}\n\n"
 
@@ -48,6 +105,29 @@ def _sse(event: dict) -> str:
 @router.get("/v1/health")
 async def health():
     return {"status": "ok"}
+
+
+@router.get("/v1/registry")
+async def model_registry():
+    """What this deployment is running: models by stage, prompt versions with
+    content fingerprints, and the live canary split."""
+    return registry.describe()
+
+
+@router.post("/v1/feedback")
+async def submit_feedback(req: FeedbackRequest):
+    entry = feedback.append(req.model_dump())
+    USER_FEEDBACK.labels(rating=req.rating, prompt_version=req.prompt_version or "unknown").inc()
+    with tracer().start_as_current_span("user.feedback") as span:
+        span.set_attribute("request_id", req.request_id)
+        span.set_attribute("feedback.rating", req.rating)
+        span.set_attribute("llm.prompt_template.version", req.prompt_version or "unknown")
+    return {"status": "ok", "timestamp": entry["timestamp"]}
+
+
+@router.get("/v1/feedback/summary")
+async def feedback_summary():
+    return feedback.summary()
 
 
 @router.get("/v1/categories")
@@ -72,9 +152,22 @@ async def ask(req: AskRequest):
     """Ask tab — resolves the turn against the conversation, retrieves hybrid
     RAG context, then generates with the citizen's chosen provider and the
     prior turns in scope."""
+    request_id = uuid.uuid4().hex
+    root = trace.get_current_span()  # the HTTP server span (no-op when tracing is off)
+    with tracer().start_as_current_span("ask") as chain:
+        span = _MirroredSpan(chain, root)
+        _annotate_chain(span, request_id, req.question)
+        return await _ask(req, request_id, span)
+
+
+async def _ask(req: AskRequest, request_id: str, span) -> AskResponse:
     # 1. Regex Guardrails input inspection (injection, illegal advice, PII)
     guardrail_report = regex_guardrails.inspect_input(req.question)
+    record_guardrail(guardrail_report)
+    span.set_attribute("guardrail.blocked", guardrail_report.blocked)
+    span.set_attribute("guardrail.pii_redacted", guardrail_report.pii_redacted)
     if guardrail_report.blocked:
+        span.set_attribute("output.value", clip(guardrail_report.refusal_reason))
         return AskResponse(
             answer=guardrail_report.refusal_reason or "Request blocked by safety policy.",
             citations=[],
@@ -89,9 +182,13 @@ async def ask(req: AskRequest):
             retrieval_query="",
             history_turns=0,
             guardrails=guardrail_report,
+            request_id=request_id,
+            question=guardrail_report.sanitized_question or req.question,
         )
 
     clean_question = guardrail_report.sanitized_question or req.question
+    prompt_version, arm = _route_prompt(request_id, req.conversation_id)
+    _annotate_routing(span, prompt_version, arm)
     history = conversation.get_history(req.conversation_id)
     retrieval_query = conversation.resolve_retrieval_query(clean_question, history)
 
@@ -103,7 +200,8 @@ async def ask(req: AskRequest):
     context = retrieval["context"]
     matched_entities = retrieval["matched_entities"]
     try:
-        result = await clients.generate(clean_question, context, req.provider, history=history)
+        result = await clients.generate(clean_question, context, req.provider, history=history,
+                                        prompt_version=prompt_version)
     except Exception as exc:
         raise HTTPException(status_code=502, detail=f"generation failed: {_error_detail(exc)}") from exc
 
@@ -112,20 +210,30 @@ async def ask(req: AskRequest):
     conversation.append_turn(req.conversation_id, "user", clean_question)
     conversation.append_turn(req.conversation_id, "assistant", result["answer"])
 
+    confidence = compute_confidence(context, matched_entities)
+    grounding = check_grounding(result["answer"], context)
+    record_answer(confidence, grounding, prompt_version)
+    _annotate_outcome(span, result["answer"], confidence, grounding, result["model"])
+
     return AskResponse(
         answer=result["answer"],
         citations=_citations(context),
         provider=result["provider"],
         model=result["model"],
         used_context=result["used_context"],
-        confidence=compute_confidence(context, matched_entities),
+        confidence=confidence,
         context=context,
         matched_entities=matched_entities,
-        grounding=GroundingCheck(**check_grounding(result["answer"], context)),
+        grounding=GroundingCheck(**grounding),
         conversation_id=req.conversation_id,
         retrieval_query=retrieval_query,
         history_turns=len(history),
         guardrails=guardrail_report,
+        request_id=request_id,
+        question=clean_question,
+        prompt_version=prompt_version,
+        prompt_arm=arm,
+        usage=_usage(result),
     )
 
 
@@ -157,11 +265,27 @@ async def ask_stream(question: str, provider: str = "ollama", conversation_id: s
     runs into URL length limits — the turns live in this service's own store
     (see conversation.py)."""
 
+    request_id = uuid.uuid4().hex
+
     async def gen():
+        # The span is opened inside the generator so it lives exactly as long
+        # as the stream does, and every downstream call made while streaming
+        # is stitched into this one trace.
+        root = trace.get_current_span()
+        with tracer().start_as_current_span("ask.stream") as chain:
+            span = _MirroredSpan(chain, root)
+            _annotate_chain(span, request_id, question)
+            async for event in _stream(span):
+                yield event
+
+    async def _stream(span):
         overall_start = time.perf_counter()
 
         # 1. Regex Guardrails inspection
         guardrail_report = regex_guardrails.inspect_input(question)
+        record_guardrail(guardrail_report)
+        span.set_attribute("guardrail.blocked", guardrail_report.blocked)
+        span.set_attribute("guardrail.pii_redacted", guardrail_report.pii_redacted)
         if guardrail_report.blocked:
             yield _sse({
                 "step": "guardrail_blocked",
@@ -186,6 +310,8 @@ async def ask_stream(question: str, provider: str = "ollama", conversation_id: s
                 "retrieval_query": "",
                 "history_turns": 0,
                 "guardrails": guardrail_report.model_dump(),
+                "request_id": request_id,
+                "question": guardrail_report.sanitized_question or question,
             })
             return
 
@@ -197,6 +323,8 @@ async def ask_stream(question: str, provider: str = "ollama", conversation_id: s
             })
 
         clean_question = guardrail_report.sanitized_question or question
+        prompt_version, arm = _route_prompt(request_id, conversation_id)
+        _annotate_routing(span, prompt_version, arm)
         history = conversation.get_history(conversation_id)
         retrieval_query = conversation.resolve_retrieval_query(clean_question, history)
 
@@ -267,7 +395,8 @@ async def ask_stream(question: str, provider: str = "ollama", conversation_id: s
             ),
         })
         try:
-            result = await clients.generate(clean_question, context, provider, history=history)
+            result = await clients.generate(clean_question, context, provider, history=history,
+                                            prompt_version=prompt_version)
         except Exception as exc:
             yield _sse({"step": "error", "message": f"generation failed: {_error_detail(exc)}"})
             return
@@ -277,6 +406,9 @@ async def ask_stream(question: str, provider: str = "ollama", conversation_id: s
         conversation.append_turn(conversation_id, "assistant", result["answer"])
 
         grounding = check_grounding(result["answer"], context)
+        confidence = compute_confidence(context, matched_entities)
+        record_answer(confidence, grounding, prompt_version)
+        _annotate_outcome(span, result["answer"], confidence, grounding, result["model"])
         yield _sse({
             "step": "grounding_check",
             "message": (
@@ -297,7 +429,7 @@ async def ask_stream(question: str, provider: str = "ollama", conversation_id: s
             "provider": result["provider"],
             "model": result["model"],
             "used_context": result["used_context"],
-            "confidence": compute_confidence(context, matched_entities),
+            "confidence": confidence,
             "context": context,
             "matched_entities": matched_entities,
             "grounding": grounding,
@@ -305,6 +437,11 @@ async def ask_stream(question: str, provider: str = "ollama", conversation_id: s
             "retrieval_query": retrieval_query,
             "history_turns": len(history),
             "guardrails": guardrail_report.model_dump(),
+            "request_id": request_id,
+            "question": clean_question,
+            "prompt_version": prompt_version,
+            "prompt_arm": arm,
+            "usage": _usage(result).model_dump(),
         })
 
     return StreamingResponse(

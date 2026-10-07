@@ -44,7 +44,12 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from evaluation.profiling import ResourceSampler, host_profile, throughput  # noqa: E402
 from services.orchestration_service.grounding import check_grounding  # noqa: E402
-from services.shared.prompts import build_system_message, render_context_block  # noqa: E402
+from services.shared.prompts import (  # noqa: E402
+    STABLE_PROMPT_VERSION,
+    build_system_message,
+    prompt_fingerprint,
+    render_context_block,
+)
 from services.shared.settings import settings  # noqa: E402
 
 QUESTIONS_PATH = Path(__file__).parent / "questions.json"
@@ -255,6 +260,10 @@ async def main() -> None:
                 "n_questions": len(questions),
                 "top_k": settings.default_top_k,
                 "graph_backend": settings.graph_backend,
+                # Offline sweeps always use the stable prompt (build_system_message's
+                # default); recorded so a results file can be traced to its prompt.
+                "prompt_version": STABLE_PROMPT_VERSION,
+                "prompt_fingerprint": prompt_fingerprint(STABLE_PROMPT_VERSION),
             },
             indent=2,
         ),

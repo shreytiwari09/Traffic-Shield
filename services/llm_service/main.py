@@ -9,9 +9,13 @@ Run: uvicorn services.llm_service.main:app --port 8003
 from fastapi import FastAPI
 
 from services.llm_service.routes import router
+from services.shared.observability import setup_metrics
+from services.shared.tracing import setup_tracing
 
 app = FastAPI(
     title="LLM Service",
     description="Talks to Ollama (llama3.1:8b) and Gemini. No retrieval logic lives here.",
 )
 app.include_router(router)
+setup_metrics(app, "llm_service")
+setup_tracing(app, "llm_service")

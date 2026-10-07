@@ -1,0 +1,53 @@
+# Monitoring ONLY — for when the five services run on the host from .venv
+# (the usual local-dev setup) rather than in docker-compose.yml.
+# Prometheus reaches the host services via host.docker.internal:8000-8004.
+#
+#   docker compose -f docker-compose.monitoring.yml up -d
+#   Grafana:    http://localhost:3000   (opens straight on the AI Ops dashboard)
+#   Prometheus: http://localhost:9090   (Status -> Targets, Alerts)
+#   Phoenix:    http://localhost:6006   (LLM traces — set OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4317
+#                                        in .env so the host services export to it)
+#
+# Do not run this alongside the full docker-compose.yml stack — that one
+# already includes Prometheus and Grafana on the same ports.
+name: trafficshield-monitoring
+
+services:
+  phoenix:
+    image: arizephoenix/phoenix:version-8.32.1
+    container_name: ts_phoenix_local
+    ports:
+      - "6006:6006"   # UI
+      - "4317:4317"   # OTLP/gRPC from the services
+    volumes:
+      - phoenix_data:/mnt/data
+    environment:
+      PHOENIX_WORKING_DIR: /mnt/data
+
+  prometheus:
+    image: prom/prometheus:v2.54.1
+    container_name: ts_prometheus_local
+    ports: ["9090:9090"]
+    volumes:
+      - ./monitoring/prometheus.local.yml:/etc/prometheus/prometheus.yml:ro
+      - ./monitoring/alert_rules.yml:/etc/prometheus/alert_rules.yml:ro
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  grafana:
+    image: grafana/grafana:11.2.0
+    container_name: ts_grafana_local
+    ports: ["3000:3000"]
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:-admin}
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+      GF_AUTH_ANONYMOUS_ORG_ROLE: Viewer
+      GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH: /var/lib/grafana/dashboards/trafficshield.json
+    volumes:
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards:ro
+    depends_on: [prometheus]
+
+volumes:
+  phoenix_data:

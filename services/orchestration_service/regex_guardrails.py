@@ -17,7 +17,10 @@ _INJECTION_PATTERNS = [
     (re.compile(r"\bignore\s+(?:all\s+)?(?:previous|prior|above)\s+instructions\b", re.IGNORECASE), "ignore_instructions"),
     (re.compile(r"\bdisregard\s+(?:any\s+)?(?:previous|prior|above)\s+(?:rules|instructions|directives)\b", re.IGNORECASE), "disregard_instructions"),
     (re.compile(r"\byou\s+are\s+now\s+(?:a|an|in)\b", re.IGNORECASE), "persona_override"),
-    (re.compile(r"\b(?:system\s*prompt|system\s*message)\b", re.IGNORECASE), "system_prompt_leak"),
+    # "system message" alone is NOT an attack — citizens quote e-challan portal
+    # system messages. Only flag it when aimed at the assistant itself; found by
+    # case B10 in evaluation/guardrail_redteam.json (was a false positive).
+    (re.compile(r"\bsystem\s*prompt\b|\b(?:your|the\s+hidden)\s+system\s*message\b", re.IGNORECASE), "system_prompt_leak"),
     (re.compile(r"\b(?:jailbreak|dan\s+mode|unfiltered\s+mode)\b", re.IGNORECASE), "jailbreak_trigger"),
     (re.compile(r"\bforget\s+(?:everything|all\s+rules|previous\s+context)\b", re.IGNORECASE), "forget_instructions"),
     (re.compile(r"\bact\s+as\s+(?:an?\s+)?(?:evil|unrestricted|bypass|unfiltered)\b", re.IGNORECASE), "unrestricted_roleplay"),

@@ -146,6 +146,44 @@ OFFICIAL SOURCES:
 {context_block}"""
 
 
+# ---------------------------------------------------------------------------
+# Prompt versioning (LLMOps)
+# ---------------------------------------------------------------------------
+# Every prompt the app can send is registered under an explicit version name,
+# and that name travels with every answer (API response, trace, Prometheus
+# label, eval history). A prompt edit is therefore never invisible: if the
+# hallucination rate moves, the dashboard shows which prompt version moved it,
+# and rolling back is a one-line settings change. Edit a prompt -> bump its
+# version; never change the text behind an existing version name.
+#
+# v4 is the canary candidate. It adds one rule aimed at the most common
+# grounding failure the checker flags in this app: a rupee amount quoted under
+# a section whose text does not contain it (see grounding.py). Whether it
+# actually helps is decided by the canary metrics, not by assumption.
+_V4_EXTRA_RULE = """7. Before you state any fine amount or time limit, check that the exact figure
+   appears in the text of the section you are citing for it. If it appears only
+   in a different section, cite that section instead; if it appears in none,
+   do not state a figure at all.
+
+"""
+
+PROMPT_REGISTRY: dict[str, str] = {
+    "legal-persona-v3": TRAFFIC_LEGAL_SYSTEM_PROMPT,
+    "legal-persona-v4-strict-amounts": TRAFFIC_LEGAL_SYSTEM_PROMPT.replace(
+        "IN CONVERSATION", _V4_EXTRA_RULE + "IN CONVERSATION", 1
+    ),
+}
+STABLE_PROMPT_VERSION = "legal-persona-v3"
+
+
+def prompt_fingerprint(version: str) -> str:
+    """Short content hash, so two deployments claiming the same version name
+    can be checked to really be running the same text."""
+    import hashlib
+
+    return hashlib.sha256(PROMPT_REGISTRY[version].encode("utf-8")).hexdigest()[:10]
+
+
 def render_context_block(items: list[dict]) -> str:
     """Each context item as ``[Act — Section N, Page P] <text>``, or the
     literal "(none provided)" when empty — which is what makes a no-RAG
@@ -166,9 +204,11 @@ def render_context_block(items: list[dict]) -> str:
     return "\n\n".join(lines)
 
 
-def build_system_message(context: list[dict]) -> str:
+def build_system_message(context: list[dict], version: str = STABLE_PROMPT_VERSION) -> str:
     """The system message: persona + hard rules + the fused context (or the
     literal "(none provided)" for a no-RAG call). The question itself is sent
     as a separate user-role message by each provider client, and any earlier
     conversation turns as the user/assistant messages before it."""
-    return TRAFFIC_LEGAL_SYSTEM_PROMPT.format(context_block=render_context_block(context))
+    if version not in PROMPT_REGISTRY:
+        raise ValueError(f"unknown prompt version '{version}' (known: {', '.join(PROMPT_REGISTRY)})")
+    return PROMPT_REGISTRY[version].format(context_block=render_context_block(context))

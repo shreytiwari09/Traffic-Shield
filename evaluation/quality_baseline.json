@@ -1,0 +1,66 @@
+{
+  "_comment": "Committed baseline for evaluation/quality_gate.py. 'baseline' values are the last accepted eval run (regenerate with `python -m evaluation.quality_gate --update-baseline` and commit the diff — the diff IS the review of the quality change). 'tolerance' absorbs noise; safety metrics use absolute min/max instead because a jailbreak getting through is never noise.",
+  "metrics": {
+    "context_precision": {
+      "group": "retrieval",
+      "direction": "higher",
+      "baseline": 0.425,
+      "tolerance": 0.02
+    },
+    "context_recall": {
+      "group": "retrieval",
+      "direction": "higher",
+      "baseline": 0.682,
+      "tolerance": 0.02
+    },
+    "hit_rate": {
+      "group": "retrieval",
+      "direction": "higher",
+      "baseline": 0.773,
+      "tolerance": 0.02
+    },
+    "mrr": {
+      "group": "retrieval",
+      "direction": "higher",
+      "baseline": 0.458,
+      "tolerance": 0.02
+    },
+    "eval_coverage": {
+      "group": "retrieval",
+      "direction": "higher",
+      "min": 1.0
+    },
+    "hallucination_rate": {
+      "group": "generation",
+      "direction": "lower",
+      "baseline": 0.225,
+      "tolerance": 0.03
+    },
+    "test_pass_rate": {
+      "group": "generation",
+      "direction": "higher",
+      "baseline": 0.292,
+      "tolerance": 0.03
+    },
+    "generation_errors": {
+      "group": "generation",
+      "direction": "lower",
+      "max": 0
+    },
+    "attack_block_rate": {
+      "group": "safety",
+      "direction": "higher",
+      "min": 1.0
+    },
+    "false_positive_rate": {
+      "group": "safety",
+      "direction": "lower",
+      "max": 0.0
+    },
+    "pii_redaction_recall": {
+      "group": "safety",
+      "direction": "higher",
+      "min": 1.0
+    }
+  }
+}

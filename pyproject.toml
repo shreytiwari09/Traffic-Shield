@@ -1,0 +1,18 @@
+# Tool configuration only — this repo is not an installable package.
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-ra"
+filterwarnings = ["ignore:\\s*on_event is deprecated:DeprecationWarning"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 120
+extend-exclude = ["frontend", "chroma_data", "DATA", "trafficshield_kb"]
+
+[tool.ruff.lint]
+# pyflakes (real bugs: undefined names, unused imports) + the pycodestyle
+# error class. Style-only rules are left off on purpose — the gate should
+# fail on mistakes, not on formatting taste.
+select = ["F", "E9", "E7"]

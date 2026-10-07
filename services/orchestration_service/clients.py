@@ -25,6 +25,7 @@ async def generate(
     provider: str,
     use_persona: bool = True,
     history: list[dict] | None = None,
+    prompt_version: str | None = None,
 ) -> dict:
     async with httpx.AsyncClient(timeout=_TIMEOUT) as client:
         response = await client.post(
@@ -35,6 +36,7 @@ async def generate(
                 "provider": provider,
                 "use_persona": use_persona,
                 "history": history or [],
+                "prompt_version": prompt_version,
             },
         )
         response.raise_for_status()
