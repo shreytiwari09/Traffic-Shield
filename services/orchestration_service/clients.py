@@ -43,6 +43,13 @@ async def generate(
         return response.json()
 
 
+async def llm_health() -> dict:
+    async with httpx.AsyncClient(timeout=_TIMEOUT) as client:
+        response = await client.get(f"{settings.llm_service_url}/v1/health")
+        response.raise_for_status()
+        return response.json()
+
+
 async def list_categories() -> dict:
     async with httpx.AsyncClient(timeout=_TIMEOUT) as client:
         response = await client.get(f"{settings.retrieval_service_url}/v1/categories")

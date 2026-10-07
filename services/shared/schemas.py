@@ -72,6 +72,7 @@ class EmbedResponse(BaseModel):
     embedding: list[float]
     model: str
     dimensions: int
+    backend: str = "ollama"  # "ollama" or "local" (in-process ONNX, when Ollama is absent)
 
 
 class ContextItem(BaseModel):

@@ -108,6 +108,14 @@ async def api_registry():
         raise HTTPException(status_code=502, detail=_error_detail(exc)) from exc
 
 
+@router.get("/api/providers")
+async def api_providers():
+    try:
+        return await clients.providers()
+    except Exception as exc:
+        raise HTTPException(status_code=502, detail=_error_detail(exc)) from exc
+
+
 @router.post("/api/eval")
 async def api_eval(req: EvalRequest):
     try:

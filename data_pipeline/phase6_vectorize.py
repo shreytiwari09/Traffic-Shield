@@ -10,10 +10,12 @@ Blueprint rules honoured here:
   • 500–800 tokens per chunk, with a 15 % overlap;
   • metadata stays attached to every chunk.
 
-Embeddings are produced by Ollama, per the project brief's requirement that no
-hosted embedding API is used. With ``--skip-embeddings`` the phase still writes
-chunks.jsonl (embeddings left empty) so the corpus can be inspected without a
-running Ollama.
+Embeddings come from Ollama when it is running, otherwise from the same
+nomic-embed-text weights run in-process — either way no hosted embedding API is
+used, per the project brief. ``--reuse-embeddings`` takes vectors from the
+existing chunks.jsonl for unchanged chunks, so the index can be rebuilt with no
+embedding model at all. With ``--skip-embeddings`` the phase still writes
+chunks.jsonl (embeddings left empty) so the corpus can be inspected.
 """
 
 import asyncio
@@ -195,19 +197,45 @@ def build_chunks(dataset_path: Path = DATASET_PATH) -> list[dict]:
 # ---------------------------------------------------------------------------
 # Embedding + storage
 # ---------------------------------------------------------------------------
-async def _embed_all(chunks: list[dict], model: str | None) -> None:
-    from data_pipeline.embedder import embed_texts
+async def _embed_all(chunks: list[dict], model: str | None) -> str:
+    """Fills chunk["embedding"] in place; returns the backend used."""
+    from data_pipeline.embedder import choose_backend, embed_texts
 
+    backend = await choose_backend(model)
+    logger.info("  embedding %d chunk(s) via %s …", len(chunks),
+                "Ollama" if backend == "ollama" else "local nomic-embed-text (Ollama not found)")
     for start in range(0, len(chunks), EMBED_BATCH_SIZE):
         batch = chunks[start:start + EMBED_BATCH_SIZE]
-        vectors = await embed_texts([c["text"] for c in batch], model=model)
+        vectors = await embed_texts([c["text"] for c in batch], model=model, backend=backend)
         if len(vectors) != len(batch):
             raise RuntimeError(
-                f"Ollama returned {len(vectors)} embeddings for {len(batch)} inputs"
+                f"{backend} returned {len(vectors)} embeddings for {len(batch)} inputs"
             )
         for chunk, vector in zip(batch, vectors):
             chunk["embedding"] = vector
         logger.info("    embedded %d/%d", min(start + EMBED_BATCH_SIZE, len(chunks)), len(chunks))
+    return backend
+
+
+def _reuse_stored_embeddings(chunks: list[dict], previous_path: Path) -> int:
+    """Copies vectors from a previous chunks.jsonl onto chunks whose id AND
+    text are unchanged, so rebuilding the Chroma index needs no embedding
+    model at all. A chunk whose text changed is left empty and re-embedded —
+    a stale vector for edited text would silently mis-rank it."""
+    if not previous_path.exists():
+        return 0
+    stored = {
+        c["metadata"]["chunk_id"]: c
+        for c in read_jsonl(previous_path)
+        if c.get("embedding")
+    }
+    reused = 0
+    for chunk in chunks:
+        old = stored.get(chunk["metadata"]["chunk_id"])
+        if old is not None and old["text"] == chunk["text"]:
+            chunk["embedding"] = old["embedding"]
+            reused += 1
+    return reused
 
 
 def _store_in_chroma(chunks: list[dict], collection_name: str) -> int:
@@ -225,7 +253,14 @@ def _store_in_chroma(chunks: list[dict], collection_name: str) -> int:
         pass
     collection = client.create_collection(
         name=collection_name,
-        metadata={"hnsw:space": "cosine"},
+        # search_ef: how many candidates HNSW explores per query. Chroma's
+        # default of 10 is barely above top_k=8, and on a rebuilt index it
+        # missed the single best chunk outright (HMVR Rule 228 "Identity
+        # card" for "Can I ask to see the officer's ID…?", the exact nearest
+        # neighbour). At 100 the index returns the true nearest chunks; on
+        # ~1.7k vectors the extra search cost is negligible. Persisted with the collection, so
+        # Data Service's queries pick it up with no code change there.
+        metadata={"hnsw:space": "cosine", "hnsw:search_ef": 100},
     )
 
     # Chroma metadata values must be scalars.
@@ -253,6 +288,7 @@ def run(
     out_path: Path = CHUNKS_PATH,
     skip_embeddings: bool = False,
     embedding_model: str | None = None,
+    reuse_embeddings: bool = False,
 ) -> dict:
     if not dataset_path.exists():
         raise FileNotFoundError(f"{dataset_path} not found — run Phases 4–5 first.")
@@ -291,15 +327,19 @@ def run(
         write_jsonl(out_path, chunks)
         return report
 
-    logger.info("  embedding via Ollama …")
-    asyncio.run(_embed_all(chunks, embedding_model))
+    reused = _reuse_stored_embeddings(chunks, out_path) if reuse_embeddings else 0
+    if reuse_embeddings:
+        logger.info("  reused %d/%d stored embedding(s) from %s", reused, len(chunks), out_path.name)
+    missing = [c for c in chunks if not c["embedding"]]
+    backend = asyncio.run(_embed_all(missing, embedding_model)) if missing else None
 
     dims = len(chunks[0]["embedding"])
     count = _store_in_chroma(chunks, CHROMA_COLLECTION)
 
     write_jsonl(out_path, chunks)
 
-    report["embeddings"] = "ollama"
+    report["embeddings"] = backend or "reused"
+    report["embeddings_reused"] = reused
     report["embedding_dimensions"] = dims
     report["chroma_collection"] = CHROMA_COLLECTION
     report["chroma_count"] = count

@@ -49,6 +49,26 @@ class Settings(BaseSettings):
     # immediately after each call on memory-constrained machines.
     ollama_keep_alive: str = "30m"
 
+    # Whether this machine has Ollama at all (services/shared/ollama_probe.py).
+    # "auto": ping it (cached for ollama_probe_ttl_seconds) and only use it if
+    # it answers — so a laptop without Ollama skips it instead of every request
+    # hanging until ollama_timeout_seconds. "always": assume it is there without
+    # pinging (the original behaviour; what the test suite runs with). "never":
+    # ignore Ollama even if it is installed.
+    ollama_mode: Literal["auto", "always", "never"] = "auto"
+    ollama_probe_ttl_seconds: float = 30.0
+
+    # Question embeddings when Ollama is not available. These are the SAME
+    # nomic-embed-text v1.5 weights Ollama serves, run in-process via ONNX
+    # (fastembed) — measured cosine 1.0000 against the Ollama vectors stored in
+    # DATA/chunks.jsonl, so the existing Chroma index needs no rebuild. A
+    # different model here would put questions in a different vector space
+    # from the index and silently break retrieval.
+    local_embedding_model: str = "nomic-ai/nomic-embed-text-v1.5"
+    # Outside the repo and outside /tmp: the ONNX weights are ~550 MB, and the
+    # library's default (a temp dir) would re-download them after every reboot.
+    local_embedding_cache_dir: Path = Path.home() / ".cache" / "fastembed"
+
     # --- Gemini --------------------------------------------------------------
     gemini_api_key: str = ""
     gemini_model: str = "gemini-3.5-flash-lite"  # override in .env if your account has a different model enabled/quota'd

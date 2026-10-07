@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { resetConversation, restoreConversation, streamAsk } from '../api'
+import { fetchProviders, resetConversation, restoreConversation, streamAsk } from '../api'
 import PipelineTrace from './PipelineTrace'
 import ResponseCard from './ResponseCard'
 import { matchSmartSuggestions } from '../suggestions'
@@ -24,6 +24,7 @@ export default function ChatTab() {
   const [conversationId, setConversationId] = useState(() => getConversationId())
   const [question, setQuestion] = useState('')
   const [provider, setProvider] = useState('ollama')
+  const [providers, setProviders] = useState(null) // null = not known yet
   const [events, setEvents] = useState([])
   const [error, setError] = useState(null)
   const [busy, setBusy] = useState(false)
@@ -44,6 +45,16 @@ export default function ChatTab() {
     // Deliberately mount-only: re-pushing after every turn would undo the
     // server's own record of the turn it just handled.
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  // Start on a provider that actually works here: on a machine without
+  // Ollama, every Ollama question would otherwise fail.
+  useEffect(() => {
+    fetchProviders().then((info) => {
+      if (!info) return
+      setProviders(info)
+      if (info.default) setProvider(info.default)
+    })
   }, [])
 
   useEffect(() => saveTranscript(messages), [messages])
@@ -213,23 +224,40 @@ export default function ChatTab() {
         </div>
         <div className="row">
           <div className="provider-toggle">
-            {['ollama', 'gemini'].map((p) => (
-              <label key={p} className={provider === p ? 'checked' : ''}>
-                <input
-                  type="radio"
-                  name="provider"
-                  value={p}
-                  checked={provider === p}
-                  onChange={() => setProvider(p)}
-                />
-                <span>{p === 'ollama' ? 'Ollama (Llama 3.1 8B)' : 'Gemini'}</span>
-              </label>
-            ))}
+            {['ollama', 'gemini'].map((p) => {
+              const unavailable = providers?.[p] && !providers[p].available
+              return (
+                <label
+                  key={p}
+                  className={[provider === p ? 'checked' : '', unavailable ? 'disabled' : ''].join(' ').trim()}
+                  title={unavailable ? providers[p].detail : undefined}
+                >
+                  <input
+                    type="radio"
+                    name="provider"
+                    value={p}
+                    checked={provider === p}
+                    disabled={unavailable}
+                    onChange={() => setProvider(p)}
+                  />
+                  <span>
+                    {p === 'ollama' ? 'Ollama (Llama 3.1 8B)' : 'Gemini'}
+                    {unavailable && (p === 'ollama' ? ' — not found' : ' — no API key')}
+                  </span>
+                </label>
+              )
+            })}
           </div>
           <button className="primary" onClick={() => ask()} disabled={busy}>
             {busy ? 'Thinking…' : 'Send'}
           </button>
         </div>
+        {providers && !providers.default && (
+          <p className="provider-hint">
+            No answer model is available: start Ollama on this machine, or set GEMINI_API_KEY in .env and
+            restart the LLM service.
+          </p>
+        )}
         <p className="chat-disclaimer">
           This assistant explains legal rights and obligations under official Haryana/Indian motor
           vehicle law. It is not a substitute for a lawyer, and says so plainly when no official

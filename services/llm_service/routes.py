@@ -1,13 +1,15 @@
+import asyncio
 import time
 
-import httpx
 from fastapi import APIRouter, HTTPException
 
 from opentelemetry.trace import Status, StatusCode
 
 from services.llm_service import gemini_client, ollama_client
 from services.llm_service.usage import estimate_cost_usd
-from services.shared.observability import LLM_GENERATION_SECONDS, record_usage
+from services.shared import local_embedder
+from services.shared.observability import EMBEDDING_REQUESTS, LLM_GENERATION_SECONDS, record_usage
+from services.shared.ollama_probe import ollama_status
 from services.shared.prompts import PROMPT_REGISTRY, STABLE_PROMPT_VERSION, build_system_message, prompt_fingerprint
 from services.shared.tracing import clip, tracer
 from services.shared.schemas import EmbedRequest, EmbedResponse, GenerateRequest, GenerateResponse
@@ -24,19 +26,15 @@ _OLLAMA_MODEL_OVERRIDES = {"codellama": "codellama:7b", "starcoder2": "starcoder
 
 @router.get("/v1/health")
 async def health():
-    ollama_reachable = False
-    try:
-        async with httpx.AsyncClient(timeout=3.0) as client:
-            r = await client.get(f"{settings.ollama_base_url}/api/tags")
-            ollama_reachable = r.status_code == 200
-    except Exception:
-        ollama_reachable = False
-
+    ollama = await ollama_status(force=True)
     return {
         "status": "ok",
         "ollama_model": settings.ollama_model,
         "gemini_model": settings.gemini_model,
-        "ollama_reachable": ollama_reachable,
+        "ollama_reachable": ollama.available,
+        "ollama_status": ollama.reason,
+        "ollama_model_pulled": ollama.has_model(settings.ollama_model),
+        "embedding_backend": "ollama" if ollama.has_model(settings.ollama_embedding_model) else "local",
         "gemini_configured": bool(settings.gemini_api_key),
         "prompt_versions": {name: prompt_fingerprint(name) for name in PROMPT_REGISTRY},
     }
@@ -44,13 +42,30 @@ async def health():
 
 @router.post("/v1/embed", response_model=EmbedResponse)
 async def embed(req: EmbedRequest):
+    """Ollama's nomic-embed-text when this machine has it, otherwise the same
+    model in-process (local_embedder.py). Both produce the vector space the
+    Chroma index was built in, so retrieval works the same either way."""
+    ollama = await ollama_status()
+    if ollama.has_model(settings.ollama_embedding_model):
+        try:
+            vector = await ollama_client.embed(req.text)
+        except Exception as exc:
+            raise HTTPException(status_code=502, detail=f"embedding failed: {exc}") from exc
+        if not vector:
+            raise HTTPException(status_code=502, detail="Ollama returned no embedding")
+        EMBEDDING_REQUESTS.labels("ollama").inc()
+        return EmbedResponse(embedding=vector, model=settings.ollama_embedding_model, dimensions=len(vector))
+
     try:
-        vector = await ollama_client.embed(req.text)
+        vector = await asyncio.to_thread(local_embedder.embed_text, req.text)
     except Exception as exc:
-        raise HTTPException(status_code=502, detail=f"embedding failed: {exc}") from exc
-    if not vector:
-        raise HTTPException(status_code=502, detail="Ollama returned no embedding")
-    return EmbedResponse(embedding=vector, model=settings.ollama_embedding_model, dimensions=len(vector))
+        raise HTTPException(
+            status_code=502,
+            detail=f"embedding failed: Ollama is unavailable ({ollama.reason}) and the local model failed: {exc}",
+        ) from exc
+    EMBEDDING_REQUESTS.labels("local").inc()
+    return EmbedResponse(embedding=vector, model=settings.local_embedding_model, dimensions=len(vector),
+                         backend="local")
 
 
 @router.post("/v1/generate", response_model=GenerateResponse)
@@ -64,6 +79,17 @@ async def generate(req: GenerateRequest):
         raise HTTPException(status_code=400, detail=str(exc)) from exc
     history = [m.model_dump() for m in req.history]
     model = settings.gemini_model if req.provider == "gemini" else _OLLAMA_MODEL_OVERRIDES.get(req.provider, settings.ollama_model)
+
+    if req.provider != "gemini":
+        ollama = await ollama_status()
+        if not ollama.available:
+            # Fail in milliseconds rather than letting the request wait out
+            # ollama_timeout_seconds against a server that is not there.
+            LLM_GENERATION_SECONDS.labels(req.provider, model, "unavailable").observe(time.perf_counter() - started)
+            raise HTTPException(
+                status_code=503,
+                detail=f"Ollama is not available on this device ({ollama.reason}). Choose Gemini instead.",
+            )
 
     with tracer().start_as_current_span("llm.generate") as span:
         span.set_attribute("openinference.span.kind", "LLM")

@@ -20,6 +20,11 @@ chromadb==0.5.23
 # not previously pinned anywhere in the repo
 pymupdf==1.24.11
 
+# Question embeddings on machines without Ollama: the same nomic-embed-text v1.5
+# weights run in-process via ONNX (services/shared/local_embedder.py). Reuses
+# chromadb's onnxruntime/tokenizers; the model downloads on first use.
+fastembed==0.9.0
+
 # Gemini provider (LLM Service)
 google-genai==1.2.0
 

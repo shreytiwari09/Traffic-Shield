@@ -132,6 +132,17 @@ textarea.question-box:focus {
 
 .provider-toggle input { display: none; }
 
+.provider-toggle label.disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.provider-hint {
+  margin: 0.6rem 0 0;
+  font-size: 0.82rem;
+  color: var(--text-dim);
+}
+
 .provider-toggle label.checked {
   background: var(--panel-3);
   color: var(--text);

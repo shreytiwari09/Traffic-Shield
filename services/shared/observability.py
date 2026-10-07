@@ -87,6 +87,11 @@ RETRIEVAL_TOP_SCORE = Histogram(
     "Best cosine similarity among retrieved chunks per query (drift signal).",
     buckets=(0.3, 0.4, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.9, 1.0),
 )
+EMBEDDING_REQUESTS = Counter(
+    "ts_embedding_requests_total",
+    "Question embeddings, by backend: ollama, or local (in-process ONNX when Ollama is absent).",
+    ["backend"],
+)
 GRAPH_BACKEND_FALLBACK = Gauge(
     "ts_graph_backend_fell_back",
     "1 when the graph store silently fell back from Neo4j to the JSON store.",
@@ -123,6 +128,8 @@ PROMPT_ROUTING = Counter(
 # restart never shows up — found when 3 blocked jailbreaks read as "0" in Grafana.
 for _outcome, _check in (("allowed", "none"), ("blocked", "prompt_injection"), ("blocked", "illegal_conduct")):
     GUARDRAIL_DECISIONS.labels(outcome=_outcome, check=_check)
+for _backend in ("ollama", "local"):
+    EMBEDDING_REQUESTS.labels(_backend)
 
 def _init_prompt_labels() -> None:
     from services.shared.prompts import PROMPT_REGISTRY

@@ -37,7 +37,9 @@ def _get_collection():
         _client = chromadb.PersistentClient(path=str(settings.chroma_dir))
         _collection = _client.get_or_create_collection(
             name=settings.chroma_collection,
-            metadata={"hnsw:space": "cosine"},
+            # Only applies if the collection does not exist yet; Phase 6 sets
+            # the same values when it builds it (see the search_ef note there).
+            metadata={"hnsw:space": "cosine", "hnsw:search_ef": 100},
         )
     return _collection
 

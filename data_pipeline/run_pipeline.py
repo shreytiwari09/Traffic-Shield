@@ -6,8 +6,10 @@ Pipeline orchestrator.
     python -m data_pipeline.run_pipeline --only 6         # one phase
     python -m data_pipeline.run_pipeline --skip-embeddings
 
-Phases 1–5 and 7 need nothing but the PDFs. Phase 6 needs a running Ollama;
-``--skip-embeddings`` lets the rest of the pipeline complete without one.
+Phases 1–5 and 7 need nothing but the PDFs. Phase 6 embeds with Ollama when
+it is running, otherwise with the same model in-process. ``--reuse-embeddings``
+rebuilds the Chroma index from the vectors already in chunks.jsonl, and
+``--skip-embeddings`` writes chunks without vectors.
 """
 
 import argparse
@@ -51,6 +53,9 @@ def main(argv: list[str] | None = None) -> int:
                         help="Phase 6: write chunks without calling Ollama")
     parser.add_argument("--embedding-model", default=None,
                         help="Phase 6: override the Ollama embedding model")
+    parser.add_argument("--reuse-embeddings", action="store_true",
+                        help="Phase 6: rebuild Chroma from the vectors already in chunks.jsonl, "
+                             "embedding only chunks whose text changed")
     parser.add_argument("-v", "--verbose", action="store_true")
     args = parser.parse_args(argv)
 
@@ -82,6 +87,7 @@ def main(argv: list[str] | None = None) -> int:
                 result = run_phase(
                     skip_embeddings=args.skip_embeddings,
                     embedding_model=args.embedding_model,
+                    reuse_embeddings=args.reuse_embeddings,
                 )
             else:
                 result = run_phase()

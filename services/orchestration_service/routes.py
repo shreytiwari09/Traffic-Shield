@@ -114,6 +114,25 @@ async def model_registry():
     return registry.describe()
 
 
+@router.get("/v1/providers")
+async def providers():
+    """Which answer providers work on this deployment right now — the Chat
+    tab greys out the ones that don't and starts on one that does."""
+    try:
+        llm = await clients.llm_health()
+    except Exception as exc:
+        raise HTTPException(status_code=502, detail=f"LLM service unreachable: {_error_detail(exc)}") from exc
+    ollama_ok = bool(llm.get("ollama_reachable"))
+    gemini_ok = bool(llm.get("gemini_configured"))
+    return {
+        "ollama": {"available": ollama_ok, "model": llm.get("ollama_model"), "detail": llm.get("ollama_status")},
+        "gemini": {"available": gemini_ok, "model": llm.get("gemini_model"),
+                   "detail": "API key set" if gemini_ok else "GEMINI_API_KEY is not set in .env"},
+        "default": "ollama" if ollama_ok else "gemini" if gemini_ok else None,
+        "embedding_backend": llm.get("embedding_backend"),
+    }
+
+
 @router.post("/v1/feedback")
 async def submit_feedback(req: FeedbackRequest):
     entry = feedback.append(req.model_dump())

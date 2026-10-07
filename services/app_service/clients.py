@@ -82,6 +82,13 @@ async def feedback_summary() -> dict:
         return response.json()
 
 
+async def providers() -> dict:
+    async with httpx.AsyncClient(timeout=_TIMEOUT) as client:
+        response = await client.get(f"{settings.orchestration_service_url}/v1/providers")
+        response.raise_for_status()
+        return response.json()
+
+
 async def model_registry() -> dict:
     async with httpx.AsyncClient(timeout=_TIMEOUT) as client:
         response = await client.get(f"{settings.orchestration_service_url}/v1/registry")

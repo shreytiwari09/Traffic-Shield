@@ -85,6 +85,18 @@ export async function fetchEvalReport() {
   return data
 }
 
+// Which providers work on this machine right now (Ollama is only used when
+// it is actually running here). Null on failure: the UI then leaves both
+// options enabled rather than guessing.
+export async function fetchProviders() {
+  try {
+    const res = await fetch('/api/providers')
+    return res.ok ? await res.json() : null
+  } catch {
+    return null
+  }
+}
+
 export async function fetchCategories() {
   const res = await fetch('/api/categories')
   if (!res.ok) throw new Error('Failed to load categories')

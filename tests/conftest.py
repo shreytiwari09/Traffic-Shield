@@ -10,3 +10,6 @@ import os
 
 os.environ["OTEL_EXPORTER_OTLP_ENDPOINT"] = ""
 os.environ["CANARY_PERCENT"] = "0"
+# Never ping a real Ollama from tests: "always" skips the probe and treats it
+# as present (Ollama itself is mocked). Detection tests set the mode themselves.
+os.environ["OLLAMA_MODE"] = "always"
