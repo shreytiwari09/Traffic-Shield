@@ -89,10 +89,13 @@ stat("High-confidence answers",
 stat("Guardrail blocks", 'sum(increase(ts_guardrail_decisions_total{outcome="blocked"}[$__range])) or vector(0)',
      16, 1, decimals=0, thresholds=[{"color": "text", "value": None}, {"color": WARN, "value": 1}],
      desc="Prompt-injection / illegal-conduct requests refused before reaching retrieval or the LLM.")
-stat("Graph backend", "max(ts_graph_backend_fell_back)", 20, 1,
-     thresholds=[{"color": GOOD, "value": None}, {"color": BAD, "value": 1}],
-     mappings=[{"type": "value", "options": {"0": {"text": "Neo4j"}, "1": {"text": "JSON fallback"}}}],
-     desc="Whether retrieval silently fell back from Neo4j to the JSON graph store.")
+# 1 = Neo4j, 0 = JSON by configuration, 2 = JSON because Neo4j was unreachable.
+stat("Graph backend", "max(ts_graph_backend_neo4j) + 2 * max(ts_graph_backend_fell_back)", 20, 1,
+     thresholds=[{"color": WARN, "value": None}, {"color": GOOD, "value": 1}, {"color": BAD, "value": 2}],
+     mappings=[{"type": "value", "options": {"0": {"text": "JSON"}, "1": {"text": "Neo4j"},
+                                             "2": {"text": "JSON fallback"}}}],
+     desc="Which graph store retrieval is using: Neo4j, the JSON store by configuration, "
+          "or the JSON store because Neo4j was unreachable (red).")
 
 # Row 2: service golden signals
 row("Service golden signals", 5)

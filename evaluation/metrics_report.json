@@ -526,13 +526,13 @@
       "answer_relevance_excluding_refusals": 0.737,
       "hallucination_rate_grounding": 0.225,
       "total_claims_checked": 40,
-      "test_pass_rate": 0.292,
+      "test_pass_rate": 0.333,
       "scorable_questions": 24,
       "open_questions_excluded": 6,
       "verdict_breakdown": {
-        "pass": 7,
-        "fail": 17,
-        "open": 6
+        "open": 6,
+        "pass": 8,
+        "fail": 16
       },
       "relevance_lexical_overlap_legacy": 0.692,
       "latency_ms": {
@@ -572,9 +572,9 @@
       "scorable_questions": 24,
       "open_questions_excluded": 6,
       "verdict_breakdown": {
+        "open": 6,
         "pass": 1,
-        "fail": 23,
-        "open": 6
+        "fail": 23
       },
       "relevance_lexical_overlap_legacy": 0.843,
       "latency_ms": {
@@ -614,8 +614,8 @@
       "scorable_questions": 24,
       "open_questions_excluded": 6,
       "verdict_breakdown": {
-        "fail": 24,
-        "open": 6
+        "open": 6,
+        "fail": 24
       },
       "relevance_lexical_overlap_legacy": 0.587,
       "latency_ms": {
@@ -651,14 +651,14 @@
       "answer_relevance_excluding_refusals": 0.773,
       "hallucination_rate_grounding": 0.096,
       "total_claims_checked": 52,
-      "test_pass_rate": 0.292,
+      "test_pass_rate": 0.375,
       "scorable_questions": 24,
       "open_questions_excluded": 5,
       "verdict_breakdown": {
-        "pass": 7,
         "no_answer": 1,
-        "fail": 17,
-        "open": 5
+        "open": 5,
+        "pass": 9,
+        "fail": 15
       },
       "relevance_lexical_overlap_legacy": 0.568,
       "latency_ms": {
@@ -7846,7 +7846,7 @@
       "faithfulness": null,
       "answer_relevance": null,
       "noncommittal": null,
-      "guardrail": "fail",
+      "guardrail": "pass",
       "grounding": {
         "total_claims": 0,
         "verified_claims": 0,
@@ -7925,7 +7925,7 @@
       "faithfulness": null,
       "answer_relevance": null,
       "noncommittal": null,
-      "guardrail": "fail",
+      "guardrail": "pass",
       "grounding": {
         "total_claims": 0,
         "verified_claims": 0,
@@ -8156,7 +8156,7 @@
       "faithfulness": null,
       "answer_relevance": null,
       "noncommittal": null,
-      "guardrail": "fail",
+      "guardrail": "pass",
       "grounding": {
         "total_claims": 0,
         "verified_claims": 0,

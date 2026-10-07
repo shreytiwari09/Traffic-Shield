@@ -65,6 +65,21 @@ def test_health_endpoints(app, path):
     assert r.json()["status"] == "ok"
 
 
+@pytest.mark.parametrize("status,loaded,neo4j,fell_back", [
+    ({"backend": "neo4j", "fell_back": False}, True, 1.0, 0.0),
+    ({"backend": "json", "fell_back": False}, True, 0.0, 0.0),   # JSON by configuration
+    ({"backend": "json", "fell_back": True}, True, 0.0, 1.0),    # Neo4j unreachable
+])
+def test_graph_backend_gauges_say_which_store_is_serving(monkeypatch, status, loaded, neo4j, fell_back):
+    from services.retrieval_service import graph_store, routes as retrieval_routes
+
+    monkeypatch.setattr(graph_store, "status", lambda: dict(status))
+    monkeypatch.setattr(graph_store, "is_loaded", lambda: loaded)
+    retrieval_routes.record_graph_backend()
+    assert metric("ts_graph_backend_neo4j", {}) == neo4j
+    assert metric("ts_graph_backend_fell_back", {}) == fell_back
+
+
 def test_data_service_health(monkeypatch):
     monkeypatch.setattr(chroma_store, "count", lambda: 1234)
     monkeypatch.setattr(dataset_store, "count", lambda: 567)

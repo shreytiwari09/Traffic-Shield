@@ -126,7 +126,11 @@ class Settings(BaseSettings):
     # under test: a model grading its own answers is not an evaluation. Nothing
     # in the live request path reads these — they exist for the offline sweep.
     judge_provider: Literal["gemini", "ollama"] = "gemini"
-    judge_model: str = "gemini-3.5-flash-lite"
+    # Was gemini-3.5-flash-lite — the same model as the Gemini contestant, i.e.
+    # the model grading its own answers (Run 1's judged scores carry that bias).
+    # A stronger judge is better still, but on the free tier gemini-3.5-flash is
+    # capped at 20 requests/day, far below a ~170-call judged sweep.
+    judge_model: str = "gemini-3.1-flash-lite"
     # Floor between judge calls. A full sweep is ~27 questions x 4 models x 3
     # judge calls; free-tier rate limits bite long before that without a gap.
     judge_min_interval_seconds: float = 4.0

@@ -52,7 +52,7 @@ const NODES = [
   },
   {
     id: 'gemini', row: 4, icon: '☁️', label: 'Gemini API', port: null, external: true,
-    summary: "gemini-3.6-flash — Google's hosted model, the second provider choice.",
+    summary: "gemini-3.5-flash-lite — Google's hosted model, the second provider choice.",
     detail: 'Called only when a citizen or evaluator explicitly picks Gemini. Requires GEMINI_API_KEY in .env; the app degrades gracefully (a clear "unavailable" message, not a crash) if it\'s unset.',
     calledBy: ['llm'],
   },

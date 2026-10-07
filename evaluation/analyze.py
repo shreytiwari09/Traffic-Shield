@@ -89,6 +89,12 @@ _REFUSAL_MARKERS = (
     "outside",
     "don't cover",
     "do not cover",
+    # Hard rule 6's out-of-scope wording ("I cover Indian and Haryana ... traffic
+    # law only"). Missing it scored the CORRECT reply to "speed limit on a German
+    # autobahn?" as a failure for every model that obeyed the rule (found by the
+    # 2026-10-08 ablation: 0/2 correct refusals even for the arm refusing 93%).
+    "traffic law only",
+    "don't have information",
 )
 
 _STOPWORDS = {

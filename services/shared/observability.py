@@ -96,6 +96,10 @@ GRAPH_BACKEND_FALLBACK = Gauge(
     "ts_graph_backend_fell_back",
     "1 when the graph store silently fell back from Neo4j to the JSON store.",
 )
+GRAPH_BACKEND_NEO4J = Gauge(
+    "ts_graph_backend_neo4j",
+    "1 when retrieval is serving from Neo4j, 0 when from the JSON store (configured or fallen back).",
+)
 
 # ---------------------------------------------------------------------------
 # LLMOps signals: tokens, cost, user feedback, prompt versions

@@ -350,7 +350,7 @@
         "type": "prometheus",
         "uid": "prometheus"
       },
-      "description": "Whether retrieval silently fell back from Neo4j to the JSON graph store.",
+      "description": "Which graph store retrieval is using: Neo4j, the JSON store by configuration, or the JSON store because Neo4j was unreachable (red).",
       "gridPos": {
         "h": 4,
         "w": 4,
@@ -367,12 +367,16 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
+                "color": "orange",
                 "value": null
               },
               {
-                "color": "red",
+                "color": "green",
                 "value": 1
+              },
+              {
+                "color": "red",
+                "value": 2
               }
             ]
           },
@@ -381,9 +385,12 @@
               "type": "value",
               "options": {
                 "0": {
-                  "text": "Neo4j"
+                  "text": "JSON"
                 },
                 "1": {
+                  "text": "Neo4j"
+                },
+                "2": {
                   "text": "JSON fallback"
                 }
               }
@@ -411,7 +418,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "max(ts_graph_backend_fell_back)",
+          "expr": "max(ts_graph_backend_neo4j) + 2 * max(ts_graph_backend_fell_back)",
           "refId": "A",
           "instant": true
         }

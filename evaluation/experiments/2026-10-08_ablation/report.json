@@ -1,0 +1,107 @@
+{
+  "meta": {
+    "date": "2026-10-08",
+    "finished_at": "2026-10-07T23:33:34+00:00",
+    "duration_s": 26.4,
+    "git_sha": "739b916",
+    "generation_model": "gemini-3.5-flash-lite",
+    "generation_temperature": "provider default (not fixed)",
+    "judge": {
+      "enabled": true,
+      "provider": "gemini",
+      "model": "gemini-3.1-flash-lite"
+    },
+    "prompt_version": "legal-persona-v3",
+    "top_k": 8,
+    "graph_backend": "json",
+    "n_questions": 30
+  },
+  "retrieval": {
+    "vector_only": {
+      "context_precision": 0.382,
+      "context_recall": 0.508,
+      "hit_rate": 0.682,
+      "mrr": 0.382,
+      "n": 22
+    },
+    "graph_only": {
+      "context_precision": 0.5,
+      "context_recall": 0.409,
+      "hit_rate": 0.455,
+      "mrr": 0.352,
+      "n": 22
+    },
+    "hybrid": {
+      "context_precision": 0.443,
+      "context_recall": 0.705,
+      "hit_rate": 0.773,
+      "mrr": 0.492,
+      "n": 22
+    }
+  },
+  "generation": {
+    "raw": {
+      "n": 30,
+      "errors": 0,
+      "statute_pass_rate": 0.042,
+      "shown_source_pass_rate": 0.0,
+      "statute_unverified_claim_rate": 0.467,
+      "shown_source_unverified_claim_rate": 1.0,
+      "claims_checked": 15,
+      "answers_citing_a_section": 0.1,
+      "refusal_rate": 0.067,
+      "correct_refusals": "0/2",
+      "faithfulness": null,
+      "answer_relevance": 0.709,
+      "answer_relevance_excluding_refusals": 0.788,
+      "mean_latency_ms": 3817.717,
+      "mean_prompt_tokens": 14.2,
+      "mean_completion_tokens": 584.733,
+      "total_cost_usd": 0.007059
+    },
+    "persona": {
+      "n": 30,
+      "errors": 0,
+      "statute_pass_rate": 0.125,
+      "shown_source_pass_rate": 0.083,
+      "statute_unverified_claim_rate": 0.0,
+      "shown_source_unverified_claim_rate": 1.0,
+      "claims_checked": 1,
+      "answers_citing_a_section": 0.033,
+      "refusal_rate": 1.0,
+      "correct_refusals": "2/2",
+      "faithfulness": null,
+      "answer_relevance": 0.0,
+      "answer_relevance_excluding_refusals": null,
+      "mean_latency_ms": 1685.75,
+      "mean_prompt_tokens": 1651.2,
+      "mean_completion_tokens": 48.0,
+      "total_cost_usd": 0.00553
+    },
+    "rag": {
+      "n": 30,
+      "errors": 0,
+      "statute_pass_rate": 0.542,
+      "shown_source_pass_rate": 0.458,
+      "statute_unverified_claim_rate": 0.017,
+      "shown_source_unverified_claim_rate": 0.1,
+      "claims_checked": 60,
+      "answers_citing_a_section": 0.8,
+      "refusal_rate": 0.233,
+      "correct_refusals": "2/2",
+      "faithfulness": 0.694,
+      "answer_relevance": 0.566,
+      "answer_relevance_excluding_refusals": 0.739,
+      "mean_latency_ms": 1639.18,
+      "mean_prompt_tokens": 4079.667,
+      "mean_completion_tokens": 107.333,
+      "total_cost_usd": 0.013527
+    }
+  },
+  "guardrails": {
+    "attacks": 13,
+    "blocked_by_regex": "13/13",
+    "without_regex_raw_model_complied": "1/13",
+    "without_regex_persona_rag_complied": "0/13"
+  }
+}

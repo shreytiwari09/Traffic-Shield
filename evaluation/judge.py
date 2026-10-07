@@ -63,6 +63,8 @@ import httpx
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
+from services.shared import local_embedder  # noqa: E402
+from services.shared.ollama_probe import ollama_status  # noqa: E402
 from services.shared.settings import settings  # noqa: E402
 
 CACHE_PATH = Path(__file__).parent / "judge_cache.json"
@@ -294,9 +296,12 @@ async def ask_judge(system: str, user: str) -> dict | None:
 # Embeddings (Answer Relevance step 2)
 # ---------------------------------------------------------------------------
 async def embed(text: str) -> list[float]:
-    """Embeds via the same Ollama nomic-embed-text used by the app's retrieval
-    path, so relevance similarity lives in the same vector space the pipeline
-    itself retrieves in."""
+    """Embeds via the same nomic-embed-text used by the app's retrieval path,
+    so relevance similarity lives in the same vector space the pipeline itself
+    retrieves in: through Ollama when this machine has it, otherwise the same
+    weights in-process (services/shared/local_embedder.py)."""
+    if not (await ollama_status()).has_model(settings.ollama_embedding_model):
+        return await asyncio.to_thread(local_embedder.embed_text, text)
     async with httpx.AsyncClient(timeout=120.0) as client:
         r = await client.post(
             f"{settings.ollama_base_url}/api/embed",

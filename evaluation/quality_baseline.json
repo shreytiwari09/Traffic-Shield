@@ -39,7 +39,7 @@
     "test_pass_rate": {
       "group": "generation",
       "direction": "higher",
-      "baseline": 0.292,
+      "baseline": 0.333,
       "tolerance": 0.03
     },
     "generation_errors": {

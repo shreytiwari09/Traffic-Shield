@@ -4,7 +4,12 @@ import time
 from fastapi import APIRouter, HTTPException
 
 from services.retrieval_service import categories, clients, core_sections, fusion, glossary, graph_store
-from services.shared.observability import GRAPH_BACKEND_FALLBACK, RETRIEVAL_STAGE_SECONDS, RETRIEVAL_TOP_SCORE
+from services.shared.observability import (
+    GRAPH_BACKEND_FALLBACK,
+    GRAPH_BACKEND_NEO4J,
+    RETRIEVAL_STAGE_SECONDS,
+    RETRIEVAL_TOP_SCORE,
+)
 from services.shared.tracing import clip, tracer
 from services.shared.schemas import (
     CategorySectionsResponse,
@@ -50,10 +55,20 @@ async def _score_graph_candidate(record_id: str, query_embedding: list[float]) -
     return {"record": record, "score": score}
 
 
-@router.get("/v1/health")
-async def health():
+def record_graph_backend() -> dict:
+    """Publishes which graph store is serving. Called at startup as well as on
+    /v1/health: in local mode nothing polls health, so a health-only update
+    left the dashboard showing its initial 0 ("Neo4j") indefinitely — even on
+    the JSON store, configured or fallen back."""
     graph_status = graph_store.status()
     GRAPH_BACKEND_FALLBACK.set(1 if graph_status.get("fell_back") else 0)
+    GRAPH_BACKEND_NEO4J.set(1 if graph_status.get("backend") == "neo4j" and graph_store.is_loaded() else 0)
+    return graph_status
+
+
+@router.get("/v1/health")
+async def health():
+    graph_status = record_graph_backend()
     return {
         "status": "ok",
         "graph_loaded": graph_store.is_loaded(),

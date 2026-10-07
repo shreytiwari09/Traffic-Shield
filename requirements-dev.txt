@@ -2,3 +2,5 @@
 # Install with: pip install -r requirements.txt -r requirements-dev.txt
 pytest==8.3.3
 ruff==0.6.9
+# README figures only (scripts/make_readme_charts.py) — not needed to run or test the app.
+matplotlib==3.9.2

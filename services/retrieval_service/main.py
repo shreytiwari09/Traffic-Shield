@@ -10,7 +10,7 @@ Run: uvicorn services.retrieval_service.main:app --port 8002
 from fastapi import FastAPI
 
 from services.retrieval_service import graph_store
-from services.retrieval_service.routes import router
+from services.retrieval_service.routes import record_graph_backend, router
 from services.shared.observability import setup_metrics
 from services.shared.tracing import setup_tracing
 
@@ -23,6 +23,7 @@ app = FastAPI(
 @app.on_event("startup")
 async def startup() -> None:
     graph_store.load()
+    record_graph_backend()
 
 
 @app.on_event("shutdown")
