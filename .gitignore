@@ -1,6 +1,9 @@
 # Secrets — never commit
 .env
 
+# Personal notes — kept locally, not committed
+/docs/
+
 # Generated data (rebuildable via data_pipeline / Phase 6)
 chroma_data/
 
