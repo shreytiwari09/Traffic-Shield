@@ -682,5 +682,5 @@ LangChain/LlamaIndex (the RAG pipeline is built by hand, so every step can be me
 
 ---
 
-*Further reading:* [GUARDRAILS.md](GUARDRAILS.md) · [evaluation/model_comparison_analysis.md](evaluation/model_comparison_analysis.md) ·
+*Further reading:* [GUARDRAILS.md](GUARDRAILS.md) · [evaluation/model_comparison_analysis.md](evaluation/model_comparison_analysis.md) 
 [evaluation/rag_pipeline_analysis.md](evaluation/rag_pipeline_analysis.md) · [data_pipeline/README.md](data_pipeline/README.md)
